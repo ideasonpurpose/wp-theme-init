@@ -7,6 +7,8 @@ class ThemeInit
     public function __construct()
     {
         $this->cleanWPHead();
+        $this->misc();
+        $this->browsersyncReload();
     }
 
     /**
@@ -31,5 +33,32 @@ class ThemeInit
         remove_filter('the_content_feed', 'wp_staticize_emoji');
         remove_filter('comment_text_rss', 'wp_staticize_emoji');
         remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
+    }
+
+    /**
+     * Miscellaneous stuff
+     */
+    private function misc()
+    {
+        add_filter('sybre_waaijer_<3', '__return_false');
+    }
+
+    /**
+     * Browsersync reload on post save
+     * Currently attempts to reload if WP_DEBUG is true
+     * More info:
+     * https://www.browsersync.io/docs/http-protocol
+     * https://blogs.oracle.com/fatbloke/networking-in-virtualbox#NAT
+     * https://superuser.com/a/310745/193584
+     */
+    private function browsersyncReload()
+    {
+        if (WP_DEBUG) {
+            add_action('save_post', function () {
+                $protocol = (is_ssl()) ? 'https' : 'http';
+                $args = ['blocking' => false, 'sslverify' => false];
+                wp_remote_get("$protocol://10.0.2.2:3000/__browser_sync__?method=reload", $args);
+            });
+        }
     }
 }

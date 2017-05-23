@@ -40,6 +40,7 @@ class ThemeInit
      */
     private function misc()
     {
+        // Hide author's name from SEO Framework block
         add_filter('sybre_waaijer_<3', '__return_false');
     }
 

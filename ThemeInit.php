@@ -2,6 +2,8 @@
 
 namespace ideasonpurpose;
 
+use ideasonpurpose\Extras;
+
 class ThemeInit
 {
     public function __construct()
@@ -9,6 +11,7 @@ class ThemeInit
         $this->cleanWPHead();
         $this->misc();
         $this->browsersyncReload();
+        new Extras\ACF();
     }
 
     /**

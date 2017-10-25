@@ -64,9 +64,11 @@ class ThemeInit
     {
         if (WP_DEBUG) {
             add_action('save_post', function () {
-                $protocol = (is_ssl()) ? 'https' : 'http';
                 $args = ['blocking' => false, 'sslverify' => false];
-                wp_remote_get("$protocol://10.0.2.2:3000/__browser_sync__?method=reload", $args);
+                // Sloppy, but there's no assurance we're actually serving over ssl
+                // This hits both possible endpoints and ignores replies, one of these should work
+                wp_remote_get("http://10.0.2.2:3000/__browser_sync__?method=reload", $args);
+                wp_remote_get("https://10.0.2.2:3000/__browser_sync__?method=reload", $args);
             });
         }
     }

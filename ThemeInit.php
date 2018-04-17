@@ -11,6 +11,7 @@ class ThemeInit
         $this->cleanWPHead();
         $this->init();
         $this->browsersyncReload();
+        new Extras\Shortcodes();
         new Extras\ACF();
     }
 

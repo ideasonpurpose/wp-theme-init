@@ -9,7 +9,7 @@ class ThemeInit
     public function __construct()
     {
         $this->cleanWPHead();
-        $this->misc();
+        $this->init();
         $this->browsersyncReload();
         new Extras\ACF();
     }
@@ -41,8 +41,24 @@ class ThemeInit
     /**
      * Miscellaneous stuff
      */
-    private function misc()
+    private function init()
     {
+        // IOP Design Credit
+        add_filter('admin_footer_text', function ($default) {
+            $credit = 'Design and development by <a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>.';
+            return preg_replace('%</span>$%', " $credit</span>", $default);
+            return $default . 'HI';
+        });
+
+        // De-Howdy the Admin menu
+        add_filter('admin_bar_menu', function ($wp_admin_bar) {
+            $account_node = $wp_admin_bar->get_node('my-account');
+            $account_title = str_replace('Howdy, ', '', $account_node->title);
+            $wp_admin_bar->add_node(
+                [ 'id' => 'my-account', 'title' => $account_title ]
+            );
+        }, 25);
+
         // Hide author's name from SEO Framework block
         add_filter('sybre_waaijer_<3', '__return_false');
 

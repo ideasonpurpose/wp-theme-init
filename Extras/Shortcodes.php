@@ -40,7 +40,7 @@ class Shortcodes
      *  Example 2: [email name@example.com]email us![/email]
      *  returns <a href="mailto:&#106;&#111;h&#110;&#99;&#111;&#109;">email us!</a>
      */
-    public function protectEmail($atts, $content = null)
+    public function protectEmail($atts, $content = "")
     {
         if (!is_email($atts[0])) {
             return $content;

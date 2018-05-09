@@ -7,9 +7,6 @@ class Shortcodes
     public function __construct()
     {
         $this->addShortcodes();
-        // if (!shortcode_exists('email')) {
-        //     add_shortcode('email', [$this, 'protectEmail']);
-        // }
     }
 
     /**

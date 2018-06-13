@@ -2,7 +2,7 @@
 
 namespace ideasonpurpose;
 
-use ideasonpurpose\Extras;
+use ideasonpurpose\ThemeInit;
 
 class ThemeInit
 {
@@ -11,8 +11,8 @@ class ThemeInit
         $this->cleanWPHead();
         $this->init();
         $this->browsersyncReload();
-        new Extras\Shortcodes();
-        new Extras\ACF();
+        new ThemeInit\Extras\Shortcodes();
+        new ThemeInit\Extras\ACF();
     }
 
     /**

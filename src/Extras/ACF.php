@@ -1,6 +1,5 @@
 <?php
-
-namespace ideasonpurpose\Extras;
+namespace ideasonpurpose\ThemeInit\Extras;
 
 class ACF
 {
@@ -14,9 +13,11 @@ class ACF
         $types = get_post_types(['public' => true]);
         foreach ($types as $type) {
             register_rest_field($type, 'acf', [
-                'get_callback' => function ($p) {
-                    return get_fields($p['id']);
-                }]);
+                'get_callback' =>
+                    function ($p) {
+                        return get_fields($p['id']);
+                    }
+            ]);
         }
     }
 }

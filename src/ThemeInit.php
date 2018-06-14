@@ -1,19 +1,33 @@
 <?php
-
 namespace ideasonpurpose;
 
 use ideasonpurpose\ThemeInit;
 
 class ThemeInit
 {
-    public function __construct()
+    public function __construct($options = [])
     {
+        $defaults = ['showIncludes' => true, 'enableComments' => false];
+        $options = array_merge($defaults, $options);
+
         $this->cleanWPHead();
         $this->init();
         $this->browsersyncReload();
         new ThemeInit\Extras\Shortcodes();
         new ThemeInit\Extras\ACF();
+        new ThemeInit\Plugins\SEOFramework();
+
+        if ($options['showIncludes'] !== false) {
+            new ThemeInit\Debug\ShowIncludes();
+        }
+
+
+        if ($options['enableComments'] === true) {
+            new ThemeInit\Extras\GlobalCommentsDisable();
+        }
+
     }
+
 
     /**
      * Remove some WP Head garbage
@@ -46,27 +60,36 @@ class ThemeInit
     {
         // IOP Design Credit
         add_filter('admin_footer_text', function ($default) {
-            $credit = 'Design and development by <a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>.';
+            $credit =
+                'Design and development by <a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>.';
             return preg_replace('%</span>$%', " $credit</span>", $default);
-            return $default . 'HI';
         });
 
         // De-Howdy the Admin menu
-        add_filter('admin_bar_menu', function ($wp_admin_bar) {
-            $account_node = $wp_admin_bar->get_node('my-account');
-            $account_title = str_replace('Howdy, ', '', $account_node->title);
-            $wp_admin_bar->add_node(
-                [ 'id' => 'my-account', 'title' => $account_title ]
-            );
-        }, 25);
+        add_filter(
+            'admin_bar_menu',
+            function ($wp_admin_bar) {
+                $account_node = $wp_admin_bar->get_node('my-account');
+                $account_title = str_replace(
+                    'Howdy, ',
+                    '',
+                    $account_node->title
+                );
+                $wp_admin_bar->add_node([
+                    'id' => 'my-account',
+                    'title' => $account_title
+                ]);
+            },
+            25
+        );
 
-        // Hide author's name from SEO Framework block
-        add_filter('sybre_waaijer_<3', '__return_false');
+        // // Hide author's name from SEO Framework block
+        // add_filter('sybre_waaijer_<3', '__return_false');
 
-        // Move SEO Framework metabox below all custom fields
-        add_filter('the_seo_framework_metabox_priority', function () {
-            return 'low';
-        });
+        // // Move SEO Framework metabox below all custom fields
+        // add_filter('the_seo_framework_metabox_priority', function () {
+        //     return 'low';
+        // });
     }
 
     /**
@@ -84,8 +107,14 @@ class ThemeInit
                 $args = ['blocking' => false, 'sslverify' => false];
                 // Sloppy, but there's no assurance we're actually serving over ssl
                 // This hits both possible endpoints and ignores replies, one of these should work
-                wp_remote_get("http://10.0.2.2:3000/__browser_sync__?method=reload", $args);
-                wp_remote_get("https://10.0.2.2:3000/__browser_sync__?method=reload", $args);
+                wp_remote_get(
+                    "http://10.0.2.2:3000/__browser_sync__?method=reload",
+                    $args
+                );
+                wp_remote_get(
+                    "https://10.0.2.2:3000/__browser_sync__?method=reload",
+                    $args
+                );
             });
         }
     }

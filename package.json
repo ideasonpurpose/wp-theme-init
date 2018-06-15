@@ -1,0 +1,30 @@
+{
+  "name": "wp-theme-init",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A common baseline of repeated functions, filters and actions used across our WordPress themes.",
+  "keywords": [
+    "Ideas On Purpose",
+    "init",
+    "wordpress"
+  ],
+  "homepage": "https://github.com/ideasonpurpose/wp-theme-init#readme",
+  "bugs": {
+    "url": "https://github.com/ideasonpurpose/wp-theme-init/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ideasonpurpose/wp-theme-init.git"
+  },
+  "license": "MIT",
+  "author": "Joe Maller <joe@joemaller.com> (http://www.joemaller.com)",
+  "scripts": {
+    "version": "version-everything && git add -u"
+  },
+  "devDependencies": {
+    "version-everything": "^0.2.2"
+  },
+  "version_files": [
+    "README.md"
+  ]
+}

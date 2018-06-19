@@ -21,13 +21,10 @@ class ThemeInit
             new ThemeInit\Debug\ShowIncludes();
         }
 
-
-        if ($options['enableComments'] === true) {
+        if ($options['enableComments'] === false) {
             new ThemeInit\Extras\GlobalCommentsDisable();
         }
-
     }
-
 
     /**
      * Remove some WP Head garbage
@@ -82,14 +79,6 @@ class ThemeInit
             },
             25
         );
-
-        // // Hide author's name from SEO Framework block
-        // add_filter('sybre_waaijer_<3', '__return_false');
-
-        // // Move SEO Framework metabox below all custom fields
-        // add_filter('the_seo_framework_metabox_priority', function () {
-        //     return 'low';
-        // });
     }
 
     /**

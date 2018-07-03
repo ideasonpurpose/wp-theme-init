@@ -22,6 +22,8 @@
     "version": "version-everything && git add -u"
   },
   "devDependencies": {
+    "@prettier/plugin-php": "prettier/plugin-php",
+    "prettier": "prettier/prettier",
     "version-everything": "^0.2.2"
   },
   "version_files": [

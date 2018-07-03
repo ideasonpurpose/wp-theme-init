@@ -22,15 +22,15 @@ A common baseline of repeated functions, filters and actions used across our Wor
 - **Admin\Separators**
   Quickly add separators to the WordPress admin dashboard's left sidebar. Initialize the class with a list of numbers representing the index locations where separators should appear in the menu. Arguments can be an array or multiple arguments.
 
-  ```
-  // Add separators
-  new Admin\Separators(5, 7);
+```php
+// Add separators
+new Admin\Separators(5, 7);
 
-  // or use an array
-  new Admin\Separators([5, 7]);
-  ```
+// or use an array
+new Admin\Separators([5, 7]);
+```
 
-* **SEO Framework Tweaks**
+- **SEO Framework Tweaks**
   We apply several tweaks to the excellent [The SEO Framework plugin](https://theseoframework.com/):
   - Hide the author's name
   - Move the metabox to the bottom of admin pages

@@ -36,7 +36,7 @@ class Shortcodes
      */
     public function protectEmail($atts, $content = "")
     {
-        if (!is_email($atts[0])) {
+        if (empty($atts) || !is_email($atts[0])) {
             return $content;
         }
         $munged_mail = antispambot($atts[0]);

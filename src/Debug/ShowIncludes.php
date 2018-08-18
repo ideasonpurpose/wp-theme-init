@@ -10,34 +10,6 @@ class ShowIncludes
         }
     }
 
-    // public function getFiles()
-    // {
-    //     $includes = get_included_files();
-    //     $templates = array_filter($includes, function ($t) {
-    //         global $template;
-    //         // return (strpos($t, get_template_directory()) !== false) && ($t != $template);
-    //         return (strpos($t, get_template_directory()) !== false);
-    //     });
-    //     $this->templates = array_map(function ($t) {
-    //         global $template;
-    //         $t = ($t == $template)
-    //             ? "<span class='template' style='font-weight: bold; color: #000;'>$t</span>"
-    //             : $t;
-    //         return (
-    //             // '<li style="list-style-type: none; color: #888; margin: 0;">' .
-    //             str_replace(get_template_directory(), '', $t)
-    //             // '</li>'
-    //         );
-    //     }, $templates);
-
-    //     global $template;
-    //     $this->templateName = str_replace(
-    //         get_template_directory(),
-    //         '',
-    //         $template
-    //     );
-    // }
-
     public function show()
     {
         global $template;

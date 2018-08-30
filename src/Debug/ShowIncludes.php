@@ -24,6 +24,8 @@ class ShowIncludes
             }, array_values($includes))
         ];
 
-        printf('<script>console.log(%s);</script>', json_encode($files));
+        printf('<script>console.log("%%cPHP Includes", "font-weight: bold", %s);</script>', json_encode($files));
+
+
     }
 }

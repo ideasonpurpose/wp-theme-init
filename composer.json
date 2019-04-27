@@ -7,11 +7,14 @@
         {
             "name": "Joe Maller",
             "email": "joe@ideasonpurpose.com"
+        },
+        {
+          "name": "Ideas On Purpose",
+          "homepage": "https://www.ideasonpurpose.com"
         }
     ],
-    "require": {},
-    "require-dev": {
-        "phpunit/phpunit": "^5.7"
+    "require": {
+        "kint-php/kint": "^3.2"
     },
     "autoload": {
         "psr-4": {

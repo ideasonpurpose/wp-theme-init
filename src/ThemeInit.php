@@ -1,7 +1,7 @@
 <?php
 namespace ideasonpurpose;
 
-use ideasonpurpose\ThemeInit;
+// use ideasonpurpose\ThemeInit;
 
 class ThemeInit
 {
@@ -24,7 +24,10 @@ class ThemeInit
         if ($options['enableComments'] === false) {
             new ThemeInit\Extras\GlobalCommentsDisable();
         }
-        require_once('Debug/kint-safety.php');
+
+        if (WP_ENV !== 'development') {
+            Kint::$enabled_mode = false;
+        }
     }
 
     /**

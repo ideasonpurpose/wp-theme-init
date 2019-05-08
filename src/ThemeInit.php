@@ -26,7 +26,7 @@ class ThemeInit
         }
 
         if (WP_ENV !== 'development') {
-            Kint::$enabled_mode = false;
+            \Kint::$enabled_mode = false;
         }
     }
 

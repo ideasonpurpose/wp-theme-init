@@ -1,8 +1,6 @@
 <?php
 namespace ideasonpurpose;
 
-// use ideasonpurpose\ThemeInit;
-
 class ThemeInit
 {
     public function __construct($options = [])
@@ -61,8 +59,7 @@ class ThemeInit
     {
         // IOP Design Credit
         add_filter('admin_footer_text', function ($default) {
-            $credit =
-                'Design and development by <a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>.';
+            $credit = 'Design and development by <a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>.';
             return preg_replace('%</span>$%', " $credit</span>", $default);
         });
 
@@ -71,11 +68,7 @@ class ThemeInit
             'admin_bar_menu',
             function ($wp_admin_bar) {
                 $account_node = $wp_admin_bar->get_node('my-account');
-                $account_title = str_replace(
-                    'Howdy, ',
-                    '',
-                    $account_node->title
-                );
+                $account_title = str_replace('Howdy, ', '', $account_node->title);
                 $wp_admin_bar->add_node([
                     'id' => 'my-account',
                     'title' => $account_title
@@ -92,6 +85,8 @@ class ThemeInit
      * https://www.browsersync.io/docs/http-protocol
      * https://blogs.oracle.com/fatbloke/networking-in-virtualbox#NAT
      * https://superuser.com/a/310745/193584
+     *
+     * TODO: Update for Webpack DevServer too
      */
     private function browsersyncReload()
     {
@@ -100,14 +95,24 @@ class ThemeInit
                 $args = ['blocking' => false, 'sslverify' => false];
                 // Sloppy, but there's no assurance we're actually serving over ssl
                 // This hits both possible endpoints and ignores replies, one of these should work
-                wp_remote_get(
-                    "http://10.0.2.2:3000/__browser_sync__?method=reload",
-                    $args
-                );
-                wp_remote_get(
-                    "https://10.0.2.2:3000/__browser_sync__?method=reload",
-                    $args
-                );
+                wp_remote_get("http://10.0.2.2:3000/__browser_sync__?method=reload", $args);
+                wp_remote_get("https://10.0.2.2:3000/__browser_sync__?method=reload", $args);
+            });
+        }
+    }
+
+    /**
+     * Used to auto-update permalinks in development so we don't have to keep
+     * the permalinks admin panel open.  /wp-admin/options-permalink.php
+     *
+     * https://codex.wordpress.org/Function_Reference/flush_rewrite_rules
+     */
+    private function debugFlushRewriteRules()
+    {
+        if (WP_DEBUG) {
+            add_action('shutdown', function () {
+                error_log('WP_DEBUG is true, flushing rewrite rules.');
+                flush_rewrite_rules();
             });
         }
     }

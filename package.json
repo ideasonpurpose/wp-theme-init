@@ -19,12 +19,14 @@
   "license": "MIT",
   "author": "Joe Maller <joe@joemaller.com> (http://www.joemaller.com)",
   "scripts": {
+    "prettier": "cd $INIT_CWD && prettier --write",
+    "prettier-php": "cd $INIT_CWD && prettier --write --print-width 120",
     "version": "version-everything && git add -u"
   },
   "devDependencies": {
-    "@prettier/plugin-php": "prettier/plugin-php",
-    "prettier": "prettier/prettier",
-    "version-everything": "^0.2.2"
+    "@prettier/plugin-php": "^0.11.2",
+    "prettier": "^1.18.2",
+    "version-everything": "^0.2.3"
   },
   "version_files": [
     "README.md"

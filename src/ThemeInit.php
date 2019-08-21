@@ -76,6 +76,22 @@ class ThemeInit
             },
             25
         );
+
+        /**
+         * Dump total execution time into the page
+         */
+        if (WP_DEBUG) {
+            add_action(
+                'shutdown',
+                function () {
+                    $time = microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"];
+                    $msg = sprintf("Total processing time: %0.4f seconds", $time);
+                    echo "\n<!--\n\n$msg\n -->";
+                    printf('<script>console.log("%%c⏱", "font-weight: bold;", "%s");</script>', $msg);
+                },
+                9999
+            );
+        }
     }
 
     /**

@@ -60,10 +60,14 @@ class Manifest
         $editorHook = current_filter() === 'enqueue_block_editor_assets';
         $wpHook = current_filter() === 'wp_enqueue_scripts';
 
+        
         $deps = [];
-
         // $hasVendorBundle = false;
         if (array_key_exists('vendor.js', $this->assets)) {
+            error_log('we have a vendor!');
+            error_log(print_r($deps, true));
+            
+            
             // $hasVendorBundle = true;
             // wp_enqueue_script('vendor-bundle', $this->assets['vendor.js']); //, [], null, !$showInHead);
             if ($initHook) {
@@ -71,9 +75,12 @@ class Manifest
             }
             array_push($deps, 'vendor_bundle');
             unset($this->assets['vendor.js']);
+            error_log(print_r($deps, true));
+            $this->deps = $deps;
         }
-
+        
         error_log(print_r($this->assets, true));
+        error_log(print_r($deps, true));
         foreach ($this->assets as $src => $file) {
             ['extension' => $ext, 'basename' => $base] = pathinfo($src);
 
@@ -104,8 +111,13 @@ class Manifest
                 $assetBaseName = sanitize_title(wp_get_theme() . "-$base");
                 // TODO: Document this?
                 // TODO: Move this up, merge with $deps... Vendor bundle stuff should happen after this
+                error_log('hi!');
+                error_log(print_r($deps, true));
+                
                 $preReqs = !$isEditorAsset ? ['jquery'] : ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor'];
-                $preReqs = array_merge($preReqs, $deps);
+                $preReqs = array_merge($preReqs, $this->deps);
+                
+                error_log(print_r($preReqs, true));
 
                 // if ($hasVendorBundle) {
                 //     array_push($preReqs, 'vendor-bundle');

@@ -30,5 +30,13 @@
   },
   "version_files": [
     "README.md"
-  ]
+  ],
+  "prettier": {
+      "overrides": [
+          {
+              "files": "*.php",
+              "options": {"printWidth": 120}
+          }
+      ]
+  }
 }

@@ -30,7 +30,7 @@ class Logger
 
         error_log($level . ': ' . $msg_clean . $trace);
 
-        $report = function () use ($msg, $trace, $level, $color, $console) {
+        $report = function () use ($msg_clean, $trace, $level, $color, $console) {
             // TODO: More styles? Images?
             // https://stackoverflow.com/a/13017382/503463
             printf(

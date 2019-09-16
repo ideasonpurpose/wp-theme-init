@@ -15,25 +15,32 @@ class Logger
         $this->name = $name;
     }
 
-    private function writeToPage($msg, $level, $color = 'red')
+    private function writeToPage($msg, $level, $color = 'red', $showTrace)
     {
-        ob_start();
-        debug_print_backtrace();
-        $trace = ob_get_clean();
+        $console = ['message' => $msg];
+        $trace = '';
 
-        error_log($level . ': ' . $msg . "\n\n" . $trace);
+        if ($showTrace) {
+            $console['trace'] = debug_backtrace();
+            ob_start();
+            debug_print_backtrace();
+            $trace = "\n\n" . ob_get_clean();
+        }
+        $msg_clean = is_string($msg) ? $msg : json_encode($msg, JSON_PRETTY_PRINT);
 
-        $report = function () use ($msg, $trace, $level, $color) {
+        error_log($level . ': ' . $msg_clean . $trace);
+
+        $report = function () use ($msg, $trace, $level, $color, $console) {
             // TODO: More styles? Images?
             // https://stackoverflow.com/a/13017382/503463
             printf(
                 '<script>console.log("%%c%s", "font-weight: bold; color: %s", %s);</script>',
                 $level,
                 $color,
-                json_encode(['message' => $msg, 'trace' => debug_backtrace()])
+                json_encode($console)
             );
 
-            echo "\n<!--\n\n$level: $msg\n\n$trace\n-->\n";
+            echo "\n<!--\n\n$level: $msg_clean\n-->\n";
         };
 
         if (WP_DEBUG) {
@@ -44,18 +51,18 @@ class Logger
         return false;
     }
 
-    public function error($msg)
+    public function error($msg, $showTrace = true)
     {
-        return $this->writeToPage($msg, 'Error', '#c00');
+        return $this->writeToPage($msg, 'Error', '#c00', $showTrace);
     }
 
-    public function warning($msg)
+    public function warning($msg, $showTrace = true)
     {
-        return $this->writeToPage($msg, 'Warning', 'gold');
+        return $this->writeToPage($msg, 'Warning', 'gold', $showTrace);
     }
 
-    public function info($msg)
+    public function info($msg, $showTrace = true)
     {
-        return $this->writeToPage($msg, 'Info', 'dodgerblue');
+        return $this->writeToPage($msg, 'Info', 'dodgerblue', $showTrace);
     }
 }

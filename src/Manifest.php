@@ -5,9 +5,23 @@ use ideasonpurpose\ThemeInit\Logger;
 
 class Manifest
 {
-    public $assets = false;
+    public $register_scripts = [];
+
+    public $assets = [
+        'wp' => [],
+        'admin' => [],
+        'editor' => []
+    ];
+
+    // TODO: This part sucks, there's got to be a better way of specifying dependencies
+    public $deps = [
+        'editor' => ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor'],
+        'assets' => ['jquery']
+    ];
+
     /**
-     * The manifest file is expected to live here: get_template_directory() . '/dist/manifest.json'
+     * The manifest file is expected to live here:
+     *      get_template_directory() . '/dist/manifest.json'
      */
     public function __construct($manifest_file = null)
     {
@@ -27,116 +41,126 @@ class Manifest
             return $this->log->error('Unable to decode manifest.json');
         }
 
-        $this->assets = array_filter(
-            $this->manifest,
-            function ($src) {
-                ['extension' => $ext] = pathinfo($src);
-                return in_array($ext, ['js', 'css']);
-            },
-            ARRAY_FILTER_USE_KEY
-        );
+        $this->sort_manifest();
 
-        // TODO:  Make sure ithe manifest isn't empty
-        if (count($this->assets) < 1) {
+        $this->log->info($this->assets, false);
+        $this->log->info($this->deps, false);
+
+        $assetCount = 0;
+        foreach ($this->assets as $set) {
+            $assetCount += count($set);
+        }
+
+        // Make sure the manifest isn't empty
+        if ($assetCount < 1) {
             return $this->log->error('No scripts or styles found in manifest.json, nothing to load');
         }
 
-        add_action('init', [$this, 'enqueue_webpack_assets']);
-        add_action('wp_enqueue_scripts', [$this, 'enqueue_webpack_assets']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_webpack_assets']);
-        add_action('enqueue_block_editor_assets', [$this, 'enqueue_webpack_assets']);
+        add_action('init', [$this, 'init_register_scripts']);
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_wp_assets']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
+        add_action('enqueue_block_editor_assets', [$this, 'enqueue_editor_assets']);
     }
 
     /**
-     * Enqueue scripts and styles from the Webpack Manifest file
+     * Process the manifest, determine pre-requisites and dependencies
+     * This should only run once per request
+     *
+     * populate the following:
+     *      - register_scripts (vendor, dependencies, etc. Will registered in init, then called by name)
+     *      - assets
+     *          - wp
+     *          - admin
+     *          - editor
      */
-    public function enqueue_webpack_assets()
+    public function sort_manifest()
     {
-        error_log(json_encode($this->assets, JSON_PRETTY_PRINT));
-        error_log('current filter: ' . current_filter());
-
-        $initHook = current_filter() === 'init';
-        $adminHook = current_filter() === 'admin_enqueue_scripts';
-        $editorHook = current_filter() === 'enqueue_block_editor_assets';
-        $wpHook = current_filter() === 'wp_enqueue_scripts';
-
-        
-        $deps = [];
-        // $hasVendorBundle = false;
-        if (array_key_exists('vendor.js', $this->assets)) {
-            error_log('we have a vendor!');
-            error_log(print_r($deps, true));
-            
-            
-            // $hasVendorBundle = true;
-            // wp_enqueue_script('vendor-bundle', $this->assets['vendor.js']); //, [], null, !$showInHead);
-            if ($initHook) {
-                wp_register_script('vendor_bundle', $this->assets['vendor.js']);
-            }
-            array_push($deps, 'vendor_bundle');
-            unset($this->assets['vendor.js']);
-            error_log(print_r($deps, true));
-            $this->deps = $deps;
-        }
-        
-        error_log(print_r($this->assets, true));
-        error_log(print_r($deps, true));
-        foreach ($this->assets as $src => $file) {
-            ['extension' => $ext, 'basename' => $base] = pathinfo($src);
-
-
-
-
-
-            // TODO: This isn't working yet. The editor Assets are being loaded into the page and there's no vendor bundle...
-
-
-
-
-
+        foreach ($this->manifest as $src => $file) {
+            ['extension' => $ext, 'basename' => $basename] = pathinfo($src);
 
             /**
-             * Assets will be enqueued from the `wp_enqueue_scripts` hook unless...
-             *  - 'admin' and 'admin-head' prefixed entrypoints will be enqueued from the `admin_enqueue_scripts` hook
-             *  - 'editor' prefixed entrypoints will be enqueued from the `enqueue_block_editor_assets` hook
-             *  Additionally, entrypoints prefixed with `head` or `admin-head` will be enqueued in the document head.
+             * Skip everything except js and css assets
              */
-            $isAdminAsset = stripos($src, 'admin') === 0;
-            $isEditorAsset = stripos($src, 'editor') === 0;
+            if (!in_array($ext, ['js', 'css'])) {
+                continue;
+            }
+
+            $assetHandle = sanitize_title(wp_get_theme()->get('Name') . "-$basename");
+
             $showInHead = stripos($src, 'head') === 0 || stripos($src, 'admin-head') === 0;
 
-            // TODO: This logic feels clumsy...
-            if (($adminHook && $isAdminAsset) || ($editorHook && $isEditorAsset) || $wpHook) {
-                // ($wpHook && !$isAdminAsset && !$isEditorAsset)
-                $assetBaseName = sanitize_title(wp_get_theme() . "-$base");
-                // TODO: Document this?
-                // TODO: Move this up, merge with $deps... Vendor bundle stuff should happen after this
-                error_log('hi!');
-                error_log(print_r($deps, true));
-                
-                $preReqs = !$isEditorAsset ? ['jquery'] : ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor'];
-                $preReqs = array_merge($preReqs, $this->deps);
-                
-                error_log(print_r($preReqs, true));
-
-                // if ($hasVendorBundle) {
-                //     array_push($preReqs, 'vendor-bundle');
-                // }
-                if (strtolower($ext) === 'js') {
-                    wp_enqueue_script($assetBaseName, $file, $preReqs, null, !$showInHead);
-                    error_log(
-                        "JS: enqueued $base ($assetBaseName) as $file from hook: " .
-                            current_filter() .
-                            " with " .
-                            json_encode($preReqs)
-                    );
-                }
-                if (strtolower($ext) === 'css') {
-                    wp_enqueue_style($assetBaseName, $file, [], null);
-                    error_log("CSS: enqueued $base ($assetBaseName) as $file from hook: " . current_filter() . "");
-                }
+            if (stripos($src, 'vendor') === 0) {
+                // error_log('matched vendor');
+                $this->register_scripts[$assetHandle] = $file;
+                $this->deps['assets'][] = $assetHandle;
+            } elseif (stripos($src, 'admin') === 0) {
+                // error_log('matched admin');
+                $this->assets['admin'][$assetHandle] = ["file" => $file, 'showInHead' => $showInHead, "ext" => $ext];
+            } elseif (stripos($src, 'editor') === 0) {
+                // error_log('matched editor');
+                $this->assets['editor'][$assetHandle] = ["file" => $file, 'showInHead' => $showInHead, "ext" => $ext];
+            } else {
+                // error_log('no match, general stuff');
+                $this->assets['wp'][$assetHandle] = ["file" => $file, 'showInHead' => $showInHead, "ext" => $ext];
             }
         }
     }
 
+    /**
+     * Register assets from the init hook
+     */
+    public function init_register_scripts()
+    {
+        foreach ($this->register_scripts as $handle => $file) {
+            /**
+             * Filter this handle or dependencies will recurse into oblivion
+             */
+            $cleanDeps = array_filter($this->deps['assets'], function ($h) use ($handle) {
+                return $h !== $handle;
+            });
+            wp_register_script($handle, $file, $cleanDeps);
+        }
+    }
+
+    /**
+     * Enqueue general assets
+     */
+    public function enqueue_wp_assets()
+    {
+        $this->enqueue_webpack_assets($this->assets['wp'], $this->deps['assets']);
+    }
+
+    /**
+     * Enqueue admin assets
+     */
+    public function enqueue_admin_assets()
+    {
+        $this->enqueue_webpack_assets($this->assets['admin'], $this->deps['assets']);
+    }
+
+    /**
+     * Enqueue editor assets
+     */
+    public function enqueue_editor_assets()
+    {
+        $this->enqueue_webpack_assets($this->assets['editor'], $this->deps['editor']);
+    }
+
+    /**
+     * Actual asset enqueuing function, handles subsets from above functions
+     * Separates scripts and styles as well as appears-in-head
+     */
+    public function enqueue_webpack_assets($assets, $deps = [])
+    {
+        foreach ($assets as $handle => $asset) {
+            if (strtolower($asset['ext']) === 'js') {
+                wp_enqueue_script($handle, $asset['file'], $deps, null, !$asset['showInHead']);
+                // error_log("JS: enqueued $handle as $asset[file]");
+            }
+            if (strtolower($asset['ext']) === 'css') {
+                wp_enqueue_style($handle, $asset['file'], [], null);
+                // error_log("CSS: enqueued $handle as $asset[file]");
+            }
+        }
+    }
 }

@@ -32,13 +32,13 @@ class Manifest
         );
 
         if (!$manifest_file) {
-            return $this->log->error('File not found: manifest.json');
+            throw new \Exception('File not found: manifest.json');
         }
 
         $this->manifest = json_decode(file_get_contents($manifest_file), true);
 
         if (!$this->manifest) {
-            return $this->log->error('Unable to decode manifest.json');
+            throw new \Exception('Unable to decode manifest.json');
         }
 
         $this->sort_manifest();
@@ -53,7 +53,7 @@ class Manifest
 
         // Make sure the manifest isn't empty
         if ($assetCount < 1) {
-            return $this->log->error('No scripts or styles found in manifest.json, nothing to load');
+            throw new \Exception('No scripts or styles found in manifest.json, nothing to load');
         }
 
         add_action('init', [$this, 'init_register_scripts']);

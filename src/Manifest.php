@@ -80,6 +80,7 @@ class Manifest
         // !d($this->manifest);
         foreach ($this->manifest as $entry => $assets) {
             $deps = [];
+
             foreach ($assets['dependencies'] as $src => $file) {
                 ['extension' => $ext, 'basename' => $basename] = pathinfo($src);
                 $assetHandle = sanitize_title(wp_get_theme()->get('Name') . "-$basename");
@@ -92,11 +93,18 @@ class Manifest
                 ['extension' => $ext, 'basename' => $basename] = pathinfo($src);
                 $assetHandle = sanitize_title(wp_get_theme()->get('Name') . "-$basename");
                 $showInHead = stripos($src, 'head') === 0 || stripos($src, 'admin-head') === 0;
-                $asset = ["file" => $file, 'showInHead' => $showInHead, "ext" => $ext, 'deps' => $deps];
+                $wpDeps = stripos($entry, 'editor') === 0 ? $this->deps['editor'] : $this->deps['assets'];
 
-                if (stripos($src, 'admin') === 0) {
+                $asset = [
+                    "file" => $file,
+                    'showInHead' => $showInHead,
+                    "ext" => $ext,
+                    'deps' => array_merge($wpDeps, $deps)
+                ];
+
+                if (stripos($entry, 'admin') === 0) {
                     $this->assets['admin'][$assetHandle] = $asset;
-                } elseif (stripos($src, 'editor') === 0) {
+                } elseif (stripos($entry, 'editor') === 0) {
                     $this->assets['editor'][$assetHandle] = $asset;
                 } else {
                     $this->assets['wp'][$assetHandle] = $asset;
@@ -111,13 +119,7 @@ class Manifest
     public function init_register_scripts()
     {
         foreach ($this->register_scripts as $handle => $file) {
-            /**
-             * Filter this handle or dependencies will recurse into oblivion
-             */
-            // $cleanDeps = array_filter($this->deps['assets'], function ($h) use ($handle) {
-            //     return $h !== $handle;
-            // });
-            wp_register_script($handle, $file, $cleanDeps);
+            wp_register_script($handle, $file);
         }
     }
 

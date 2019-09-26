@@ -84,10 +84,18 @@ class ThemeInit
             add_action(
                 'shutdown',
                 function () {
+                    /**
+                     * Need to be sure we don't dump this into a JSON response or other structured data request
+                     */
+                    // if (wp_doing_ajax()) {
+                    //     return;
+                    // }
+                    // error_log('SHUTDOWN');
+                    // error_log(print_r($_SERVER, true));
                     $time = microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"];
                     $msg = sprintf("Total processing time: %0.4f seconds", $time);
-                    echo "\n<!--\n\n$msg\n -->";
-                    printf('<script>console.log("%%c⏱", "font-weight: bold;", "%s");</script>', $msg);
+                    // echo "\n<!--\n\n$msg\n -->";
+                    // printf('<script>console.log("%%c⏱", "font-weight: bold;", "%s");</script>', $msg);
                 },
                 9999
             );

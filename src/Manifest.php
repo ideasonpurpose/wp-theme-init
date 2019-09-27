@@ -92,19 +92,26 @@ class Manifest
             foreach ($assets['files'] as $src => $file) {
                 ['extension' => $ext, 'basename' => $basename] = pathinfo($src);
                 $assetHandle = sanitize_title(wp_get_theme()->get('Name') . "-$basename");
+
+                $isAdmin = stripos($entry, 'admin') === 0;
+                $isEditor = stripos($entry, 'editor') === 0;
                 $showInHead = stripos($src, 'head') === 0 || stripos($src, 'admin-head') === 0;
-                $wpDeps = stripos($entry, 'editor') === 0 ? $this->deps['editor'] : $this->deps['assets'];
+
+                $wpDeps = $isEditor ? $this->deps['editor'] : $this->deps['assets'];
 
                 $asset = [
+                    "entry" => $entry,
                     "file" => $file,
                     'showInHead' => $showInHead,
                     "ext" => $ext,
-                    'deps' => array_merge($wpDeps, $deps)
+                    'deps' => array_merge($wpDeps, $deps),
+                    'isAdmin' => $isAdmin,
+                    'isEditor' => $isEditor
                 ];
 
-                if (stripos($entry, 'admin') === 0) {
+                if ($isAdmin) {
                     $this->assets['admin'][$assetHandle] = $asset;
-                } elseif (stripos($entry, 'editor') === 0) {
+                } elseif ($isEditor) {
                     $this->assets['editor'][$assetHandle] = $asset;
                 } else {
                     $this->assets['wp'][$assetHandle] = $asset;
@@ -158,7 +165,13 @@ class Manifest
                 wp_enqueue_script($handle, $asset['file'], $asset['deps'], null, !$asset['showInHead']);
             }
             if (strtolower($asset['ext']) === 'css') {
-                wp_enqueue_style($handle, $asset['file'], [], null);
+                if ($asset['isEditor']) {
+                    // NOTE: Leaving this here in case Gutenberg starts working this way again
+                    // add_editor_style($asset['file']);
+                    wp_enqueue_style($handle, $asset['file'], [], null);
+                } else {
+                    wp_enqueue_style($handle, $asset['file'], [], null);
+                }
             }
         }
     }

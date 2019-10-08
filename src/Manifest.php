@@ -77,22 +77,9 @@ class Manifest
      */
     public function sort_manifest()
     {
-<<<<<<< HEAD
         // !d($this->manifest);
         foreach ($this->manifest as $entry => $assets) {
             $deps = [];
-=======
-        foreach ($this->manifest as $src => $file) {
-            d($this->manifest, $src, $file);
-            ['extension' => $ext, 'basename' => $basename] = pathinfo($src);
-
-            /**
-             * Skip everything except js and css assets
-             */
-            if (!in_array($ext, ['js', 'css'])) {
-                continue;
-            }
->>>>>>> Refine error language
 
             foreach ($assets['dependencies'] as $src => $file) {
                 ['extension' => $ext, 'basename' => $basename] = pathinfo($src);

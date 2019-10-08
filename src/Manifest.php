@@ -35,13 +35,13 @@ class Manifest
         );
 
         if (!$manifest_file) {
-            throw new \Exception('File not found: manifest.json');
+            throw new \Exception("File not found: $manifest_file");
         }
 
         $this->manifest = json_decode(file_get_contents($manifest_file), true);
 
         if (!$this->manifest) {
-            throw new \Exception('Unable to decode manifest.json');
+            throw new \Exception('Unable to decode manifest (error parsing JSON)');
         }
 
         $this->sort_manifest();
@@ -56,7 +56,7 @@ class Manifest
 
         // Make sure the manifest isn't empty
         if ($assetCount < 1) {
-            throw new \Exception('No scripts or styles found in manifest.json, nothing to load');
+            throw new \Exception('No scripts or styles found in manifest, nothing to load');
         }
         add_action('init', [$this, 'init_register_scripts']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_wp_assets']);
@@ -77,9 +77,22 @@ class Manifest
      */
     public function sort_manifest()
     {
+<<<<<<< HEAD
         // !d($this->manifest);
         foreach ($this->manifest as $entry => $assets) {
             $deps = [];
+=======
+        foreach ($this->manifest as $src => $file) {
+            d($this->manifest, $src, $file);
+            ['extension' => $ext, 'basename' => $basename] = pathinfo($src);
+
+            /**
+             * Skip everything except js and css assets
+             */
+            if (!in_array($ext, ['js', 'css'])) {
+                continue;
+            }
+>>>>>>> Refine error language
 
             foreach ($assets['dependencies'] as $src => $file) {
                 ['extension' => $ext, 'basename' => $basename] = pathinfo($src);

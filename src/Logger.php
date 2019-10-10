@@ -43,7 +43,16 @@ class Logger
             echo "\n<!--\n\n$level: $msg_clean\n-->\n";
         };
 
-        if (WP_DEBUG && !defined('WP_CLI')) {
+        if (
+            WP_DEBUG &&
+            !defined('XMLRPC_REQUEST') &&
+            !defined('REST_REQUEST') &&
+            !defined('WP_INSTALLING') &&
+            !wp_doing_ajax() &&
+            !wp_doing_cron() &&
+            !wp_is_json_request() &&
+            !defined('WP_CLI')
+        ) {
             // add_action('admin_enqueue_scripts', $report, 0);
             // add_action('wp_enqueue_scripts', $report, 0);
             add_action('shutdown', $report, 0);

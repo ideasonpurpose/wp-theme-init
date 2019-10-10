@@ -43,7 +43,7 @@ class Logger
             echo "\n<!--\n\n$level: $msg_clean\n-->\n";
         };
 
-        if (WP_DEBUG) {
+        if (WP_DEBUG && !defined('WP_CLI')) {
             // add_action('admin_enqueue_scripts', $report, 0);
             // add_action('wp_enqueue_scripts', $report, 0);
             add_action('shutdown', $report, 0);

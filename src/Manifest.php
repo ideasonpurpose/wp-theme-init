@@ -1,4 +1,5 @@
 <?php
+
 namespace ideasonpurpose\ThemeInit;
 
 use ideasonpurpose\ThemeInit\Logger;
@@ -82,7 +83,7 @@ class Manifest
             $deps = [];
 
             foreach ($assets['dependencies'] as $src => $file) {
-                ['extension' => $ext, 'basename' => $basename] = pathinfo($src);
+                ['extension' => $ext, 'basename' => $basename] = str_replace('~', '-', pathinfo($src));
                 $assetHandle = sanitize_title(wp_get_theme()->get('Name') . "-$basename");
 
                 $deps[] = $assetHandle;

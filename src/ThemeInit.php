@@ -12,7 +12,7 @@ class ThemeInit
         $this->init();
         $this->browsersyncReload();
         new ThemeInit\Extras\Shortcodes();
-        new ThemeInit\Extras\ACF();
+        new ThemeInit\Plugins\ACF();
         new ThemeInit\Plugins\SEOFramework();
 
         if ($options['showIncludes'] !== false) {

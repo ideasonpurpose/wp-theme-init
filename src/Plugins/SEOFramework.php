@@ -1,5 +1,5 @@
 <?php
-namespace ideasonpurpose\ThemeInit\plugins;
+namespace ideasonpurpose\ThemeInit\Plugins;
 
 class SeoFramework
 {

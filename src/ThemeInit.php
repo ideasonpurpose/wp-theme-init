@@ -11,6 +11,8 @@ class ThemeInit
         $this->cleanWPHead();
         $this->init();
         $this->browsersyncReload();
+        $this->debugFlushRewriteRules();
+
         new ThemeInit\Extras\Shortcodes();
         new ThemeInit\Plugins\ACF();
         new ThemeInit\Plugins\SEOFramework();

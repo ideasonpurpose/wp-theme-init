@@ -7,6 +7,7 @@ use ideasonpurpose\ThemeInit\Logger;
 class Manifest
 {
     public $register_scripts = [];
+    public $register_styles = [];
 
     public $assets = [
         'wp' => [],
@@ -59,7 +60,7 @@ class Manifest
         if ($assetCount < 1) {
             throw new \Exception('No scripts or styles found in manifest, nothing to load');
         }
-        add_action('init', [$this, 'init_register_scripts']);
+        add_action('init', [$this, 'init_register_assets']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_wp_assets']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
         add_action('enqueue_block_editor_assets', [$this, 'enqueue_editor_assets']);
@@ -80,14 +81,22 @@ class Manifest
     {
         // !d($this->manifest);
         foreach ($this->manifest as $entry => $assets) {
-            $deps = [];
+            $jsDeps = [];
+            $cssDeps = [];
 
             foreach ($assets['dependencies'] as $src => $file) {
                 ['extension' => $ext, 'basename' => $basename] = str_replace('~', '-', pathinfo($src));
                 $assetHandle = sanitize_title(wp_get_theme()->get('Name') . "-$basename");
 
-                $deps[] = $assetHandle;
-                $this->register_scripts[$assetHandle] = $file;
+                if (strtolower($ext) === 'js') {
+                    $jsDeps[] = $assetHandle;
+                    $this->register_scripts[$assetHandle] = $file;
+                }
+                if (strtolower($ext) === 'css') {
+                    $cssDeps[]   =   $assetHandle;
+                    $this->register_styles[$assetHandle] = $file;
+                }
+
             }
 
             foreach ($assets['files'] as $src => $file) {
@@ -105,7 +114,8 @@ class Manifest
                     "file" => $file,
                     'showInHead' => $showInHead,
                     "ext" => $ext,
-                    'deps' => array_merge($wpDeps, $deps),
+                    'deps_js' => array_merge($wpDeps, $jsDeps),
+                    'deps_css' => $cssDeps,
                     'isAdmin' => $isAdmin,
                     'isEditor' => $isEditor
                 ];
@@ -124,10 +134,14 @@ class Manifest
     /**
      * Register assets from the init hook
      */
-    public function init_register_scripts()
+    public function init_register_assets()
     {
+        // TODO: Do scripts which are dependencies of head scripts appear in the head?
         foreach ($this->register_scripts as $handle => $file) {
-            wp_register_script($handle, $file);
+            wp_register_script($handle, $file, [], null, true);
+        }
+        foreach ($this->register_styles as $handle => $file) {
+            wp_register_style($handle, $file, [], null);
         }
     }
 
@@ -163,15 +177,15 @@ class Manifest
     {
         foreach ($assets as $handle => $asset) {
             if (strtolower($asset['ext']) === 'js') {
-                wp_enqueue_script($handle, $asset['file'], $asset['deps'], null, !$asset['showInHead']);
+                wp_enqueue_script($handle, $asset['file'], $asset['deps_js'], null, !$asset['showInHead']);
             }
             if (strtolower($asset['ext']) === 'css') {
                 if ($asset['isEditor']) {
                     // NOTE: Leaving this here in case Gutenberg starts working this way again
                     // add_editor_style($asset['file']);
-                    wp_enqueue_style($handle, $asset['file'], [], null);
+                    wp_enqueue_style($handle, $asset['file'], $asset['deps_css'], null);
                 } else {
-                    wp_enqueue_style($handle, $asset['file'], [], null);
+                    wp_enqueue_style($handle, $asset['file'], $asset['deps_css'], null);
                 }
             }
         }

@@ -34,7 +34,6 @@ class Separators
 
     public function styleSeparators()
     {
-        error_log('hello? can i haz a style?');
         $css = '
             #adminmenu li.wp-menu-separator {
               margin: 6px 0;

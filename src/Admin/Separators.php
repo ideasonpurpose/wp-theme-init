@@ -11,10 +11,9 @@ class Separators
 {
     public function __construct()
     {
-        $this->seps = new \RecursiveIteratorIterator(
-            new \RecursiveArrayIterator(func_get_args())
-        );
+        $this->seps = new \RecursiveIteratorIterator(new \RecursiveArrayIterator(func_get_args()));
         add_action('admin_menu', [$this, 'addSeparators']);
+        add_action('admin_enqueue_scripts', [$this, 'styleSeparators'], 100);
     }
 
     public function addSeparators()
@@ -31,6 +30,19 @@ class Separators
             ];
         }
         ksort($menu);
-        // error_log(print_r($menu, true));
+    }
+
+    public function styleSeparators()
+    {
+        error_log('hello? can i haz a style?');
+        $css = '
+            #adminmenu li.wp-menu-separator {
+              margin: 6px 0;
+            }
+            #adminmenu li.wp-menu-separator .separator {
+              border-top: 1px dotted rgba(255, 255, 255, 0.25);
+            }
+        ';
+        wp_add_inline_style('wp-admin', $css);
     }
 }

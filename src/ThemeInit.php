@@ -88,6 +88,12 @@ class ThemeInit
                 function () {
                     /**
                      * Need to be sure we don't dump this into a JSON response or other structured data request
+                     * 
+                     * TODO: Check code from wp-includes/admin-bar.php for skipping AJAX, JSON, etc.
+                     *       https://github.com/WordPress/WordPress/blob/42d52ce08099f9fae82a1977da0237b32c863e94/wp-includes/admin-bar.php#L1179-L1181
+                     *
+                     *      if ( defined( 'XMLRPC_REQUEST' ) || defined( 'DOING_AJAX' ) || defined( 'IFRAME_REQUEST' ) || wp_is_json_request() ) {
+                     * 
                      */
                     // if (wp_doing_ajax()) {
                     //     return;

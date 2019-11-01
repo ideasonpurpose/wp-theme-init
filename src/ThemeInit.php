@@ -25,7 +25,7 @@ class ThemeInit
             new ThemeInit\Extras\GlobalCommentsDisable();
         }
 
-        if (WP_ENV !== 'development') {
+        if (defined('WP_ENV') && WP_ENV !== 'development') {
             \Kint::$enabled_mode = false;
         }
     }

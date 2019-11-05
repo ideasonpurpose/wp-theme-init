@@ -88,12 +88,12 @@ class ThemeInit
                 function () {
                     /**
                      * Need to be sure we don't dump this into a JSON response or other structured data request
-                     * 
+                     *
                      * TODO: Check code from wp-includes/admin-bar.php for skipping AJAX, JSON, etc.
                      *       https://github.com/WordPress/WordPress/blob/42d52ce08099f9fae82a1977da0237b32c863e94/wp-includes/admin-bar.php#L1179-L1181
                      *
                      *      if ( defined( 'XMLRPC_REQUEST' ) || defined( 'DOING_AJAX' ) || defined( 'IFRAME_REQUEST' ) || wp_is_json_request() ) {
-                     * 
+                     *
                      */
                     // if (wp_doing_ajax()) {
                     //     return;
@@ -129,6 +129,11 @@ class ThemeInit
                 // This hits both possible endpoints and ignores replies, one of these should work
                 wp_remote_get("http://10.0.2.2:3000/__browser_sync__?method=reload", $args);
                 wp_remote_get("https://10.0.2.2:3000/__browser_sync__?method=reload", $args);
+                /**
+                 * These urls are specific to ideasonpurpose/docker-build
+                 */
+                wp_remote_get("http://localhost:8080/webpack/reload", $args);
+                wp_remote_get("https://localhost:8080/webpack/reload", $args);
             });
         }
     }
@@ -142,7 +147,7 @@ class ThemeInit
     private function debugFlushRewriteRules()
     {
         if (WP_DEBUG) {
-            add_action('shutdown', function () {
+            add_action('admin_footer', function () {
                 error_log('WP_DEBUG is true, flushing rewrite rules.');
                 flush_rewrite_rules();
             });

@@ -10,8 +10,11 @@ class ThemeInit
 
         $this->cleanWPHead();
         $this->init();
-        $this->browsersyncReload();
         $this->debugFlushRewriteRules();
+        /**
+         * `browsersyncReload` was disabled 2019-11-06, see note in method
+         */
+        // $this->browsersyncReload();
 
         new ThemeInit\Extras\Shortcodes();
         new ThemeInit\Plugins\ACF();
@@ -118,7 +121,15 @@ class ThemeInit
      * https://blogs.oracle.com/fatbloke/networking-in-virtualbox#NAT
      * https://superuser.com/a/310745/193584
      *
-     * TODO: Update for Webpack DevServer too
+     * TODO: This was disabled from init() on 2019-11-06 for a few reasons:
+     *       1. Since _everything_ is going through the devserver proxy,
+     *          saving a post in admin will trigger a reload of the page
+     *          being authored. This breaks the default workflow and causes
+     *          pops up a number of "Reload site?" alerts.
+     *
+     *       2. Trying to reach the 10.0.2.2 Vagrant external IP from Docker
+     *          was causing a blocking DNS stall for 10 seconds per request.
+     *          This made the backend nearly unusable.
      */
     private function browsersyncReload()
     {
@@ -129,11 +140,11 @@ class ThemeInit
                 // This hits both possible endpoints and ignores replies, one of these should work
                 wp_remote_get("http://10.0.2.2:3000/__browser_sync__?method=reload", $args);
                 wp_remote_get("https://10.0.2.2:3000/__browser_sync__?method=reload", $args);
+
                 /**
-                 * These urls are specific to ideasonpurpose/docker-build
+                 * /webpack/reload is specific to ideasonpurpose/docker-build
                  */
-                wp_remote_get("http://localhost:8080/webpack/reload", $args);
-                wp_remote_get("https://localhost:8080/webpack/reload", $args);
+                wp_remote_get("http://host.docker.internal:8080/webpack/reload", $args);
             });
         }
     }

@@ -7,7 +7,7 @@ A common baseline of repeated functions, filters and actions used across our Wor
 ### Some of what's included:
 
 - **Webpack dependency manifest asset loading**<br>
-  Uses the [Dependency Manifest Plugin](https://github.com/ideasonpurpose/docker-build/blob/master/lib/DependencyManifestPlugin.js) from ideasonpurpose/docker-build.
+  Uses the [Dependency Manifest Plugin](https://github.com/ideasonpurpose/docker-build/blob/master/lib/DependencyManifestPlugin.js) from [ideasonpurpose/docker-build](https://github.com/ideasonpurpose/docker-build).
 
 - **Miscellaneous Fixes and Cleanup**
 

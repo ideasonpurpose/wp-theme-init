@@ -1,10 +1,13 @@
 # wp-theme-init
 
-#### Version: 1.8.0
+#### Version: 2.0.1
 
 A common baseline of repeated functions, filters and actions used across our WordPress themes.
 
 ### Some of what's included:
+
+- **Webpack dependency manifest asset loading**<br>
+  Uses the [Dependency Manifest Plugin](https://github.com/ideasonpurpose/docker-build/blob/master/lib/DependencyManifestPlugin.js) from ideasonpurpose/docker-build.
 
 - **Miscellaneous Fixes and Cleanup**
 

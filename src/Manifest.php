@@ -79,29 +79,29 @@ class Manifest
      */
     public function sort_manifest()
     {
-        // !d($this->manifest);
         foreach ($this->manifest as $entry => $assets) {
             $jsDeps = [];
             $cssDeps = [];
+            $themeName = preg_replace('/\bv?[0-9.-]+$/', '', wp_get_theme()->get('Name'));
 
             foreach ($assets['dependencies'] as $src => $file) {
-                ['extension' => $ext, 'basename' => $basename] = str_replace('~', '-', pathinfo($src));
-                $assetHandle = sanitize_title(wp_get_theme()->get('Name') . "-$basename");
+                ['extension' => $ext, 'filename' => $filename] = str_replace('~', '-', pathinfo($src));
+                $assetHandle = sanitize_title("$themeName-$filename");
 
                 if (strtolower($ext) === 'js') {
                     $jsDeps[] = $assetHandle;
                     $this->register_scripts[$assetHandle] = $file;
                 }
                 if (strtolower($ext) === 'css') {
-                    $cssDeps[]   =   $assetHandle;
+                    $cssDeps[] = $assetHandle;
                     $this->register_styles[$assetHandle] = $file;
                 }
-
             }
 
+            // TODO: Why are there two identical loops here?
             foreach ($assets['files'] as $src => $file) {
-                ['extension' => $ext, 'basename' => $basename] = pathinfo($src);
-                $assetHandle = sanitize_title(wp_get_theme()->get('Name') . "-$basename");
+                ['extension' => $ext, 'filename' => $filename] = pathinfo($src);
+                $assetHandle = sanitize_title("$themeName-$filename");
 
                 $isAdmin = stripos($entry, 'admin') === 0;
                 $isEditor = stripos($entry, 'editor') === 0;
@@ -110,10 +110,11 @@ class Manifest
                 $wpDeps = $isEditor ? $this->deps['editor'] : $this->deps['assets'];
 
                 $asset = [
-                    "entry" => $entry,
-                    "file" => $file,
+                    'handle' => $assetHandle,
+                    'entry' => $entry,
+                    'file' => $file,
                     'showInHead' => $showInHead,
-                    "ext" => $ext,
+                    'ext' => $ext,
                     'deps_js' => array_merge($wpDeps, $jsDeps),
                     'deps_css' => $cssDeps,
                     'isAdmin' => $isAdmin,
@@ -121,11 +122,11 @@ class Manifest
                 ];
 
                 if ($isAdmin) {
-                    $this->assets['admin'][$assetHandle] = $asset;
+                    $this->assets['admin'][] = $asset;
                 } elseif ($isEditor) {
-                    $this->assets['editor'][$assetHandle] = $asset;
+                    $this->assets['editor'][] = $asset;
                 } else {
-                    $this->assets['wp'][$assetHandle] = $asset;
+                    $this->assets['wp'][] = $asset;
                 }
             }
         }
@@ -175,17 +176,17 @@ class Manifest
      */
     public function enqueue_webpack_assets($assets)
     {
-        foreach ($assets as $handle => $asset) {
+        foreach ($assets as $asset) {
             if (strtolower($asset['ext']) === 'js') {
-                wp_enqueue_script($handle, $asset['file'], $asset['deps_js'], null, !$asset['showInHead']);
+                wp_enqueue_script($asset['handle'], $asset['file'], $asset['deps_js'], null, !$asset['showInHead']);
             }
             if (strtolower($asset['ext']) === 'css') {
                 if ($asset['isEditor']) {
                     // NOTE: Leaving this here in case Gutenberg starts working this way again
                     // add_editor_style($asset['file']);
-                    wp_enqueue_style($handle, $asset['file'], $asset['deps_css'], null);
+                    wp_enqueue_style($asset['handle'], $asset['file'], $asset['deps_css'], null);
                 } else {
-                    wp_enqueue_style($handle, $asset['file'], $asset['deps_css'], null);
+                    wp_enqueue_style($asset['handle'], $asset['file'], $asset['deps_css'], null);
                 }
             }
         }

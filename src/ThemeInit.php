@@ -151,16 +151,16 @@ class ThemeInit
 
     /**
      * Used to auto-update permalinks in development so we don't have to keep
-     * the permalinks admin panel open.  /wp-admin/options-permalink.php
+     * the permalinks admin page open.  /wp-admin/options-permalink.php
      *
      * https://codex.wordpress.org/Function_Reference/flush_rewrite_rules
      */
     private function debugFlushRewriteRules()
     {
         if (WP_DEBUG) {
-            add_action('admin_footer', function () {
+            add_action('init', function () {
                 error_log('WP_DEBUG is true, flushing rewrite rules.');
-                flush_rewrite_rules();
+                flush_rewrite_rules(false);
             });
         }
     }

@@ -28,8 +28,10 @@ class ThemeInit
             new ThemeInit\Extras\GlobalCommentsDisable();
         }
         // TODO: Is this too permissive? Reason not to disable unless WP_ENV == 'development'?
-        if (defined('WP_ENV') && WP_ENV !== 'development') {
-            \Kint::$enabled_mode = false;
+        \Kint::$enabled_mode = false;
+        // if (defined('WP_ENV') && WP_ENV !== 'development') {
+        if (WP_DEBUG) {
+            \Kint::$enabled_mode = true;
         }
     }
 

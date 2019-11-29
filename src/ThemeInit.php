@@ -161,6 +161,20 @@ class ThemeInit
     {
         if (WP_DEBUG) {
             add_action('init', function () {
+                /*
+                 * This code is adapted from wp-includes/admin-bar.php for skipping AJAX, JSON, etc.
+                 *       https://github.com/WordPress/WordPress/blob/42d52ce08099f9fae82a1977da0237b32c863e94/wp-includes/admin-bar.php#L1179-L1181
+                 */
+                if (
+                    defined('XMLRPC_REQUEST') ||
+                    defined('DOING_AJAX') ||
+                    defined('IFRAME_REQUEST') ||
+                    wp_is_json_request() ||
+                    is_embed()
+                ) {
+                    return false;
+                }
+
                 error_log('WP_DEBUG is true, flushing rewrite rules.');
                 flush_rewrite_rules(false);
             });

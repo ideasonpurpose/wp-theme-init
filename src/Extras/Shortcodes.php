@@ -41,6 +41,7 @@ class Shortcodes
         }
         $munged_mail = antispambot($atts[0]);
         $content = ($content) ?: $munged_mail;
-        return "<a href='mailto:$munged_mail'>$content</a>";
+        $classes = (isset($atts['class'])) ? "class=\"$atts[class]\"" : '';
+        return "<a $classes href='mailto:$munged_mail'>$content</a>";
     }
 }

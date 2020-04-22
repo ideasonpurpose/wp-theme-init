@@ -170,12 +170,13 @@ class ThemeInit
                     defined('DOING_AJAX') ||
                     defined('IFRAME_REQUEST') ||
                     wp_is_json_request() ||
-                    is_embed()
+                    is_embed() ||
+                    !is_admin()
                 ) {
                     return false;
                 }
 
-                error_log('WP_DEBUG is true, flushing rewrite rules.');
+                error_log("WP_DEBUG is true, flushing rewrite rules. \nRequest: {$_SERVER['REQUEST_URI']}");
                 flush_rewrite_rules(false);
             });
         }

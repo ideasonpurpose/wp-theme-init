@@ -12,13 +12,13 @@ class Manifest
     public $assets = [
         'wp' => [],
         'admin' => [],
-        'editor' => []
+        'editor' => [],
     ];
 
     // TODO: This part sucks, there's got to be a better way of specifying baseline dependencies
     public $deps = [
         'editor' => ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor'],
-        'assets' => ['jquery']
+        'assets' => ['jquery'],
     ];
 
     /**
@@ -30,26 +30,23 @@ class Manifest
      */
     public function __construct($manifest_file = null)
     {
-        // $this->log = new Logger('manifest');
-
-        $manifest_file = realpath(
+        $this->manifest_file = realpath(
             is_null($manifest_file) ? get_template_directory() . '/dist/dependency-manifest.json' : $manifest_file
         );
 
-        if (!$manifest_file) {
-            throw new \Exception("File not found: $manifest_file");
+        if (!$this->manifest_file) {
+            $this->error_handler("ERROR: File not found: $manifest_file");
+            return;
         }
 
-        $this->manifest = json_decode(file_get_contents($manifest_file), true);
+        $this->manifest = json_decode(file_get_contents($this->manifest_file), true);
 
         if (!$this->manifest) {
-            throw new \Exception('Unable to decode manifest (error parsing JSON)');
+            $this->error_handler('ERROR: Unable to decode manifest (error parsing JSON)');
+            return;
         }
 
         $this->sort_manifest();
-
-        // $this->log->info($this->assets, false);
-        // $this->log->info($this->deps, false);
 
         $assetCount = 0;
         foreach ($this->assets as $set) {
@@ -64,6 +61,22 @@ class Manifest
         add_action('wp_enqueue_scripts', [$this, 'enqueue_wp_assets']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
         add_action('enqueue_block_editor_assets', [$this, 'enqueue_editor_assets']);
+    }
+
+    /**
+     * Logs errors. Also writes to page if WP_DEBUG is true
+     *
+     * @param  string $msg
+     * @return void
+     */
+    public function error_handler($msg)
+    {
+        if (WP_DEBUG) {
+            add_action('wp_head', function () use ($msg) {
+                echo "\n<!-- $msg --> \n\n";
+            });
+        }
+        error_log($msg);
     }
 
     /**
@@ -118,7 +131,7 @@ class Manifest
                     'deps_js' => array_merge($wpDeps, $jsDeps),
                     'deps_css' => $cssDeps,
                     'isAdmin' => $isAdmin,
-                    'isEditor' => $isEditor
+                    'isEditor' => $isEditor,
                 ];
 
                 if ($isAdmin) {

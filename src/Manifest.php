@@ -1,8 +1,8 @@
 <?php
 
-namespace ideasonpurpose\ThemeInit;
+namespace IdeasOnPurpose\ThemeInit;
 
-use ideasonpurpose\ThemeInit\Logger;
+use IdeasOnPurpose\ThemeInit\Logger;
 
 class Manifest
 {

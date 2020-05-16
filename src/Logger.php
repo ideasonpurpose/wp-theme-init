@@ -1,6 +1,6 @@
 <?php
 
-namespace ideasonpurpose\ThemeInit;
+namespace IdeasOnPurpose\ThemeInit;
 
 // TODO: This is a patch for now, make it compatible with PSR-3
 // https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md

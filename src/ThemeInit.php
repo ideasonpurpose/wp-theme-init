@@ -1,5 +1,5 @@
 <?php
-namespace ideasonpurpose;
+namespace IdeasOnPurpose;
 
 class ThemeInit
 {

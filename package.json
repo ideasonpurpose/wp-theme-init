@@ -38,9 +38,10 @@
     ]
   },
   "devDependencies": {
-    "@prettier/plugin-php": "^0.11.2",
-    "prettier": "^1.19.1",
-    "version-everything": "^0.5.4"
+    "@prettier/plugin-php": "^0.14.0",
+    "auto-changelog": "^2.0.0",
+    "prettier": "^2.0.5",
+    "version-everything": "^0.6.3"
   },
   "auto-changelog": {
     "package": true
@@ -49,8 +50,5 @@
     "files": [
       "README.md"
     ]
-  },
-  "dependencies": {
-    "auto-changelog": "^2.0.0"
   }
 }

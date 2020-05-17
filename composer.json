@@ -18,8 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "IdeasOnPurpose\\": "src",
-            "IdeasOnPurpose\\ThemeInit\\": "src"
+            "IdeasOnPurpose\\": "src"
         }
     }
 }

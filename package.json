@@ -17,7 +17,10 @@
     "url": "git+https://github.com/ideasonpurpose/wp-theme-init.git"
   },
   "license": "MIT",
-  "author": "Joe Maller <joe@joemaller.com> (http://www.joemaller.com)",
+  "author": "Ideas On Purpose (https://www.ideasonpurpose.com)",
+  "contributors": [
+    "Joe Maller <joe@ideasonpurpose.com>"
+  ],
   "scripts": {
     "prettier": "cd $INIT_CWD && prettier --write",
     "prettier-php": "cd $INIT_CWD && prettier --write --print-width 120",
@@ -44,11 +47,13 @@
     "version-everything": "^0.6.3"
   },
   "auto-changelog": {
-    "package": true
+    "package": true,
+    "commitLimit": 7
   },
   "version-everything": {
     "files": [
-      "README.md"
+      "README.md",
+      "composer.json"
     ]
   }
 }

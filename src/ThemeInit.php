@@ -27,6 +27,9 @@ class ThemeInit
         if ($options['enableComments'] === false) {
             new ThemeInit\Extras\GlobalCommentsDisable();
         }
+
+        add_filter('option_theme_mods_' . get_option('stylesheet'), [$this, 'themeBaseName'], 10, 2);
+
         // TODO: Is this too permissive? Reason not to disable unless WP_ENV == 'development'?
         \Kint::$enabled_mode = false;
         // if (defined('WP_ENV') && WP_ENV !== 'development') {
@@ -78,7 +81,7 @@ class ThemeInit
                 $account_title = str_replace('Howdy, ', '', $account_node->title);
                 $wp_admin_bar->add_node([
                     'id' => 'my-account',
-                    'title' => $account_title
+                    'title' => $account_title,
                 ]);
             },
             25
@@ -105,8 +108,8 @@ class ThemeInit
                     // }
                     // error_log('SHUTDOWN');
                     // error_log(print_r($_SERVER, true));
-                    $time = microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"];
-                    $msg = sprintf("Total processing time: %0.4f seconds", $time);
+                    $time = microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
+                    $msg = sprintf('Total processing time: %0.4f seconds', $time);
                     // echo "\n<!--\n\n$msg\n -->";
                     // printf('<script>console.log("%%c⏱", "font-weight: bold;", "%s");</script>', $msg);
                 },
@@ -140,13 +143,13 @@ class ThemeInit
                 $args = ['blocking' => false, 'sslverify' => false];
                 // Sloppy, but there's no assurance we're actually serving over ssl
                 // This hits both possible endpoints and ignores replies, one of these should work
-                wp_remote_get("http://10.0.2.2:3000/__browser_sync__?method=reload", $args);
-                wp_remote_get("https://10.0.2.2:3000/__browser_sync__?method=reload", $args);
+                wp_remote_get('http://10.0.2.2:3000/__browser_sync__?method=reload', $args);
+                wp_remote_get('https://10.0.2.2:3000/__browser_sync__?method=reload', $args);
 
                 /**
                  * /webpack/reload is specific to ideasonpurpose/docker-build
                  */
-                wp_remote_get("http://host.docker.internal:8080/webpack/reload", $args);
+                wp_remote_get('http://host.docker.internal:8080/webpack/reload', $args);
             });
         }
     }
@@ -180,5 +183,33 @@ class ThemeInit
                 flush_rewrite_rules(false);
             });
         }
+    }
+
+    /**
+     * Strip version numbers from theme names before writing options
+     *
+     * Our build pipeline outputs versioned themes in directories which look
+     * something like `{theme-name}-{semver}` where the semver string has dots
+     * replaced with underscores (workaround for some WP oddity I've forgotten)
+     * A theme directory might look something like this:
+     *      `iop-theme-2_3_11`
+     * Indicating the theme basename is `iop-theme` and the version is `2.3.11`
+     *
+     * WordPress stores some options, especially menu assignments, under a key
+     * derived from the theme directory. The problem
+     * The regex is a minor modification of the officially-sanctioned semver regex
+     * @link https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
+     * @link https://regex101.com/r/Ly7O1x/3/
+     */
+    public function themeBaseName($val, $opt)
+    {
+        $semverRegex =
+            '/-(?P<major>0|[1-9]\d*)(?:\.|_)(?P<minor>0|[1-9]\d*)(?:\.|_)(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/';
+
+        // $optBase = preg_replace('/-\d+_\d+_\d+$/', '', $opt);
+        $optBase = preg_replace($semverRegex, '', $opt);
+
+        // if $optBase and $opt match, getting the option will nest infinitely
+        return $optBase === $opt ? $val : get_option($optBase);
     }
 }

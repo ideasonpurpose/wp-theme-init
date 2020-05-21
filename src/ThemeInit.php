@@ -28,7 +28,11 @@ class ThemeInit
             new ThemeInit\Extras\GlobalCommentsDisable();
         }
 
-        add_filter('option_theme_mods_' . get_option('stylesheet'), [$this, 'themeBaseName'], 10, 2);
+        /**
+         * Strip version from theme name when reading/writing options
+         */
+        add_filter('option_theme_mods_' . get_option('stylesheet'), [$this, 'readOption'], 10, 2);
+        add_filter('pre_update_option_theme_mods_' . get_option('stylesheet'), [$this, 'writeOption'], 10, 3);
 
         // TODO: Is this too permissive? Reason not to disable unless WP_ENV == 'development'?
         \Kint::$enabled_mode = false;
@@ -186,7 +190,7 @@ class ThemeInit
     }
 
     /**
-     * Strip version numbers from theme names before writing options
+     * Strip version numbers from theme names when reading/writing options
      *
      * Our build pipeline outputs versioned themes in directories which look
      * something like `{theme-name}-{semver}` where the semver string has dots
@@ -196,20 +200,35 @@ class ThemeInit
      * Indicating the theme basename is `iop-theme` and the version is `2.3.11`
      *
      * WordPress stores some options, especially menu assignments, under a key
-     * derived from the theme directory. The problem
+     * derived from the theme directory. The problem is that updating the theme
+     * using snapshots means the option-name changes and the new theme can't find
+     * the old settings. The solution here is to strip the version number from the
+     * option name when writing, then request the version-less option on read.
+     *
      * The regex is a minor modification of the officially-sanctioned semver regex
      * @link https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
      * @link https://regex101.com/r/Ly7O1x/3/
      */
-    public function themeBaseName($val, $opt)
-    {
-        $semverRegex =
-            '/-(?P<major>0|[1-9]\d*)(?:\.|_)(?P<minor>0|[1-9]\d*)(?:\.|_)(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/';
+    public $semverRegex = '/-(?P<major>0|[1-9]\d*)(?:\.|_)(?P<minor>0|[1-9]\d*)(?:\.|_)(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/';
 
-        // $optBase = preg_replace('/-\d+_\d+_\d+$/', '', $opt);
-        $optBase = preg_replace($semverRegex, '', $opt);
+    public function readOption($val, $opt)
+    {
+        $optBase = preg_replace($this->semverRegex, '', $opt);
 
         // if $optBase and $opt match, getting the option will nest infinitely
         return $optBase === $opt ? $val : get_option($optBase);
+    }
+
+    public function writeOption($val, $oldVal, $opt)
+    {
+        $optBase = preg_replace($this->semverRegex, '', $opt);
+        // Trying to update when optBase and $opt are the same will nest infinitely
+        if ($optBase !== $opt) {
+            update_option($optBase, $val);
+            // short-circuit from here and return $oldVal, no need
+            // to write an extra wp_options entry
+            return $oldVal;
+        }
+        return $val;
     }
 }

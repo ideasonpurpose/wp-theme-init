@@ -22,8 +22,6 @@
     "Joe Maller <joe@ideasonpurpose.com>"
   ],
   "scripts": {
-    "prettier": "cd $INIT_CWD && prettier --write",
-    "prettier-php": "cd $INIT_CWD && prettier --write --print-width 120",
     "version": "version-everything && auto-changelog && git add -u"
   },
   "prettier": {
@@ -41,7 +39,7 @@
     ]
   },
   "devDependencies": {
-    "@prettier/plugin-php": "^0.14.0",
+    "@prettier/plugin-php": "^0.14.1",
     "auto-changelog": "^2.0.0",
     "prettier": "^2.0.5",
     "version-everything": "^0.6.3"

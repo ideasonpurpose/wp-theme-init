@@ -1,24 +1,30 @@
 {
-    "name": "ideasonpurpose/wp-theme-init",
-    "description": "A common baseline of repeated functions, filters and actions used across WordPress themes.",
-    "license": "MIT",
-    "keywords": ["wordpress", "plugin", "init", "Ideas On Purpose"],
-    "authors": [
-        {
-            "name": "Joe Maller",
-            "email": "joe@ideasonpurpose.com"
-        },
-        {
-          "name": "Ideas On Purpose",
-          "homepage": "https://www.ideasonpurpose.com"
-        }
-    ],
-    "require": {
-        "kint-php/kint": "^3.2"
+  "name": "ideasonpurpose/wp-theme-init",
+  "description": "A common baseline of repeated functions, filters and actions used across WordPress themes.",
+  "license": "MIT",
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "init",
+    "Ideas On Purpose"
+  ],
+  "authors": [
+    {
+      "name": "Joe Maller",
+      "email": "joe@ideasonpurpose.com"
     },
-    "autoload": {
-        "psr-4": {
-            "IdeasOnPurpose\\": "src"
-        }
+    {
+      "name": "Ideas On Purpose",
+      "homepage": "https://www.ideasonpurpose.com"
     }
+  ],
+  "require": {
+    "kint-php/kint": "^3.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "IdeasOnPurpose\\": "src"
+    }
+  },
+  "version": "2.2.1"
 }

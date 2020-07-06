@@ -22,6 +22,9 @@
     "Joe Maller <joe@ideasonpurpose.com>"
   ],
   "scripts": {
+    "composer": "npm run composer:install",
+    "composer:install": "docker-compose run --rm composer",
+    "composer:update": "docker-compose run --rm composer update",
     "version": "version-everything && auto-changelog && git add -u"
   },
   "prettier": {

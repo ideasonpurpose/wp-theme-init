@@ -34,6 +34,13 @@ class ThemeInit
         add_filter('option_theme_mods_' . get_option('stylesheet'), [$this, 'readOption'], 10, 2);
         add_filter('pre_update_option_theme_mods_' . get_option('stylesheet'), [$this, 'writeOption'], 10, 3);
 
+        /**
+         * Enable our WP_Image_Editor_Imagick_HQ class for better scaling
+         */
+        add_filter('wp_image_editors', function ($editors) {
+            return array_merge([__NAMESPACE__ . '\\ThemeInit\\Imagick\HQ'], $editors);
+        });
+
         // TODO: Is this too permissive? Reason not to disable unless WP_ENV == 'development'?
         \Kint::$enabled_mode = false;
         // if (defined('WP_ENV') && WP_ENV !== 'development') {

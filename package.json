@@ -30,10 +30,16 @@
   "prettier": {
     "overrides": [
       {
+        "files": "*.md",
+        "options": {
+          "embeddedLanguageFormatting": "off"
+        }
+      },
+      {
         "files": "*.php",
         "options": {
           "phpVersion": "7.2",
-          "printWidth": 120,
+          "printWidth": 100,
           "singleQuote": true,
           "tabWidth": 4,
           "trailingCommaPHP": true
@@ -42,9 +48,9 @@
     ]
   },
   "devDependencies": {
-    "@prettier/plugin-php": "^0.14.1",
-    "auto-changelog": "^2.0.0",
-    "prettier": "^2.0.5",
+    "@prettier/plugin-php": "^0.15.1",
+    "auto-changelog": "^2.2.1",
+    "prettier": "^2.1.2",
     "version-everything": "^0.6.3"
   },
   "auto-changelog": {

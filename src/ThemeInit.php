@@ -174,7 +174,7 @@ class ThemeInit
     private function debugFlushRewriteRules()
     {
         if (WP_DEBUG) {
-            add_action('init', function () {
+            add_action('admin_init', function () {
                 /*
                  * This code is adapted from wp-includes/admin-bar.php for skipping AJAX, JSON, etc.
                  *       https://github.com/WordPress/WordPress/blob/42d52ce08099f9fae82a1977da0237b32c863e94/wp-includes/admin-bar.php#L1179-L1181
@@ -190,8 +190,11 @@ class ThemeInit
                     return false;
                 }
 
-                error_log("WP_DEBUG is true, flushing rewrite rules. \nRequest: {$_SERVER['REQUEST_URI']}");
-                flush_rewrite_rules(false);
+                $htaccess = file_exists(  ABSPATH . '.htaccess');
+                $htaccess_log = $htaccess ? "" : " including .htaccess file";
+                error_log("WP_DEBUG is true: Flushing rewrite rules{$htaccess_log}.\nRequest: {$_SERVER['REQUEST_URI']}");
+
+                flush_rewrite_rules(!$htaccess);
             });
         }
     }

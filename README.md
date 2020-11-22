@@ -4,6 +4,12 @@
 
 A common baseline of repeated functions, filters and actions used across our WordPress themes.
 
+[![Travis Build Status](https://img.shields.io/travis/ideasonpurpose/wp-theme-init?logo=travis)](https://travis-ci.org/ideasonpurpose/wp-theme-init)
+[![codecov](https://codecov.io/gh/ideasonpurpose/wp-theme-init/branch/master/graph/badge.svg)](https://codecov.io/gh/ideasonpurpose/wp-theme-init)
+[![Coveralls github](https://img.shields.io/coveralls/github/ideasonpurpose/wp-theme-init?label=Coveralls)](https://coveralls.io/github/ideasonpurpose/wp-theme-init)
+[![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/ideasonpurpose/wp-theme-init)](https://codeclimate.com/github/ideasonpurpose/wp-theme-init)
+[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+
 ### Some of what's included:
 
 - **Webpack dependency manifest asset loading**<br>
@@ -38,3 +44,7 @@ new Admin\Separators([5, 7]);
   - Hide the author's name
   - Move the metabox to the bottom of admin pages
   - Show the default image from the first post in archives
+
+## Development
+
+Run the PHPUnit test suite with: `npm run test`

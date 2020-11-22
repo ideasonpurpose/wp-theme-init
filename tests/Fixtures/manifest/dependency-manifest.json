@@ -1,0 +1,40 @@
+{
+  "main": {
+    "files": {
+      "main.css": "/wp-content/themes/iop/dist/main.css",
+      "main.js": "/wp-content/themes/iop/dist/main.js",
+      "main.map": "/wp-content/themes/iop/dist/main.js.map"
+    },
+    "dependencies": {
+      "fake-main.css": "/wp-content/themes/iop/dist/fake-main-f16e48.css",
+      "vendors~admin~editor~main.js": "/wp-content/themes/iop/dist/vendors~admin~editor~main-f16e48.js",
+      "vendors~admin~editor~main.map": "/wp-content/themes/iop/dist/vendors~admin~editor~main-f16e48.js.map",
+      "vendors~main.js": "/wp-content/themes/iop/dist/vendors~main-66cefa.js",
+      "vendors~main.map": "/wp-content/themes/iop/dist/vendors~main-66cefa.js.map"
+    }
+  },
+  "admin": {
+    "files": {
+      "admin.css": "/wp-content/themes/iop/dist/admin.css",
+      "admin.js": "/wp-content/themes/iop/dist/admin.js",
+      "admin.map": "/wp-content/themes/iop/dist/admin.js.map"
+    },
+    "dependencies": {
+      "vendors~admin~editor~main.js": "/wp-content/themes/iop/dist/vendors~admin~editor~main-f16e48.js",
+      "vendors~admin~editor~main.map": "/wp-content/themes/iop/dist/vendors~admin~editor~main-f16e48.js.map"
+    }
+  },
+  "editor": {
+    "files": {
+      "editor.css": "/wp-content/themes/iop/dist/editor.css",
+      "editor.js": "/wp-content/themes/iop/dist/editor.js",
+      "editor.map": "/wp-content/themes/iop/dist/editor.js.map"
+    },
+    "dependencies": {
+      "vendors~admin~editor~main.js": "/wp-content/themes/iop/dist/vendors~admin~editor~main-f16e48.js",
+      "vendors~admin~editor~main.map": "/wp-content/themes/iop/dist/vendors~admin~editor~main-f16e48.js.map",
+      "vendors~editor.js": "/wp-content/themes/iop/dist/vendors~editor-888b83.js",
+      "vendors~editor.map": "/wp-content/themes/iop/dist/vendors~editor-888b83.js.map"
+    }
+  }
+}

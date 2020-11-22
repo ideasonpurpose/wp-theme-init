@@ -25,7 +25,10 @@
     "composer": "npm run composer:install",
     "composer:install": "docker-compose run --rm composer",
     "composer:update": "docker-compose run --rm composer update",
-    "version": "version-everything && auto-changelog && git add -u"
+    "test": "docker-compose run test",
+    "test:watch": "chokidar '{src,tests}/**/*.php' -c 'npm run test'",
+    "version": "version-everything && auto-changelog && git add -u",
+    "posttest": "replace '<file name=\"/app/' '<file name=\"./' coverage.xml --silent"
   },
   "prettier": {
     "overrides": [
@@ -48,9 +51,11 @@
     ]
   },
   "devDependencies": {
-    "@prettier/plugin-php": "^0.15.1",
+    "@prettier/plugin-php": "^0.15.2",
     "auto-changelog": "^2.2.1",
+    "chokidar-cli": "^2.1.0",
     "prettier": "^2.1.2",
+    "replace": "^1.2.0",
     "version-everything": "^0.6.3"
   },
   "auto-changelog": {

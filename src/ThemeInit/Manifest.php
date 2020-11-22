@@ -2,12 +2,15 @@
 
 namespace IdeasOnPurpose\ThemeInit;
 
-use IdeasOnPurpose\ThemeInit\Logger;
-
 class Manifest
 {
     public $register_scripts = [];
     public $register_styles = [];
+
+    /**
+     * A placeholder for WP_DEBUG which can be mocked
+     */
+    public $is_debug = false;
 
     public $assets = [
         'wp' => [],
@@ -30,8 +33,41 @@ class Manifest
      */
     public function __construct($manifest_file = null)
     {
+        $this->is_debug = defined('WP_DEBUG') && WP_DEBUG;
+
+        $this->load_manifest($manifest_file);
+
+        add_action('init', [$this, 'init_register_assets']);
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_wp_assets']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
+        add_action('enqueue_block_editor_assets', [$this, 'enqueue_editor_assets']);
+    }
+
+    /**
+     * Logs errors. Also writes to page if WP_DEBUG is true
+     *
+     * @param  string $msg
+     * @return void
+     */
+    public function error_handler($msg)
+    {
+        if ($this->is_debug) {
+            add_action('wp_head', function () use ($msg) {
+                echo "\n<!-- $msg --> \n\n";
+            });
+        }
+        error_log($msg);
+    }
+
+    /**
+     * Load the Manifest from a filepath
+     */
+    public function load_manifest($manifest_file)
+    {
         $this->manifest_file = realpath(
-            is_null($manifest_file) ? get_template_directory() . '/dist/dependency-manifest.json' : $manifest_file
+            is_null($manifest_file)
+                ? get_template_directory() . '/dist/dependency-manifest.json'
+                : $manifest_file
         );
 
         if (!$this->manifest_file) {
@@ -53,32 +89,14 @@ class Manifest
             $assetCount += count($set);
         }
 
-        // Make sure the manifest isn't empty
+        /**
+         * Make sure the manifest isn't empty
+         * TODO: Why does this throw an Exception instead of using error_handler?
+         */
         if ($assetCount < 1) {
             throw new \Exception('No scripts or styles found in manifest, nothing to load');
         }
-        add_action('init', [$this, 'init_register_assets']);
-        add_action('wp_enqueue_scripts', [$this, 'enqueue_wp_assets']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
-        add_action('enqueue_block_editor_assets', [$this, 'enqueue_editor_assets']);
     }
-
-    /**
-     * Logs errors. Also writes to page if WP_DEBUG is true
-     *
-     * @param  string $msg
-     * @return void
-     */
-    public function error_handler($msg)
-    {
-        if (WP_DEBUG) {
-            add_action('wp_head', function () use ($msg) {
-                echo "\n<!-- $msg --> \n\n";
-            });
-        }
-        error_log($msg);
-    }
-
     /**
      * Process the manifest, determine pre-requisites and dependencies
      * This should only run once per request
@@ -98,7 +116,11 @@ class Manifest
             $themeName = preg_replace('/\bv?[0-9.-]+$/', '', wp_get_theme()->get('Name'));
 
             foreach ($assets['dependencies'] as $src => $file) {
-                ['extension' => $ext, 'filename' => $filename] = str_replace('~', '-', pathinfo($src));
+                ['extension' => $ext, 'filename' => $filename] = str_replace(
+                    '~',
+                    '-',
+                    pathinfo($src)
+                );
                 $assetHandle = sanitize_title("$themeName-$filename");
 
                 if (strtolower($ext) === 'js') {
@@ -191,7 +213,13 @@ class Manifest
     {
         foreach ($assets as $asset) {
             if (strtolower($asset['ext']) === 'js') {
-                wp_enqueue_script($asset['handle'], $asset['file'], $asset['deps_js'], null, !$asset['showInHead']);
+                wp_enqueue_script(
+                    $asset['handle'],
+                    $asset['file'],
+                    $asset['deps_js'],
+                    null,
+                    !$asset['showInHead']
+                );
             }
             if (strtolower($asset['ext']) === 'css') {
                 if ($asset['isEditor']) {

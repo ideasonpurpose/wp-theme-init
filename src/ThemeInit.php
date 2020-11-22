@@ -3,8 +3,15 @@ namespace IdeasOnPurpose;
 
 class ThemeInit
 {
+    /**
+     * A placeholder for WP_DEBUG which can be mocked
+     */
+    public $is_debug = false;
+
     public function __construct($options = [])
     {
+        $this->is_debug = defined('WP_DEBUG') && WP_DEBUG;
+
         $defaults = ['showIncludes' => true, 'enableComments' => false];
         $options = array_merge($defaults, $options);
 
@@ -32,19 +39,19 @@ class ThemeInit
          * Strip version from theme name when reading/writing options
          */
         add_filter('option_theme_mods_' . get_option('stylesheet'), [$this, 'readOption'], 10, 2);
-        add_filter('pre_update_option_theme_mods_' . get_option('stylesheet'), [$this, 'writeOption'], 10, 3);
+        add_filter(
+            'pre_update_option_theme_mods_' . get_option('stylesheet'),
+            [$this, 'writeOption'],
+            10,
+            3
+        );
 
-        /**
-         * Enable our WP_Image_Editor_Imagick_HQ class for better scaling
-         */
-        add_filter('wp_image_editors', function ($editors) {
-            return array_merge([__NAMESPACE__ . '\\ThemeInit\\Imagick\HQ'], $editors);
-        });
+        add_filter('wp_image_editors', [$this, 'addEditor']);
 
         // TODO: Is this too permissive? Reason not to disable unless WP_ENV == 'development'?
         \Kint::$enabled_mode = false;
         // if (defined('WP_ENV') && WP_ENV !== 'development') {
-        if (WP_DEBUG) {
+        if ($this->is_debug) {
             \Kint::$enabled_mode = true;
         }
     }
@@ -80,7 +87,8 @@ class ThemeInit
     {
         // IOP Design Credit
         add_filter('admin_footer_text', function ($default) {
-            $credit = 'Design and development by <a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>.';
+            $credit =
+                'Design and development by <a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>.';
             return preg_replace('%</span>$%', " $credit</span>", $default);
         });
 
@@ -101,7 +109,7 @@ class ThemeInit
         /**
          * Dump total execution time into the page
          */
-        if (WP_DEBUG) {
+        if (defined('WP_DEBUG') && WP_DEBUG) {
             add_action(
                 'shutdown',
                 function () {
@@ -130,6 +138,14 @@ class ThemeInit
     }
 
     /**
+     * Enable our WP_Image_Editor_Imagick_HQ class for better scaling
+     */
+    protected function addEditor($editors)
+    {
+        return array_merge([__NAMESPACE__ . '\\ThemeInit\Imagick\HQ'], $editors);
+    }
+
+    /**
      * Browsersync reload on post save
      * Currently attempts to reload if WP_DEBUG is true
      * More info:
@@ -149,7 +165,7 @@ class ThemeInit
      */
     private function browsersyncReload()
     {
-        if (WP_DEBUG) {
+        if (defined('WP_DEBUG') && WP_DEBUG) {
             add_action('save_post', function () {
                 $args = ['blocking' => false, 'sslverify' => false];
                 // Sloppy, but there's no assurance we're actually serving over ssl
@@ -173,7 +189,7 @@ class ThemeInit
      */
     private function debugFlushRewriteRules()
     {
-        if (WP_DEBUG) {
+        if (defined('WP_DEBUG') && WP_DEBUG) {
             add_action('admin_init', function () {
                 /*
                  * This code is adapted from wp-includes/admin-bar.php for skipping AJAX, JSON, etc.
@@ -190,9 +206,11 @@ class ThemeInit
                     return false;
                 }
 
-                $htaccess = file_exists(  ABSPATH . '.htaccess');
-                $htaccess_log = $htaccess ? "" : " including .htaccess file";
-                error_log("WP_DEBUG is true: Flushing rewrite rules{$htaccess_log}.\nRequest: {$_SERVER['REQUEST_URI']}");
+                $htaccess = file_exists(ABSPATH . '.htaccess');
+                $htaccess_log = $htaccess ? '' : ' including .htaccess file';
+                error_log(
+                    "WP_DEBUG is true: Flushing rewrite rules{$htaccess_log}.\nRequest: {$_SERVER['REQUEST_URI']}"
+                );
 
                 flush_rewrite_rules(!$htaccess);
             });
@@ -215,6 +233,10 @@ class ThemeInit
      * the old settings. The solution here is to strip the version number from the
      * option name when writing, then request the version-less option on read.
      *
+     * Both filters are called from options.php:
+     * @link https://github.com/WordPress/WordPress/blob/48f35e42fc790a62d85d2a6e104550fa5a1019b9/wp-includes/option.php#L166-L179
+     * @link https://github.com/WordPress/WordPress/blob/48f35e42fc790a62d85d2a6e104550fa5a1019b9/wp-includes/option.php#L373-L384
+     *
      * The regex is a minor modification of the officially-sanctioned semver regex
      * @link https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
      * @link https://regex101.com/r/Ly7O1x/3/
@@ -232,11 +254,22 @@ class ThemeInit
     public function writeOption($val, $oldVal, $opt)
     {
         $optBase = preg_replace($this->semverRegex, '', $opt);
-        // Trying to update when optBase and $opt are the same will nest infinitely
+        /**
+         * Because this filter is triggered _from inside_ update_option(),
+         * calling update_option() again with the same inputs would cause
+         * WordPress to nest infinitely and crash the server.
+         *
+         * We must check that $optBase and $opt are different before we can
+         * update the value attached to the corrected option name.
+         */
         if ($optBase !== $opt) {
             update_option($optBase, $val);
-            // short-circuit from here and return $oldVal, no need
-            // to write an extra wp_options entry
+            /**
+             * Returning $oldVal short-circuits the original update_option()
+             * call. Since we've already updated the value under the modified
+             * name, there's no need to write an extra wp_options entry which
+             * will never be used.
+             */
             return $oldVal;
         }
         return $val;

@@ -28,6 +28,13 @@ function remove_filter()
 {
 }
 
+function register_rest_field($type, $field, $args)
+{
+    global $rest_fields;
+    $rest_fields[] = ['post_type' => $type, 'field' => $field];
+    call_user_func($args['get_callback'], ['id' => 1]);
+}
+
 function shortcode_exists()
 {
 }
@@ -64,15 +71,19 @@ function remove_menu_page()
 {
 }
 
+function get_template_directory()
+{
+    return __DIR__;
+}
+
 function wp_get_theme()
 {
     return new WP_Theme();
 }
 
-function get_template_directory()
-{
-    return __DIR__;
-}
+/**
+ * Class stubs
+ */
 
 class WP_Theme
 {
@@ -84,6 +95,19 @@ class WP_Theme
     public function get($key)
     {
         return $this->{$key};
+    }
+}
+
+class WP_Admin_Bar
+{
+    public function get_node($key)
+    {
+        return (object) ['id' => 'my-account', 'title' => 'Howdy, Stella'];
+    }
+
+    public function add_node($node)
+    {
+        echo $node['title'];
     }
 }
 
@@ -102,4 +126,12 @@ class WP_Theme
 $is_ = ['is_admin_bar_showing', 'is_embed', 'is_admin', 'is_user_logged_in', 'wp_is_json_request'];
 foreach ($is_ as $func) {
     eval("function {$func}() { global \${$func}; return !!\${$func}; }");
+}
+
+/**
+ * ACF Pro
+ */
+function get_fields()
+{
+    return ['a', 'b', 'c'];
 }

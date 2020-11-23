@@ -24,7 +24,10 @@ class ThemeInit
         // $this->browsersyncReload();
 
         new ThemeInit\Extras\Shortcodes();
-        new ThemeInit\Plugins\ACF();
+
+        if (function_exists('get_fields')) {
+            new ThemeInit\Plugins\ACF();
+        }
         new ThemeInit\Plugins\SEOFramework();
 
         if ($options['showIncludes'] !== false) {
@@ -34,6 +37,16 @@ class ThemeInit
         if ($options['enableComments'] === false) {
             new ThemeInit\Extras\GlobalCommentsDisable();
         }
+
+        /**
+         * De-Howdy the WordPress Admin menu
+         */
+        add_filter('admin_bar_menu', [$this, 'deHowdy'], 25);
+
+        /**
+         * IOP Design Credit
+         */
+        add_filter('admin_footer_text', [$this, 'iopCredit']);
 
         /**
          * Strip version from theme name when reading/writing options
@@ -85,27 +98,6 @@ class ThemeInit
      */
     private function init()
     {
-        // IOP Design Credit
-        add_filter('admin_footer_text', function ($default) {
-            $credit =
-                'Design and development by <a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>.';
-            return preg_replace('%</span>$%', " $credit</span>", $default);
-        });
-
-        // De-Howdy the Admin menu
-        add_filter(
-            'admin_bar_menu',
-            function ($wp_admin_bar) {
-                $account_node = $wp_admin_bar->get_node('my-account');
-                $account_title = str_replace('Howdy, ', '', $account_node->title);
-                $wp_admin_bar->add_node([
-                    'id' => 'my-account',
-                    'title' => $account_title,
-                ]);
-            },
-            25
-        );
-
         /**
          * Dump total execution time into the page
          */
@@ -135,6 +127,29 @@ class ThemeInit
                 9999
             );
         }
+    }
+
+    /**
+     * Insert design credit into admin footer
+     */
+    public function iopCredit($default)
+    {
+        $credit =
+            'Design and development by <a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>.';
+        return preg_replace('%</span>$%', " $credit</span>", $default);
+    }
+
+    /**
+     * Remove "Howdy" from the WordPress admin bar
+     */
+    public function deHowdy($wp_admin_bar)
+    {
+        $account_node = $wp_admin_bar->get_node('my-account');
+        $account_title = str_replace('Howdy, ', '', $account_node->title);
+        $wp_admin_bar->add_node([
+            'id' => 'my-account',
+            'title' => $account_title,
+        ]);
     }
 
     /**

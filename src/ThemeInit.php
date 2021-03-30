@@ -99,6 +99,13 @@ class ThemeInit
     private function init()
     {
         /**
+         * Disable Plugin and Theme editors
+         */
+        if (!defined('DISALLOW_FILE_EDIT')) {
+            define('DISALLOW_FILE_EDIT', true);
+        }
+
+        /**
          * Dump total execution time into the page
          */
         if (defined('WP_DEBUG') && WP_DEBUG) {

@@ -51,11 +51,11 @@
     ]
   },
   "devDependencies": {
-    "@prettier/plugin-php": "^0.15.2",
+    "@prettier/plugin-php": "^0.16.2",
     "auto-changelog": "^2.2.1",
     "chokidar-cli": "^2.1.0",
-    "prettier": "^2.1.2",
-    "replace": "^1.2.0",
+    "prettier": "^2.2.1",
+    "replace": "^1.2.1",
     "version-everything": "^0.6.3"
   },
   "auto-changelog": {

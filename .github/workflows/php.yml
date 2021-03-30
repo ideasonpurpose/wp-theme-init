@@ -14,10 +14,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Enable XDebug Coverage
-      run: |
-        echo 'xdebug.mode=coverage' >> /usr/local/etc/php/php.ini
-
     - name: Validate composer.json and composer.lock
       run: composer validate
 
@@ -35,6 +31,8 @@ jobs:
       run: composer install --prefer-dist --no-progress --no-suggest
 
     - name: Run test suite
+      env: 
+        XDEBUG_MODE: coverage
       run: vendor/bin/phpunit
       
     - name: Coddle Coveralls

@@ -162,9 +162,9 @@ class ThemeInit
     /**
      * Enable our WP_Image_Editor_Imagick_HQ class for better scaling
      */
-    protected function addEditor($editors)
+    public function addEditor($editors)
     {
-        return array_merge([__NAMESPACE__ . '\\ThemeInit\Imagick\HQ'], $editors);
+        return array_merge([__NAMESPACE__ . '\ThemeInit\Imagick\HQ'], $editors);
     }
 
     /**

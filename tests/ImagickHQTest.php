@@ -13,26 +13,23 @@ require_once 'Fixtures/WP_Image_Editor_Imagick.php';
  */
 final class ImagickHQTest extends TestCase
 {
-    public function testAddEditors()
+    public function testAddHQImageEditors()
     {
         $ThemeInit = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit')
             ->disableOriginalConstructor()
-            ->setMethodsExcept(['addEditor'])
+            ->setMethodsExcept(['addHQImageEditor'])
             ->getMock();
 
         /**
-         * ThemeInit::addEditors is protected, so set up a Reflection
-         * to make the method accessible
-         */
-        $method = new \ReflectionMethod($ThemeInit, 'addEditor');
-        $method->setAccessible(true);
-
-        /**
-         * Our editor should have been prepended to the list of editors
+         * This will have a length of 2 because addHQImageEditor will prepend our
+         * editor to $editorList. This function is a filter, so $editorList is a
+         * WordPress supplied array of image editor names as strings.
          */
         $editorList = ['Fake\Editor'];
-        $editors = $method->invokeArgs($ThemeInit, [$editorList]);
+        $editors = $ThemeInit->addHQImageEditor($editorList);
         $this->assertCount(2, $editors);
+        $this->assertContains($editorList[0], $editors);
+        $this->assertContains('IdeasOnPurpose\ThemeInit\Imagick\HQ', $editors);
 
         /**
          * Instantiate and verify our editor

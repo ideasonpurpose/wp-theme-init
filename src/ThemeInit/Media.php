@@ -67,23 +67,24 @@ class Media
 
         if (is_wp_error($saved)) {
             error_log('Error trying to save.', $saved->get_error_message());
+            return $metadata;
+        }
+
+        /**
+         * Compare filesize of the optimized image against the original
+         * If the optimized filesize is less than 75% of the original, then
+         * use the optimized image. If not, remove the optimized image and
+         * keep using the original image.
+         */
+        if (filesize($saved['path']) / filesize($srcFile) < 0.75) {
+            // Optimization successful, update $metadata to use optimized image
+            // Ref: https://developer.wordpress.org/reference/functions/_wp_image_meta_replace_original/
+            update_attached_file($attachment_id, $saved['path']);
+            $metadata['original_image'] = basename($metadata['file']);
+            $metadata['file'] = dirname($metadata['file']) . '/' . $saved['file'];
         } else {
-            /**
-             * Compare filesize of the optimized image against the original
-             * If the optimized filesize is less than 75% of the original, then
-             * use the optimized image. If not, remove the optimized image and
-             * keep using the original image.
-             */
-            if (filesize($saved['path']) / filesize($srcFile) < 0.75) {
-                // Optimization successful, update $metadata to use optimized image
-                // Ref: https://developer.wordpress.org/reference/functions/_wp_image_meta_replace_original/
-                update_attached_file($attachment_id, $saved['path']);
-                $metadata['original_image'] = basename($metadata['file']);
-                $metadata['file'] = dirname($metadata['file']) . '/' . $saved['file'];
-            } else {
-                // Optimization not worth it, delete optimized file and use original
-                unlink($saved['path']);
-            }
+            // Optimization not worth it, delete optimized file and use original
+            unlink($saved['path']);
         }
         return $metadata;
     }

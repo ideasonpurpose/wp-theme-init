@@ -41,48 +41,48 @@ class Media
      */
     public function compressAllImages($metadata, $attachment_id)
     {
-
-
-      /**
+        /**
          * Check to see if 'original_image' has been created yet (`big_image_size_threshold` filter)
          * If not, save out an optimized copy and update image metadata
          */
-        if (!array_key_exists('original_image', $metadata)) {
-            $uploads = wp_upload_dir();
-            $srcFile = $uploads['basedir'] . '/' . $metadata['file'];
-            $editor = wp_get_image_editor($srcFile);
+        if (array_key_exists('original_image', $metadata)) {
+            return $metadata;
+        }
 
-            if (is_wp_error($editor)) {
-                error_log("File $metadata[file] can not be edited.");
-                return $metadata;
-            }
+        $uploads = wp_upload_dir();
+        $srcFile = $uploads['basedir'] . '/' . $metadata['file'];
+        $editor = wp_get_image_editor($srcFile);
 
+        if (is_wp_error($editor)) {
+            error_log("File $metadata[file] can not be edited.");
+            return $metadata;
+        }
+
+        /**
+         * WordPress does not expose the Imagick object from `wp_get_image_editor`
+         * so there's no way to get the compressed image's filesize before it's written
+         * to disk.
+         */
+        $saved = $editor->save($editor->generate_filename('optimized'));
+
+        if (is_wp_error($saved)) {
+            error_log('Error trying to save.', $saved->get_error_message());
+        } else {
             /**
-             * WordPress does not expose the Imagick object from `wp_get_image_editor`
-             * so there's no way to get the compressed image's filesize before it's written
-             * to disk.
+             * Compare filesize of the optimized image against the original
+             * If the optimized filesize is less than 75% of the original, then
+             * use the optimized image. If not, remove the optimized image and
+             * keep using the original image.
              */
-            $saved = $editor->save($editor->generate_filename('optimized'));
-
-            if (is_wp_error($saved)) {
-                error_log('Error trying to save.', $saved->get_error_message());
+            if (filesize($saved['path']) / filesize($srcFile) < 0.75) {
+                // Optimization successful, update $metadata to use optimized image
+                // Ref: https://developer.wordpress.org/reference/functions/_wp_image_meta_replace_original/
+                update_attached_file($attachment_id, $saved['path']);
+                $metadata['original_image'] = basename($metadata['file']);
+                $metadata['file'] = dirname($metadata['file']) . '/' . $saved['file'];
             } else {
-                /**
-                 * Compare filesize of the optimized image against the original
-                 * If the optimized filesize is less than 75% of the original, then
-                 * use the optimized image. If not, remove the optimized image and
-                 * keep using the original image.
-                 */
-                if (filesize($saved['path']) / filesize($srcFile) < 0.75) {
-                    // Optimization successful, update $metadata to use optimized image
-                    // Ref: https://developer.wordpress.org/reference/functions/_wp_image_meta_replace_original/
-                    update_attached_file($attachment_id, $saved['path']);
-                    $metadata['original_image'] = basename($metadata['file']);
-                    $metadata['file'] = dirname($metadata['file']) . '/' . $saved['file'];
-                } else {
-                    // Optimization not worth it, delete optimized file and use original
-                    unlink($saved['path']);
-                }
+                // Optimization not worth it, delete optimized file and use original
+                unlink($saved['path']);
             }
         }
         return $metadata;

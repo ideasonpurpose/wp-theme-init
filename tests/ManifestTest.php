@@ -27,10 +27,12 @@ function wp_enqueue_style($handle, $file, $deps = [], $version)
     $enqueued[] = ['handle' => $handle, 'file' => $file, 'deps' => $deps];
 }
 
-function error_log($err)
-{
-    global $error_log;
-    $error_log = $err;
+if (!function_exists(__NAMESPACE__ . '\error_log')) {
+    function error_log($err)
+    {
+        global $error_log;
+        $error_log = $err;
+    }
 }
 
 function add_action($hook, $func)

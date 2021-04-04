@@ -1,6 +1,6 @@
 <?php
 
-namespace IdeasOnPurpose\ThemeInit\Imagick;
+namespace IdeasOnPurpose\ThemeInit\Media\Imagick;
 
 class HQ extends \WP_Image_Editor_Imagick
 {

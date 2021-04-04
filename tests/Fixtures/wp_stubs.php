@@ -1,5 +1,8 @@
 <?php
 
+if (!defined('JPEG_QUALITY')) {
+    define('JPEG_QUALITY', 77);
+}
 /**
  * A bunch of placeholder WordPress functions in the global namespace
  */
@@ -111,6 +114,17 @@ class WP_Admin_Bar
     }
 }
 
+class WP_Image_Editor
+{
+    public function generate_filename()
+    {
+        return 'file-optimized.jpg';
+    }
+    public function save()
+    {
+        return ['file' => 'file-optimized.jpg', 'path'];
+    }
+}
 /**
  * All WordPress is_{$name} test functions are mocked using the same pattern:
  * They return the value of a global with the same name, allowing them
@@ -122,8 +136,7 @@ class WP_Admin_Bar
  *
  * To add additional functions, add their names to the $is_ array
  */
-
-$is_ = ['is_admin_bar_showing', 'is_embed', 'is_admin', 'is_user_logged_in', 'wp_is_json_request'];
+$is_ = ['is_admin_bar_showing', 'is_admin', 'is_embed', 'is_user_logged_in', 'wp_is_json_request'];
 foreach ($is_ as $func) {
     eval("function {$func}() { global \${$func}; return !!\${$func}; }");
 }
@@ -134,4 +147,26 @@ foreach ($is_ as $func) {
 function get_fields()
 {
     return ['a', 'b', 'c'];
+}
+
+function wp_upload_dir()
+{
+    return [
+        'path' => '/Users/wp/fake/path',
+        'url' => 'http://example.com/fake/path',
+        'subdir' => '/fake',
+        'basedir' => '/fake/path',
+        'baseurl' => 'http://example.com/fake/path',
+        'error' => '',
+    ];
+}
+
+function wp_get_image_editor()
+{
+    global $wp_get_image_editor;
+    return $wp_get_image_editor;
+}
+
+function update_attached_file()
+{
 }

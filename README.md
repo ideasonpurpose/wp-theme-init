@@ -28,8 +28,14 @@ A common baseline of repeated functions, filters and actions used across our Wor
 - **Global Comments Disable**
   Comments and Trackbacks are completely disabled. To re-enable comments, initialize the ThemeInit class with an array containing: `['enableComments' => true]`
 
-- **Admin\Separators**
+- **Admin Separators**
   Quickly add separators to the WordPress admin dashboard's left sidebar. Initialize the class with a list of numbers representing the index locations where separators should appear in the menu. Arguments can be an array or multiple arguments.
+
+- **Media**
+  Several media related features will be enabled:
+  - The JPEG Compression value can be set by defining a `JPEG_QUALITY` constant before invoking `ThemeInit()`. Numeric values will be clamped between 0-100 then passed to the [WordPress `jpeg_quality` filter](https://developer.wordpress.org/reference/hooks/jpeg_quality/).
+  - A high-quality Lanczos scaling filter will be used for scaling images.
+  - All image uploads will be re-compressed if their filesize can be reduced by at least 75%.
 
 ```php
 // Add separators

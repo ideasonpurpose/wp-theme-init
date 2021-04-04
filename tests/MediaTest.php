@@ -1,18 +1,44 @@
 <?php
 
-namespace IdeasOnPurpose;
+namespace IdeasOnPurpose\ThemeInit;
 
 use PHPUnit\Framework\TestCase;
 
 require_once 'Fixtures/wp_stubs.php';
-require_once 'Fixtures/WP_Image_Editor_Imagick.php';
+
+if (!function_exists(__NAMESPACE__ . '\error_log')) {
+    function error_log($err)
+    {
+        global $error_log;
+        $error_log = $err;
+    }
+}
 
 /**
  * @covers \IdeasOnPurpose\ThemeInit\Media
  * @covers \IdeasOnPurpose\ThemeInit\Media\Imagick\HQ
  */
-final class ImagickHQTest extends TestCase
+final class MediaTest extends TestCase
 {
+    public function testJPEGQuality()
+    {
+        $Media = new Media();
+        $quality = $Media->jpeg_quality();
+        $this->assertEquals(65, $quality);
+
+        $Media->JPEG_QUALITY = 12;
+        $quality = $Media->jpeg_quality();
+        $this->assertEquals(12, $quality);
+
+        $Media->JPEG_QUALITY = -1;
+        $quality = $Media->jpeg_quality();
+        $this->assertEquals(0, $quality);
+
+        $Media->JPEG_QUALITY = 150;
+        $quality = $Media->jpeg_quality();
+        $this->assertEquals(100, $quality);
+    }
+
     public function testAddHQImageEditors()
     {
         $Media = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Media')

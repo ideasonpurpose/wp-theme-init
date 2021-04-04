@@ -13,6 +13,7 @@ require_once 'Fixtures/WP_Image_Editor_Imagick.php';
  * @covers \IdeasOnPurpose\ThemeInit\Debug\ShowIncludes
  * @covers \IdeasOnPurpose\ThemeInit\Extras\GlobalCommentsDisable
  * @covers \IdeasOnPurpose\ThemeInit\Extras\Shortcodes
+ * @covers \IdeasOnPurpose\ThemeInit\Media
  * @covers \IdeasOnPurpose\ThemeInit\Plugins\ACF
  * @covers \IdeasOnPurpose\ThemeInit\Plugins\SEOFramework
  */
@@ -22,9 +23,9 @@ final class ThemeInitTest extends TestCase
     {
         $ThemeInit = new ThemeInit();
         $this->assertTrue($ThemeInit->is_debug);
+
         $ThemeInit->is_debug = false;
         $this->assertFalse($ThemeInit->is_debug);
-
         $this->expectOutputRegex('/console\.log.*PHP Includes/');
     }
 
@@ -53,7 +54,7 @@ final class ThemeInitTest extends TestCase
     {
         $ThemeInit = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit')
             ->disableOriginalConstructor()
-            ->setMethodsExcept(['writeOption'])
+            ->addMethods([])
             ->getMock();
 
         /**
@@ -71,7 +72,7 @@ final class ThemeInitTest extends TestCase
     {
         $ThemeInit = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit')
             ->disableOriginalConstructor()
-            ->setMethodsExcept(['iopCredit'])
+            ->addMethods([])
             ->getMock();
 
         $credit = $ThemeInit->iopCredit('<span>Text</span>');
@@ -84,7 +85,7 @@ final class ThemeInitTest extends TestCase
     {
         $ThemeInit = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit')
             ->disableOriginalConstructor()
-            ->setMethodsExcept(['deHowdy'])
+            ->addMethods([])
             ->getMock();
 
         $ThemeInit->deHowdy(new WP_Admin_Bar());
@@ -97,7 +98,7 @@ final class ThemeInitTest extends TestCase
         global $post_types, $rest_fields;
         $ACF = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Plugins\ACF')
             ->disableOriginalConstructor()
-            ->setMethodsExcept(['injectACF'])
+            ->addMethods([])
             ->getMock();
 
         $ACF->injectACF();

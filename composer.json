@@ -19,7 +19,7 @@
     }
   ],
   "require": {
-    "kint-php/kint": "^3.2"
+    "kint-php/kint": "^3.3"
   },
   "autoload": {
     "psr-4": {

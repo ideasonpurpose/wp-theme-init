@@ -10,6 +10,7 @@ require_once 'Fixtures/WP_Image_Editor_Imagick.php';
 
 /**
  * @covers \IdeasOnPurpose\ThemeInit
+ * @covers \IdeasOnPurpose\ThemeInit\Admin\PostStates
  * @covers \IdeasOnPurpose\ThemeInit\Debug\ShowIncludes
  * @covers \IdeasOnPurpose\ThemeInit\Extras\GlobalCommentsDisable
  * @covers \IdeasOnPurpose\ThemeInit\Extras\Shortcodes
@@ -19,15 +20,6 @@ require_once 'Fixtures/WP_Image_Editor_Imagick.php';
  */
 final class ThemeInitTest extends TestCase
 {
-    public function testExisting()
-    {
-        $ThemeInit = new ThemeInit();
-        $this->assertTrue($ThemeInit->is_debug);
-
-        $ThemeInit->is_debug = false;
-        $this->assertFalse($ThemeInit->is_debug);
-        $this->expectOutputRegex('/console\.log.*PHP Includes/');
-    }
 
     public function testReadOption()
     {

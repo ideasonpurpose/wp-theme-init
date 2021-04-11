@@ -65,6 +65,11 @@ class ThemeInit
          */
         new ThemeInit\Media();
 
+        /**
+         * Add Post State Labels to WP Admin
+         */
+        new ThemeInit\Admin\PostStates();
+
         // TODO: Is this too permissive? Reason not to disable unless WP_ENV == 'development'?
         \Kint::$enabled_mode = false;
         // if (defined('WP_ENV') && WP_ENV !== 'development') {

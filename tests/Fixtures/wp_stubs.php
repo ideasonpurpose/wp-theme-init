@@ -10,11 +10,19 @@ if (!defined('JPEG_QUALITY')) {
 /**
  * Stub a bunch of miscellaneous WordPress global functions
  */
-function add_action($hook, $action, $priority = 10)
+function add_action($hook, $action, $priority = 10, $args = 1)
 {
     global $actions;
-    $actions[] = ['add' => $hook, 'action' => $action, 'priority' => $priority];
-    call_user_func($action);
+    $actions[] = ['add' => $hook, 'action' => $action, 'priority' => $priority, 'args' => $args];
+    // call_user_func($action);
+    // if (is_string($action) && function_exists(__NAMESPACE__ . '\\' . $action)) {
+    //     call_user_func($action);
+    // }
+    // if ($action instanceof Closure) {
+    //     call_user_func($action);
+    // }
+
+
 }
 
 function remove_action($hook, $action, $priority = 10)
@@ -23,12 +31,22 @@ function remove_action($hook, $action, $priority = 10)
     $actions[] = ['remove' => $hook, 'action' => $action, 'priority' => $priority];
 }
 
-function add_filter()
+function add_filter($hook, $filter, $priority = 10, $args = 1)
 {
+    global $filters;
+    $filters[] = ['add' => $hook, 'action' => $filter, 'priority' => $priority, 'args' => $args];
+    // if (is_string($filter) && function_exists(__NAMESPACE__ . '\\' . $filter)) {
+    //     call_user_func($filter);
+    // }
+    // if ($filter instanceof Closure) {
+    //     call_user_func($filter);
+    // }
 }
 
-function remove_filter()
+function remove_filter($hook, $filter, $priority = 10)
 {
+    global $filters;
+    $filters[] = ['remove' => $hook, 'action' => $filter, 'priority' => $priority];
 }
 
 function register_rest_field($type, $field, $args)
@@ -53,6 +71,17 @@ function get_option($name)
 
 function update_option($opt, $val)
 {
+}
+
+/**
+ * The WordPress function returns arrays or strings or arrays of arrays of strings.
+ * Use the global $post_meta variable to
+ * @link https://developer.wordpress.org/reference/functions/get_post_meta/
+ */
+function get_post_meta()
+{
+    global $post_meta;
+    return  $post_meta;
 }
 
 function get_post_types()

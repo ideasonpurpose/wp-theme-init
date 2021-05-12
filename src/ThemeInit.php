@@ -46,7 +46,7 @@ class ThemeInit
         /**
          * IOP Design Credit
          */
-        add_filter('admin_footer_text', [$this, 'iopCredit']);
+        add_filter('admin_footer_text', [$this, 'iopCredit'], 100);
 
         /**
          * Strip version from theme name when reading/writing options

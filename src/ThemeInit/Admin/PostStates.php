@@ -1,5 +1,5 @@
 <?php
-namespace ideasonpurpose\ThemeInit\Admin;
+namespace IdeasOnPurpose\ThemeInit\Admin;
 
 /**
  * A class to collect post-state labels. Initially, the only label here is

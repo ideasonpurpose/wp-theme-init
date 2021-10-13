@@ -27,14 +27,15 @@ final class AdminPostStatesTest extends TestCase
     /**
      * silly, but, coverage...
      */
-public  function testFilterCreated() {
-global $filters;
- $admin= new Admin\PostStates();
- $lastFilter = array_pop($filters);
- $this->assertArrayHasKey('add', $lastFilter, 'display_post_states');
+    public function testFilterCreated()
+    {
+        global $filters;
+        $admin = new Admin\PostStates();
+        $lastFilter = array_pop($filters);
+        $this->assertArrayHasKey('add', $lastFilter);
+        $this->assertEquals($lastFilter['add'], 'display_post_states');
 
-
-}
+    }
 
     public function test404State()
     {
@@ -44,7 +45,10 @@ global $filters;
 
         $post_meta = '404.php';
         $states = $Admin->add_404_state([], $this->post);
-        $this->assertArrayHasKey(404, $states, '404 Page');
+        $this->assertArrayHasKey(404, $states);
+        $this->assertEquals($states[404], '404 Page');
+        $this->assertArrayHasKey('404', $states);
+        $this->assertEquals($states['404'], '404 Page');
 
         $post_meta = 'index.php';
         $states = $Admin->add_404_state([], $this->post);

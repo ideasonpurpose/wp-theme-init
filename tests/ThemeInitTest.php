@@ -21,26 +21,82 @@ require_once 'Fixtures/WP_Image_Editor_Imagick.php';
  */
 final class ThemeInitTest extends TestCase
 {
+    protected function setUp(): void
+    {
+    }
+
+    /**
+     * This checks to see if all the pieces are called.
+     *
+     * Will be used to help make sure it keeps working after refactoring the constructor into an init method
+     */
+    public function testInstantiation()
+    {
+        $ThemeInit = new ThemeInit();
+
+        $this->assertContains(['admin_bar_menu', 'deHowdy'], all_added_filters());
+        $this->assertContains(
+            ['wp_head', 'adjacent_posts_rel_link_wp_head'],
+            all_removed_actions()
+        );
+    }
 
     public function testReadOption()
     {
+        global $options;
+        /**
+         * Replace PHPUnit's deprecated setMethodsExcept method with a list of all methods EXCEPT 'readOption'
+         *
+         * TODO: Waiting on feedback about best practices for partial mocks
+         *     - https://github.com/sebastianbergmann/phpunit/issues/4652#issuecomment-957662989
+         *     - https://stackoverflow.com/questions/69813091/how-to-best-preserve-some-methods-when-mocking-a-class-with-phpunit-10
+         */
+
+        $methods = get_class_methods(ThemeInit::class);
+        $methods = array_diff($methods, ['readOption']);
+
         $ThemeInit = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit')
             ->disableOriginalConstructor()
-            ->setMethodsExcept(['readOption'])
+            ->onlyMethods($methods)
             ->getMock();
+
+        /**
+         * Alternate method: Use Reflection API to get a copy of the readOption method
+         */
+        $class = new \ReflectionClass(ThemeInit::class);
+        $readOption = $class->getMethod('readOption');
 
         /**
          * The mocked get_option function returns the argument passed to it,
          * which should be the theme name with the version stripped off
          */
-        $opt = $ThemeInit->readOption('42', 'theme-name-1_2_3');
-        $this->assertEquals($opt, 'theme-name');
+        $expected = 'SomeValue';
+        $options['theme-name'] = $expected;
+        $opt = $ThemeInit->readOption('Other Value', 'theme-name-1_2_3');
+        $this->assertEquals($opt, $expected);
+        /**
+         * Check the ReflectionMethod too
+         */
+        $opt = $readOption->invoke(
+            $class->newInstanceWithoutConstructor(),
+            'hello',
+            'theme-name-1_2_4'
+        );
+        $this->assertEquals($opt, $expected);
 
         /**
-         * Options without versions pass through directly
+         * Option values attached to un-versioned theme-names pass through directly
          */
-        $opt = $ThemeInit->readOption('42', 'theme-name');
-        $this->assertEquals($opt, '42');
+        $expected = '42';
+        $opt = $ThemeInit->readOption($expected, 'theme-name');
+        $this->assertEquals($opt, $expected);
+
+        $opt = $readOption->invoke(
+            $class->newInstanceWithoutConstructor(),
+            $expected,
+            'theme-name_1_2_4'
+        );
+        $this->assertEquals($opt, $expected);
     }
 
     public function testWriteOption()

@@ -3,8 +3,9 @@
 namespace IdeasOnPurpose\ThemeInit;
 
 use PHPUnit\Framework\TestCase;
+use IdeasOnPurpose\WP\Test;
 
-require_once 'Fixtures/wp_stubs.php';
+Test\Stubs::init();
 
 /**
  * Simple spy for wp_enqueue_style to collect called arguments

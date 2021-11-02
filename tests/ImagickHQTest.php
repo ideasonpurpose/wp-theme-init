@@ -3,8 +3,10 @@
 namespace IdeasOnPurpose;
 
 use PHPUnit\Framework\TestCase;
+use IdeasOnPurpose\WP\Test;
 
-require_once 'Fixtures/wp_stubs.php';
+Test\Stubs::init();
+
 require_once 'Fixtures/WP_Image_Editor_Imagick.php';
 
 /**

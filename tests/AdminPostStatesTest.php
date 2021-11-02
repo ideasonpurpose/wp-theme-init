@@ -3,8 +3,9 @@
 namespace IdeasOnPurpose\ThemeInit;
 
 use PHPUnit\Framework\TestCase;
+use IdeasOnPurpose\WP\Test;
 
-require_once 'Fixtures/wp_stubs.php';
+Test\Stubs::init();
 
 /**
  * @covers \IdeasOnPurpose\ThemeInit\Admin\PostStates
@@ -34,7 +35,6 @@ final class AdminPostStatesTest extends TestCase
         $lastFilter = array_pop($filters);
         $this->assertArrayHasKey('add', $lastFilter);
         $this->assertEquals($lastFilter['add'], 'display_post_states');
-
     }
 
     public function test404State()

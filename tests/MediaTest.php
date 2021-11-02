@@ -3,8 +3,9 @@
 namespace IdeasOnPurpose\ThemeInit;
 
 use PHPUnit\Framework\TestCase;
+use IdeasOnPurpose\WP\Test;
 
-require_once 'Fixtures/wp_stubs.php';
+Test\Stubs::init();
 
 if (!function_exists(__NAMESPACE__ . '\error_log')) {
     function error_log($err)

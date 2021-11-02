@@ -256,11 +256,18 @@ class ThemeInit
      * the old settings. The solution here is to strip the version number from the
      * option name when writing, then request the version-less option on read.
      *
+     * If we someday decide to use plain version-less theme folders, these filters
+     * and methods can be removed.
+     *
      * Both filters are called from options.php:
      * @link https://github.com/WordPress/WordPress/blob/48f35e42fc790a62d85d2a6e104550fa5a1019b9/wp-includes/option.php#L166-L179
      * @link https://github.com/WordPress/WordPress/blob/48f35e42fc790a62d85d2a6e104550fa5a1019b9/wp-includes/option.php#L373-L384
      *
      * The regex is a minor modification of the officially-sanctioned semver regex
+     * Modifications include:
+     *   - Pattern starts with a leading hyphen to match our naming convention
+     *   - Pattern matches for `(?:\.|_)` instead of just `\.`
+     *   - Drops the `g` Global and `m` multiline flags
      * @link https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
      * @link https://regex101.com/r/Ly7O1x/3/
      */

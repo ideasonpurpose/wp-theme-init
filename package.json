@@ -23,9 +23,9 @@
   ],
   "scripts": {
     "composer": "npm run composer:install",
-    "composer:install": "docker-compose run --rm composer",
-    "composer:update": "docker-compose run --rm composer update",
-    "test": "docker-compose run test",
+    "composer:install": "docker compose run --rm composer",
+    "composer:update": "docker compose run --rm composer update",
+    "test": "docker compose run test",
     "posttest": "replace-in-file '<file name=\"/app/' '<file name=\"./' coverage.xml --quiet",
     "test:watch": "chokidar '{src,tests}/**/*.php' -c 'npm run test'",
     "version": "version-everything && auto-changelog && git add -u"

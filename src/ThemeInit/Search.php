@@ -42,16 +42,25 @@ class Search
     }
 
     /**
-     * Redirect query-string (GET) searches /search/[query]
+     * Redirect query-string (GET) searches /search/[query] when the site
+     * is using pretty permalinks.
      *
      * Called from the 'pre_get_posts' action
      */
     public function redirect()
     {
-        if (!is_admin() && is_search() && isset($_GET['s'])) {
-            $searchString = urlencode(get_search_query());
-            wp_redirect(trailingslashit(home_url("/search/{$searchString}")));
-            exit();
+        /**
+         * If the 'permalink_structure' options is empty, then the site is using
+         * plain query links. Only redirect if the site is using pretty permalinks.
+         */
+        $permlinks = get_option('permalink_structure');
+
+        if (!empty($permlinks)) {
+            if (!is_admin() && is_search() && isset($_GET['s'])) {
+                $searchString = urlencode(get_search_query());
+                wp_redirect(trailingslashit(home_url("/search/{$searchString}")));
+                exit();
+            }
         }
     }
 

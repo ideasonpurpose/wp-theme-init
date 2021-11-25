@@ -157,4 +157,29 @@ final class ThemeInitTest extends TestCase
         $ACF->InjectACF();
         $this->assertEquals($rest_fields[0]['post_type'], $type);
     }
+
+    public function testDebugFlushRewriteRules()
+    {
+        global $is_admin, $flush_rewrite_rules;
+        $is_admin = false;
+
+        $ThemeInit = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit')
+            ->disableOriginalConstructor()
+            ->onlyMethods([])
+            ->getMock();
+        $ThemeInit->is_debug = true;
+
+        $actual = $ThemeInit->debugFlushRewriteRules();
+        $this->assertFalse($actual);
+
+        $abspath = __DIR__ . '/Fixtures/htaccess/';
+        if (!defined('ABSPATH')) {
+            define('ABSPATH', $abspath);
+        }
+
+        $is_admin = true;
+        $expected = false;
+        $actual = $ThemeInit->debugFlushRewriteRules();
+        $this->assertEquals($expected, $flush_rewrite_rules);
+    }
 }

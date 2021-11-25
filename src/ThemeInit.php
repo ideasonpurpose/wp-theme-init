@@ -58,6 +58,7 @@ class ThemeInit
             10,
             3
         );
+        add_action('admin_init', [$this, 'debugFlushRewriteRules']);
         /**
          * Set JPEG_Quality
          * Add Imagick\HQ scaling
@@ -135,8 +136,9 @@ class ThemeInit
                     // }
                     // error_log('SHUTDOWN');
                     // error_log(print_r($_SERVER, true));
-                    $time = microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
-                    $msg = sprintf('Total processing time: %0.4f seconds', $time);
+
+                    // $time = microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
+                    // $msg = sprintf('Total processing time: %0.4f seconds', $time);
                     // echo "\n<!--\n\n$msg\n -->";
                     // printf('<script>console.log("%%c⏱", "font-weight: bold;", "%s");</script>', $msg);
                 },
@@ -185,6 +187,8 @@ class ThemeInit
      *       2. Trying to reach the 10.0.2.2 Vagrant external IP from Docker
      *          was causing a blocking DNS stall for 10 seconds per request.
      *          This made the backend nearly unusable.
+     *
+     * @codeCoverageIgnore
      */
     private function browsersyncReload()
     {
@@ -210,33 +214,32 @@ class ThemeInit
      *
      * https://codex.wordpress.org/Function_Reference/flush_rewrite_rules
      */
-    private function debugFlushRewriteRules()
+    public function debugFlushRewriteRules()
     {
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            add_action('admin_init', function () {
-                /*
-                 * This code is adapted from wp-includes/admin-bar.php for skipping AJAX, JSON, etc.
-                 *       https://github.com/WordPress/WordPress/blob/42d52ce08099f9fae82a1977da0237b32c863e94/wp-includes/admin-bar.php#L1179-L1181
-                 */
-                if (
-                    defined('XMLRPC_REQUEST') ||
-                    defined('DOING_AJAX') ||
-                    defined('IFRAME_REQUEST') ||
-                    wp_is_json_request() ||
-                    is_embed() ||
-                    !is_admin()
-                ) {
-                    return false;
-                }
+        if ($this->is_debug) {
+            /*
+             * This code is adapted from wp-includes/admin-bar.php for skipping AJAX, JSON, etc.
+             *       https://github.com/WordPress/WordPress/blob/42d52ce08099f9fae82a1977da0237b32c863e94/wp-includes/admin-bar.php#L1179-L1181
+             */
+            if (
+                defined('XMLRPC_REQUEST') ||
+                defined('DOING_AJAX') ||
+                defined('IFRAME_REQUEST') ||
+                wp_is_json_request() ||
+                is_embed() ||
+                !is_admin()
+            ) {
+                return false;
+            }
 
-                $htaccess = file_exists(ABSPATH . '.htaccess');
-                $htaccess_log = $htaccess ? '' : ' including .htaccess file';
-                error_log(
-                    "WP_DEBUG is true: Flushing rewrite rules{$htaccess_log}.\nRequest: {$_SERVER['REQUEST_URI']}"
-                );
+            $htaccess = file_exists(ABSPATH . '.htaccess');
+            $htaccess_log = $htaccess ? '' : ' including .htaccess file';
+            error_log(
+                "WP_DEBUG is true: Flushing rewrite rules{$htaccess_log}.\nRequest: {$_SERVER['REQUEST_URI']}"
+            );
 
-                flush_rewrite_rules(!$htaccess);
-            });
+            d($htaccess);
+            flush_rewrite_rules(!$htaccess);
         }
     }
 

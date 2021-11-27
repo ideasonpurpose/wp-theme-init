@@ -6,6 +6,7 @@ class Shortcodes
     public function __construct()
     {
         $this->addShortcodes();
+        // add_action('init', [$this, 'addShortcodes']);
     }
 
     /**
@@ -34,9 +35,9 @@ class Shortcodes
      *  Example 2: [email name@example.com]email us![/email]
      *  returns <a href="mailto:&#106;&#111;h&#110;&#99;&#111;&#109;">email us!</a>
      */
-    public function protectEmail($atts, $content = "")
+    public function protectEmail(array $atts, ?string $content = "")
     {
-        if (empty($atts) || !is_email($atts[0])) {
+        if (empty($atts) || !filter_var($atts[0], FILTER_VALIDATE_EMAIL)) {
             return $content;
         }
         $munged_mail = antispambot($atts[0]);

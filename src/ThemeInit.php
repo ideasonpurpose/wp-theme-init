@@ -238,7 +238,6 @@ class ThemeInit
                 "WP_DEBUG is true: Flushing rewrite rules{$htaccess_log}.\nRequest: {$_SERVER['REQUEST_URI']}"
             );
 
-            d($htaccess);
             flush_rewrite_rules(!$htaccess);
         }
     }

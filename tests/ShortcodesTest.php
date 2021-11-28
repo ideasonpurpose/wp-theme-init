@@ -25,11 +25,6 @@ final class ShortcodesTest extends TestCase
     public function testAddShortcodes()
     {
         global $shortcodes;
-        // $shortcodes = [];
-        // $Shortcode = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Extras\Shortcodes')
-        //     ->disableOriginalConstructor()
-        //     ->onlyMethods([])
-        //     ->getMock();
 
         $this->Shortcode->codes = ['stella' => 'one', 'frog' => 'two', 'orange' => 'three'];
         $this->Shortcode->addShortcodes();

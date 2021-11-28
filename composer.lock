@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cd5802d947fd1b79c57971311b3c86d3",
+    "content-hash": "a4cec1efa9ed174e70a0a1b00750726f",
     "packages": [
         {
             "name": "kint-php/kint",
@@ -157,7 +157,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ideasonpurpose/wp-test-stubs",
-                "reference": "ace800201bdbe2cd43e72d9536734c0e3a0035fd"
+                "reference": "7282c2e3596abfc74905fa7c6547279c37e14130"
             },
             "default-branch": true,
             "type": "library",
@@ -176,7 +176,7 @@
                 }
             ],
             "description": "A simple collection of stubs and doubles for testing WordPress code.",
-            "time": "2021-11-25T03:58:20+00:00"
+            "time": "2021-11-28T18:05:54+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -402,6 +402,50 @@
                 "source": "https://github.com/phar-io/version/tree/3.1.0"
             },
             "time": "2021-02-23T14:00:09+00:00"
+        },
+        {
+            "name": "php-stubs/acf-pro-stubs",
+            "version": "v5.10.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-stubs/acf-pro-stubs.git",
+                "reference": "a79d5b7727895821c6d50f7e1acf3c7abc828b0d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-stubs/acf-pro-stubs/zipball/a79d5b7727895821c6d50f7e1acf3c7abc828b0d",
+                "reference": "a79d5b7727895821c6d50f7e1acf3c7abc828b0d",
+                "shasum": ""
+            },
+            "require": {
+                "php-stubs/wordpress-stubs": "^4.7 || ^5.0"
+            },
+            "require-dev": {
+                "giacocorsiglia/stubs-generator": "^0.5.0",
+                "php": "~7.1"
+            },
+            "suggest": {
+                "symfony/polyfill-php73": "Symfony polyfill backporting some PHP 7.3+ features to lower PHP versions",
+                "szepeviktor/phpstan-wordpress": "WordPress extensions for PHPStan"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "Advanced Custom Fields PRO stubs for static analysis.",
+            "homepage": "https://github.com/php-stubs/acf-pro-stubs",
+            "keywords": [
+                "PHPStan",
+                "acf",
+                "static analysis",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/php-stubs/acf-pro-stubs/issues",
+                "source": "https://github.com/php-stubs/acf-pro-stubs/tree/v5.10.2"
+            },
+            "time": "2021-10-06T03:29:13+00:00"
         },
         {
             "name": "php-stubs/wordpress-stubs",

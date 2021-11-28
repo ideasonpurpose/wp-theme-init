@@ -5,9 +5,18 @@ namespace IdeasOnPurpose;
 use PHPUnit\Framework\TestCase;
 use WP_Admin_Bar;
 use IdeasOnPurpose\WP\Test;
+// use ThemeInit;
 
 Test\Stubs::init();
 require_once 'Fixtures/WP_Image_Editor_Imagick.php';
+
+if (!function_exists(__NAMESPACE__ . '\error_log')) {
+    function error_log($err)
+    {
+        global $error_log;
+        $error_log = $err;
+    }
+}
 
 /**
  * @covers \IdeasOnPurpose\ThemeInit
@@ -23,6 +32,11 @@ final class ThemeInitTest extends TestCase
 {
     protected function setUp(): void
     {
+        /** @var \IdeasOnPurpose\ThemeInit $this->ThemeInit */
+        $this->ThemeInit = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit')
+            ->disableOriginalConstructor()
+            ->addMethods([])
+            ->getMock();
     }
 
     /**
@@ -32,7 +46,7 @@ final class ThemeInitTest extends TestCase
      */
     public function testInstantiation()
     {
-        $ThemeInit = new ThemeInit();
+        new ThemeInit();
 
         $this->assertContains(['admin_bar_menu', 'deHowdy'], all_added_filters());
         $this->assertContains(
@@ -55,6 +69,7 @@ final class ThemeInitTest extends TestCase
         $methods = get_class_methods(ThemeInit::class);
         $methods = array_diff($methods, ['readOption']);
 
+        /** @var \IdeasOnPurpose\ThemeInit $ThemeInit */
         $ThemeInit = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit')
             ->disableOriginalConstructor()
             ->onlyMethods($methods)
@@ -101,30 +116,20 @@ final class ThemeInitTest extends TestCase
 
     public function testWriteOption()
     {
-        $ThemeInit = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit')
-            ->disableOriginalConstructor()
-            ->addMethods([])
-            ->getMock();
-
         /**
          * When the theme-name is corrected, writeOption will
          * return the old value to short-circuit update_option()
          */
-        $opt = $ThemeInit->writeOption('42', 'old-42', 'theme-name-1_2_3');
+        $opt = $this->ThemeInit->writeOption('42', 'old-42', 'theme-name-1_2_3');
         $this->assertEquals($opt, 'old-42');
 
-        $opt = $ThemeInit->writeOption('42', 'old-42', 'theme-name');
+        $opt = $this->ThemeInit->writeOption('42', 'old-42', 'theme-name');
         $this->assertEquals($opt, '42');
     }
 
     public function testIOPCredit()
     {
-        $ThemeInit = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit')
-            ->disableOriginalConstructor()
-            ->addMethods([])
-            ->getMock();
-
-        $credit = $ThemeInit->iopCredit('<span>Text</span>');
+        $credit = $this->ThemeInit->iopCredit('<span>Text</span>');
         $this->assertStringContainsString('Design and development', $credit);
         $this->assertStringContainsString('ideasonpurpose.com', $credit);
         $this->assertStringContainsString('Ideas On Purpose', $credit);
@@ -132,19 +137,20 @@ final class ThemeInitTest extends TestCase
 
     public function testDeHowdy()
     {
-        $ThemeInit = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit')
-            ->disableOriginalConstructor()
-            ->addMethods([])
-            ->getMock();
-
-        $ThemeInit->deHowdy(new WP_Admin_Bar());
-        $this->expectOutputRegex('/^(?!Howdy ).*/');
-        // $this->assertStringNotContainsString($this->getActualOutput(), 'Howdy');
+        $name = 'Stella';
+        $AdminBar = new WP_Admin_Bar();
+        $AdminBar->add_node(['id' => 'my-account', 'title' => "Howdy, $name"]);
+        $this->ThemeInit->deHowdy($AdminBar);
+        $actual = $AdminBar->get_node('my-account')->title;
+        $this->assertEquals($name, $actual);
+        $this->assertStringNotContainsString($actual, 'Howdy');
     }
 
     public function testInjectACF()
     {
         global $post_types, $rest_fields;
+
+        /** @var \IdeasOnPurpose\ThemeInit\Plugins\ACF $ACF */
         $ACF = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Plugins\ACF')
             ->disableOriginalConstructor()
             ->addMethods([])
@@ -160,17 +166,15 @@ final class ThemeInitTest extends TestCase
 
     public function testDebugFlushRewriteRules()
     {
-        global $is_admin, $flush_rewrite_rules;
+        global $is_admin, $flush_rewrite_rules, $error_log;
+        $error_log = '';
         $is_admin = false;
 
-        $ThemeInit = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit')
-            ->disableOriginalConstructor()
-            ->onlyMethods([])
-            ->getMock();
-        $ThemeInit->is_debug = true;
+        $this->ThemeInit->is_debug = true;
 
-        $actual = $ThemeInit->debugFlushRewriteRules();
+        $actual = $this->ThemeInit->debugFlushRewriteRules();
         $this->assertFalse($actual);
+        $this->assertEquals('', $error_log);
 
         $abspath = __DIR__ . '/Fixtures/htaccess/';
         if (!defined('ABSPATH')) {
@@ -179,7 +183,8 @@ final class ThemeInitTest extends TestCase
 
         $is_admin = true;
         $expected = false;
-        $actual = $ThemeInit->debugFlushRewriteRules();
+        $actual = $this->ThemeInit->debugFlushRewriteRules();
         $this->assertEquals($expected, $flush_rewrite_rules);
+        $this->assertStringContainsString(' Flushing rewrite rules', $error_log);
     }
 }

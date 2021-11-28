@@ -1,12 +1,14 @@
 <?php
 
-namespace ideasonpurpose\ThemeInit\Debug;
+namespace IdeasOnPurpose\ThemeInit\Debug;
 
 class ShowIncludes
 {
     public function __construct()
     {
-        if (defined('WP_DEBUG') && WP_DEBUG) {
+        $this->is_debug = defined('WP_DEBUG') && WP_DEBUG;
+
+        if ($this->is_debug) {
             add_action('wp_footer', [$this, 'show']);
         }
     }
@@ -15,18 +17,18 @@ class ShowIncludes
     {
         global $template;
         $includes = array_filter(get_included_files(), function ($t) {
-            return (strpos($t, get_template_directory()) !== false);
+            return strpos($t, get_template_directory()) !== false;
         });
 
         $includes = array_map(function ($t) {
-            return (str_replace(get_template_directory() . '/', '', $t));
+            return str_replace(get_template_directory() . '/', '', $t);
         }, array_values($includes));
 
         $all = [];
         $theme = [];
         $vendor = [];
 
-        foreach ($includes as $include ) {
+        foreach ($includes as $include) {
             $all[] = $include;
             if (strpos($include, 'vendor') === 0) {
                 $vendor[] = $include;
@@ -36,12 +38,18 @@ class ShowIncludes
         }
 
         $files = [
-            'template' => str_replace(get_template_directory(), '', $template),
+            'template' => str_replace(get_template_directory() . '/', '', $template),
             'all_includes' => $all,
             'theme_includes' => $theme,
-            'vendor_includes' => $vendor
-         ];
+            'vendor_includes' => $vendor,
+        ];
 
-        printf('<script>console.log("%%cPHP Includes", "font-weight: bold", %s);</script>', json_encode($files));
+        printf(
+            '<script>console.log("%%cPHP Includes", "font-weight: bold", %s);</script>',
+            json_encode($files)
+        );
+
+        // Actions don't use return values, this is purely for testing.
+        return $files;
     }
 }

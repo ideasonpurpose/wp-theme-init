@@ -14,8 +14,6 @@ final class ShowIncludesTest extends TestCase
 {
     protected function setUp(): void
     {
-        // global $shortcodes;
-        // $shortcodes = [];
         $this->ShowIncludes = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Debug\ShowIncludes')
             ->disableOriginalConstructor()
             ->onlyMethods([])
@@ -30,7 +28,7 @@ final class ShowIncludesTest extends TestCase
         require 'Fixtures/templates/fake-template.php';
 
         $expected = 'theme-placeholder.php';
-        $template_directory = '/app/tests/Fixtures/templates/';
+        $template_directory = __DIR__ . '/Fixtures/templates/';
         $template = "{$template_directory}{$expected}";
 
         $this->expectOutputRegex('/fake plain template/');

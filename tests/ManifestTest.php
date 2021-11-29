@@ -11,7 +11,7 @@ Test\Stubs::init();
  * Simple spy for wp_enqueue_style to collect called arguments
  */
 
-function wp_enqueue_script($handle, $file, $deps = [], $version, $showInHead)
+function wp_enqueue_script($handle, $file, $deps = [], $version = false, $showInHead = false)
 {
     global $enqueued;
     $enqueued[] = [
@@ -22,7 +22,7 @@ function wp_enqueue_script($handle, $file, $deps = [], $version, $showInHead)
     ];
 }
 
-function wp_enqueue_style($handle, $file, $deps = [], $version)
+function wp_enqueue_style($handle, $file, $deps = [], $version = false)
 {
     global $enqueued;
     $enqueued[] = ['handle' => $handle, 'file' => $file, 'deps' => $deps];

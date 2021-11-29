@@ -3,34 +3,28 @@ namespace ideasonpurpose\ThemeInit\Extras;
 
 /**
  * Thanks to https://gist.github.com/mattclements/eab5ef656b2f946c4bfb
- *
  */
 class GlobalCommentsDisable
 {
     public function __construct()
     {
-        add_action('init', function () {
-            if (is_admin_bar_showing()) {
-                remove_action(
-                    'admin_bar_menu',
-                    'wp_admin_bar_comments_menu',
-                    60
-                );
-            }
-        });
-
-        add_action('admin_init', [$this, 'postTypeSupport']);
-
-        // Remove comments page in menu
-        add_action('admin_menu', function () {
-            remove_menu_page('edit-comments.php');
-        });
+        add_action('init', [$this, 'removeFromAdminBar']);
+        add_action('admin_init', [$this, 'removePostTypeSupport']);
+        add_action('admin_init', [$this, 'removeFromDashboard']);
+        add_action('admin_menu', [$this, 'removeCommentsMenu']);
 
         add_filter('comments_open', '__return_false', 20, 2);
         add_filter('pings_open', '__return_false', 20, 2);
     }
 
-    public function postTypeSupport()
+    public function removeFromAdminBar()
+    {
+        if (is_admin_bar_showing()) {
+            remove_action('admin_bar_menu', 'wp_admin_bar_comments_menu', 60);
+        }
+    }
+
+    public function removePostTypeSupport()
     {
         $types = get_post_types();
         foreach ($types as $type) {
@@ -39,7 +33,15 @@ class GlobalCommentsDisable
                 remove_post_type_support($type, 'trackbacks');
             }
         }
-        // Remove comments metabox from dashboard
+    }
+
+    public function removeFromDashboard()
+    {
         remove_meta_box('dashboard_recent_comments', 'dashboard', 'normal');
+    }
+
+    public function removeCommentsMenu()
+    {
+        remove_menu_page('edit-comments.php');
     }
 }

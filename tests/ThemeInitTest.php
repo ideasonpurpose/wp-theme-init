@@ -146,24 +146,6 @@ final class ThemeInitTest extends TestCase
         $this->assertStringNotContainsString($actual, 'Howdy');
     }
 
-    public function testInjectACF()
-    {
-        global $post_types, $rest_fields;
-
-        /** @var \IdeasOnPurpose\ThemeInit\Plugins\ACF $ACF */
-        $ACF = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Plugins\ACF')
-            ->disableOriginalConstructor()
-            ->addMethods([])
-            ->getMock();
-
-        $ACF->injectACF();
-
-        $type = 'news';
-        $post_types = [$type];
-        $ACF->InjectACF();
-        $this->assertEquals($rest_fields[0]['post_type'], $type);
-    }
-
     public function testDebugFlushRewriteRules()
     {
         global $is_admin, $flush_rewrite_rules, $error_log;

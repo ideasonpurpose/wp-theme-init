@@ -157,7 +157,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ideasonpurpose/wp-test-stubs",
-                "reference": "9a84f416f3eb04828e90c433e6d8f93d54cabdec"
+                "reference": "31eae5a06b27c4070e0a0ac96a7e0689b666c547"
             },
             "default-branch": true,
             "type": "library",
@@ -176,7 +176,7 @@
                 }
             ],
             "description": "A simple collection of stubs and doubles for testing WordPress code.",
-            "time": "2021-11-29T01:18:20+00:00"
+            "time": "2021-11-29T03:50:09+00:00"
         },
         {
             "name": "myclabs/deep-copy",

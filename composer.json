@@ -10,16 +10,17 @@
   ],
   "authors": [
     {
-      "name": "Joe Maller",
-      "email": "joe@ideasonpurpose.com"
+      "name": "Ideas On Purpose",
+      "website": "https://www.ideasonpurpose.com"
     },
     {
-      "name": "Ideas On Purpose",
-      "homepage": "https://www.ideasonpurpose.com"
+      "name": "Joe Maller",
+      "email": "joe@ideasonpurpose.com"
     }
   ],
   "require": {
-    "kint-php/kint": "^3.3"
+    "kint-php/kint": "^3.3",
+    "ideasonpurpose/wp-admin-separators"
   },
   "autoload": {
     "psr-4": {
@@ -31,11 +32,5 @@
     "php-stubs/wordpress-stubs": "^5.8",
     "php-stubs/acf-pro-stubs": "^5.10.2",
     "ideasonpurpose/wp-test-stubs": "dev-main@dev"
-  },
-  "repositories": [
-    {
-      "type": "git",
-      "url": "https://github.com/ideasonpurpose/wp-test-stubs"
-    }
-  ]
+  }
 }

@@ -6,7 +6,7 @@ A common baseline of repeated functions, filters and actions used across our Wor
 
 [![Packagist](https://badgen.net/packagist/v/ideasonpurpose/wp-theme-init)](https://packagist.org/packages/ideasonpurpose/wp-theme-init)
 [![codecov](https://codecov.io/gh/ideasonpurpose/wp-theme-init/branch/master/graph/badge.svg)](https://codecov.io/gh/ideasonpurpose/wp-theme-init)
-[![Coveralls github](https://img.shields.io/coveralls/github/ideasonpurpose/wp-theme-init?label=Coveralls)](https://coveralls.io/github/ideasonpurpose/wp-theme-init)
+[![Coverage Status](https://coveralls.io/repos/github/ideasonpurpose/wp-theme-init/badge.svg?branch=master)](https://coveralls.io/github/ideasonpurpose/wp-theme-init?branch=master)
 [![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/ideasonpurpose/wp-theme-init)](https://codeclimate.com/github/ideasonpurpose/wp-theme-init)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 

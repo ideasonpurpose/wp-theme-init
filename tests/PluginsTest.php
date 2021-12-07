@@ -36,7 +36,6 @@ final class PluginsTest extends TestCase
 
     public function testReturnLow()
     {
-
         /** @var \IdeasOnPurpose\ThemeInit\Plugins\SEOFramework $seo */
         $seo = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Plugins\SEOFramework')
             ->disableOriginalConstructor()
@@ -59,9 +58,9 @@ final class PluginsTest extends TestCase
 
         /** @var \IdeasOnPurpose\ThemeInit\Plugins\SEOFramework $seo */
         $seo = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Plugins\SEOFramework')
-        ->disableOriginalConstructor()
-        ->addMethods([])
-        ->getMock();
+            ->disableOriginalConstructor()
+            ->addMethods([])
+            ->getMock();
 
         $expected = ['image' => 'fake/image.jpg'];
         $wp_get_attachment_image_src = ['global/image/placeholder.png'];
@@ -73,6 +72,5 @@ final class PluginsTest extends TestCase
         $has_post_thumbnail = false;
         $actual = $seo->useFeaturedImage($expected);
         $this->assertEquals($expected['image'], $actual['image']);
-
     }
 }

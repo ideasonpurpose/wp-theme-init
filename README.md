@@ -29,15 +29,7 @@ A common baseline of repeated functions, filters and actions used across our Wor
   Comments and Trackbacks are completely disabled. To re-enable comments, initialize the ThemeInit class with an array containing: `['enableComments' => true]`
 
 - **Admin Separators**
-  Quickly add separators to the WordPress admin dashboard's left sidebar. Initialize the class with a list of numbers representing the index locations where separators should appear in the menu. Arguments can be an array or multiple arguments.
-
-```php
-// Add separators
-new Admin\Separators(5, 7);
-
-// or use an array
-new Admin\Separators([5, 7]);
-```
+  Admin Separators have been moved to their own library: [wp-admin-separators](https://github.com/ideasonpurpose/wp-admin-separators)
 
 - **Media**
   Several media related features will be enabled:

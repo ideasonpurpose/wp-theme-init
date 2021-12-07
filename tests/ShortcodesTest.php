@@ -31,7 +31,6 @@ final class ShortcodesTest extends TestCase
 
         $this->assertCount(3, $shortcodes);
         $this->assertEquals(array_keys($this->Shortcode->codes), $shortcodes);
-        // $this->assertContains('IdeasOnPurpose\ThemeInit\Media\Imagick\HQ', $editors);
     }
 
     public function testProtectEmail()

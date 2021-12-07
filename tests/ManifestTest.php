@@ -60,6 +60,17 @@ final class ManifestTest extends TestCase
 {
     protected function setUp(): void
     {
+        /** @var \IdeasOnPurpose\ThemeInit $this->Manifest */
+        $this->Manifest = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Manifest')
+            ->disableOriginalConstructor()
+            ->onlyMethods(['error_handler'])
+            ->getMock();
+
+        /** @var \IdeasOnPurpose\ThemeInit $this->Manifest */
+        $this->ManifestErrorHandler = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Manifest')
+            ->disableOriginalConstructor()
+            ->onlyMethods([])
+            ->getMock();
     }
 
     public function loadManifest()
@@ -74,30 +85,18 @@ final class ManifestTest extends TestCase
 
     public function testLoadManifestMissing()
     {
-        $Manifest = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Manifest')
-            ->disableOriginalConstructor()
-            ->onlyMethods(['error_handler'])
-            ->getMock();
-
-        $Manifest->expects($this->exactly(2))->method('error_handler');
-
-        $Manifest->__construct();
-        $Manifest->__construct('no-file.json');
+        $this->Manifest->expects($this->exactly(2))->method('error_handler');
+        $this->Manifest->__construct();
+        $this->Manifest->__construct('no-file.json');
     }
 
     public function testLoadManifestParseError()
     {
-        $Manifest = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Manifest')
-            ->disableOriginalConstructor()
-            ->onlyMethods(['error_handler'])
-            ->getMock();
-
-        $Manifest->expects($this->once())->method('error_handler');
-
-        $Manifest->__construct(__DIR__ . '/Fixtures/manifest/no-parse.txt');
+        $this->Manifest->expects($this->once())->method('error_handler');
+        $this->Manifest->__construct(__DIR__ . '/Fixtures/manifest/no-parse.txt');
 
         $this->expectException('Exception');
-        $Manifest->load_manifest(__DIR__ . '/Fixtures/manifest/empty.json');
+        $this->Manifest->load_manifest(__DIR__ . '/Fixtures/manifest/empty.json');
     }
 
     /**
@@ -109,7 +108,6 @@ final class ManifestTest extends TestCase
 
         $manifest = new Manifest(__DIR__ . '/Fixtures/manifest/dependency-manifest.json');
 
-        // print_r($manifest->assets);
         $enqueued = [];
         $manifest->enqueue_wp_assets();
         $this->assertCount(2, $enqueued);
@@ -126,20 +124,29 @@ final class ManifestTest extends TestCase
     public function testErrorHandler()
     {
         global $error_log;
-        $ThemeInit = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Manifest')
-            ->disableOriginalConstructor()
-            ->setMethodsExcept(['error_handler'])
-            ->getMock();
+        $error_log = '';
+
+        $this->ManifestErrorHandler->is_debug = false;
+
+        $err_msg = 'Test error_message';
+        $this->ManifestErrorHandler->error_handler($err_msg);
 
         $this->expectOutputString('');
-        $err_msg = 'Test errror_message';
-        $ThemeInit->error_handler($err_msg);
+        $this->assertEquals($err_msg, $error_log);
+    }
+
+    public function testErrorHandlerDebug()
+    {
+        global $error_log;
+        $error_log = '';
+
+        $this->ManifestErrorHandler->is_debug = true;
+
+        $err_msg = 'Test error_message';
+        $this->ManifestErrorHandler->error_handler($err_msg);
 
         $this->assertEquals($err_msg, $error_log);
 
         $this->expectOutputString("\n<!-- {$err_msg} --> \n\n");
-
-        $ThemeInit->is_debug = true;
-        $ThemeInit->error_handler($err_msg);
     }
 }

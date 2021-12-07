@@ -42,6 +42,7 @@ final class MediaTest extends TestCase
 
     public function testAddHQImageEditors()
     {
+        /** @var \IdeasOnPurpose\ThemeInit\Media $Media */
         $Media = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Media')
             ->disableOriginalConstructor()
             ->addMethods([])

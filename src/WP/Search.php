@@ -1,6 +1,6 @@
 <?php
 
-namespace IdeasOnPurpose\ThemeInit;
+namespace IdeasOnPurpose\WP;
 /**
  * Search Fixes:
  *

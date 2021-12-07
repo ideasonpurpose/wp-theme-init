@@ -47,3 +47,10 @@ jobs:
       run: |
         composer require 'php-coveralls/php-coveralls:2.4.3'
         vendor/bin/php-coveralls -v
+        
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v2
+      with:
+        fail_ci_if_error: true
+        files: ./coverage1.xml
+        verbose: true

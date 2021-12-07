@@ -4,7 +4,7 @@
 
 A common baseline of repeated functions, filters and actions used across our WordPress themes.
 
-[![Travis Build Status](https://img.shields.io/travis/ideasonpurpose/wp-theme-init?logo=travis)](https://travis-ci.org/ideasonpurpose/wp-theme-init)
+[![Packagist](https://badgen.net/packagist/v/ideasonpurpose/wp-theme-init)](https://packagist.org/packages/ideasonpurpose/wp-theme-init)
 [![codecov](https://codecov.io/gh/ideasonpurpose/wp-theme-init/branch/master/graph/badge.svg)](https://codecov.io/gh/ideasonpurpose/wp-theme-init)
 [![Coveralls github](https://img.shields.io/coveralls/github/ideasonpurpose/wp-theme-init?label=Coveralls)](https://coveralls.io/github/ideasonpurpose/wp-theme-init)
 [![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/ideasonpurpose/wp-theme-init)](https://codeclimate.com/github/ideasonpurpose/wp-theme-init)

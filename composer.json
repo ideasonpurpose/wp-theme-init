@@ -31,5 +31,16 @@
     "php-stubs/wordpress-stubs": "^5.8",
     "php-stubs/acf-pro-stubs": "^5.10.2",
     "ideasonpurpose/wp-test-stubs": "dev-main@dev"
+  },
+  "archive": {
+    "exclude": [
+      "/.git*",
+      "/tests",
+      "CHANGELOG.md",
+      "docker-compose.yml",
+      "Dockerfile",
+      "package*",
+      "phpunit.xml"
+    ]
   }
 }

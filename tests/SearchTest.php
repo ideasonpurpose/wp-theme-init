@@ -7,41 +7,117 @@ use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
-// $stub = new Text\TextCase()->
-
-// if (!function_exists(__NAMESPACE__ . '\error_log')) {
-//     function error_log($err)
-//     {
-//         global $error_log;
-//         $error_log = $err;
-//     }
-// }
+if (!function_exists(__NAMESPACE__ . '\error_log')) {
+    function error_log($err)
+    {
+        global $error_log;
+        $error_log = $err;
+    }
+}
 
 /**
  * @covers \IdeasOnPurpose\WP\Search
  */
 final class SearchTest extends TestCase
 {
-    public function testCoverage()
+    protected function setUp(): void
     {
-        $Search = new Search();
+        $this->exitMessage = 'Exited!';
+        /** @var \IdeasOnPurpose\ThemeInit $this->ThemeInit */
+        $this->Search = $this->getMockBuilder('\IdeasOnPurpose\WP\Search')
+            ->disableOriginalConstructor()
+            ->onlyMethods(['exit'])
+            ->getMock();
 
-        $Search->rewrite();
-
-        $this->assertTrue(true);
+        $this->Search
+            ->expects($this->any())
+            ->method('exit')
+            ->willReturn($this->exitMessage);
     }
 
-    public function testPadDotSearch() {
+    public function testConstructor()
+    {
+        new Search();
+
+        /**
+         * These checks correspond to individual tests in this file
+         **/
+        $this->assertContains(['pre_get_posts', 'redirect'], all_added_actions());
+        $this->assertContains(['init', 'rewrite'], all_added_actions());
+        $this->assertContains(['search_link', 'pad_dot_search'], all_added_filters());
+        $this->assertContains(['posts_search', 'no_short_search'], all_added_filters());
+    }
+
+    public function testPadDotSearch()
+    {
         global $wp_rewrite;
         $wp_rewrite = new \stdClass();
         $wp_rewrite->search_base = 'plain_search_string';
 
-
-        $Search = new Search();
         $expected = '/some_prefix/plain_search_string/+.dotfile';
-        $actual = $Search->pad_dot_search('/some_prefix/plain_search_string/.dotfile', '.dotfile');
+        $actual = $this->Search->pad_dot_search(
+            '/some_prefix/plain_search_string/.dotfile',
+            '.dotfile'
+        );
 
         $this->assertEquals($expected, $actual);
+    }
 
+    public function testNoShortSearch()
+    {
+        global $is_admin, $search_query, $is_search, $is_main_query;
+
+        $is_admin = false;
+        $is_search = true;
+        $is_main_query = true;
+
+        $query = new \WP_Query();
+
+        $search_query = 'some search string';
+        $actual = $this->Search->no_short_search($search_query, $query);
+        $this->assertStringNotContainsString('AND 0=1', $actual);
+
+        $search_query = 'a';
+        $actual = $this->Search->no_short_search($search_query, $query);
+        $this->assertStringContainsString('AND 0=1', $actual);
+
+        $search_query = '';
+        $actual = $this->Search->no_short_search($search_query, $query);
+        $this->assertStringContainsString('AND 0=1', $actual);
+    }
+
+    public function testRewrite()
+    {
+        global $rewrite_rules;
+        $rewrite_rules = [];
+
+        $Search = new Search();
+        $this->assertCount(0, $rewrite_rules);
+
+        $Search->rewrite();
+        $this->assertCount(1, $rewrite_rules);
+    }
+
+    public function testRedirect()
+    {
+        global $options, $is_admin, $is_search, $wp_redirect;
+        $is_search = true;
+        $wp_redirect = [];
+        $_GET['s'] = 'search+string';
+
+        $is_admin = false;
+        $options['permalink_structure'] = '';
+        $actual = $this->Search->redirect();
+        $this->assertNull($actual);
+
+        $is_admin = true;
+        $options['permalink_structure'] = 'permalinks';
+        $actual = $this->Search->redirect();
+        $this->assertNull($actual);
+
+        $is_admin = false;
+        $actual = $this->Search->redirect();
+        $this->assertStringContainsString('search', $wp_redirect[0]['location']);
+        $this->assertEquals($actual, $this->exitMessage);
     }
 }

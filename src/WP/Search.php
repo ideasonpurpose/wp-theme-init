@@ -10,7 +10,7 @@ namespace IdeasOnPurpose\WP;
  *
  * Instantiate this class from functions.php:
  *
- * new IdeasOnPurpose\ThemeInit\Search();
+ * new IdeasOnPurpose\WP\Search();
  */
 class Search
 {
@@ -19,14 +19,30 @@ class Search
         add_filter('posts_search', [$this, 'no_short_search'], 10, 2);
         add_action('pre_get_posts', [$this, 'redirect']);
         add_action('init', [$this, 'rewrite']);
-        add_filter('search_link', [$this, 'pad_dot_search'], 10, 2);
+        add_filter('search_link', [$this, 'pad_dot_search']);
     }
 
     /**
-     * Short-circuit empty or <3 character search queries and show an empty search form
+     * Isolate calls to `exit` so we can run PHPUnit without exiting
+     * All this does is die.
+     *
+     * @codeCoverageIgnore
+     */
+    public function exit()
+    {
+        exit();
+    }
+    /**
+     * Short-circuit empty or < 2 character search queries and show an empty search form
      * Modified from https://wordpress.stackexchange.com/a/216734/71132
+     * Short search queries which match the additional conditions are replaced with a
+     * null query: ' AND 0=1 '
+     *
+     * @param string $search looks something like this:
+     *        " AND (((wp_posts.post_title LIKE '{3a30}fa{3a30}') OR (wp_posts.post_excerpt LIKE '{3a30}fa{3a30}') OR (wp_posts.post_content LIKE '{3a30}fa{3a30}')))  AND (wp_posts.post_password = '') "
      *
      * Called from the 'posts_search' filter
+     * @link https://developer.wordpress.org/reference/hooks/posts_search/
      */
     public function no_short_search($search, \WP_Query $q)
     {
@@ -49,18 +65,19 @@ class Search
      */
     public function redirect()
     {
+        if (is_admin()) {
+            return;
+        }
         /**
          * If the 'permalink_structure' options is empty, then the site is using
          * plain query links. Only redirect if the site is using pretty permalinks.
          */
         $permlinks = get_option('permalink_structure');
 
-        if (!empty($permlinks)) {
-            if (!is_admin() && is_search() && isset($_GET['s'])) {
-                $searchString = urlencode(get_search_query());
-                wp_redirect(trailingslashit(home_url("/search/{$searchString}")));
-                exit();
-            }
+        if (!empty($permlinks) && is_search() && isset($_GET['s'])) {
+            $searchString = urlencode(get_search_query());
+            wp_redirect(trailingslashit(home_url("/search/{$searchString}")));
+            return $this->exit();
         }
     }
 
@@ -71,10 +88,9 @@ class Search
      *
      * Called from the 'search_link' filter
      */
-    public function pad_dot_search($link, $search)
+    public function pad_dot_search($link)
     {
         global $wp_rewrite;
-
         return str_replace("{$wp_rewrite->search_base}/.", "{$wp_rewrite->search_base}/+.", $link);
     }
 

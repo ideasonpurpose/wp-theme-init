@@ -6,37 +6,15 @@ class ThemeInit
     /**
      * A placeholder for WP_DEBUG which can be mocked
      */
-    public $is_debug = false;
+    // public $is_debug = false;
 
     public function __construct($options = [])
     {
         $this->is_debug = defined('WP_DEBUG') && WP_DEBUG;
+        $this->abspath = defined('ABSPATH') && ABSPATH;
 
         $defaults = ['showIncludes' => true, 'enableComments' => false];
         $options = array_merge($defaults, $options);
-
-        $this->cleanWPHead();
-        $this->init();
-        $this->debugFlushRewriteRules();
-        /**
-         * `browsersyncReload` was disabled 2019-11-06, see note in method
-         */
-        // $this->browsersyncReload();
-
-        new ThemeInit\Extras\Shortcodes();
-
-        if (function_exists('get_fields')) {
-            new ThemeInit\Plugins\ACF();
-        }
-        new ThemeInit\Plugins\SEOFramework();
-
-        if ($options['showIncludes'] !== false) {
-            new ThemeInit\Debug\ShowIncludes();
-        }
-
-        if ($options['enableComments'] === false) {
-            new ThemeInit\Extras\GlobalCommentsDisable();
-        }
 
         /**
          * De-Howdy the WordPress Admin menu
@@ -45,20 +23,25 @@ class ThemeInit
 
         /**
          * IOP Design Credit
+         *
+         * Kinsta also applies this filter with priority 99, but they replace
+         * the entire string. We need to call ours after theirs.
          */
-        add_filter('admin_footer_text', [$this, 'iopCredit'], 100);
+        add_filter('admin_footer_text', [$this, 'iopCredit'], 500);
 
         /**
          * Strip version from theme name when reading/writing options
          */
-        add_filter('option_theme_mods_' . get_option('stylesheet'), [$this, 'readOption'], 10, 2);
-        add_filter(
-            'pre_update_option_theme_mods_' . get_option('stylesheet'),
-            [$this, 'writeOption'],
-            10,
-            3
-        );
+        $stylesheet = get_option('stylesheet');
+        add_filter("option_theme_mods_{$stylesheet}", [$this, 'readOption'], 10, 2);
+        add_filter("pre_update_option_theme_mods_{$stylesheet}", [$this, 'writeOption'], 10, 3);
+
         add_action('admin_init', [$this, 'debugFlushRewriteRules']);
+
+        $this->cleanWPHead();
+        $this->init();
+        $this->debugFlushRewriteRules();
+
         /**
          * Set JPEG_Quality
          * Add Imagick\HQ scaling
@@ -68,12 +51,24 @@ class ThemeInit
 
         /**
          * Add Post State Labels to WP Admin
+         *  - Includes "404 Page" label
          */
         new ThemeInit\Admin\PostStates();
 
+        new ThemeInit\Plugins\ACF();
+        new ThemeInit\Plugins\SEOFramework();
+
+        if ($options['showIncludes'] !== false) {
+            new ThemeInit\Debug\ShowIncludes();
+        }
+
+        if ($options['enableComments'] === false) {
+            new ThemeInit\Extras\GlobalCommentsDisable();
+        }
+        new ThemeInit\Extras\Shortcodes();
+
         // TODO: Is this too permissive? Reason not to disable unless WP_ENV == 'development'?
         \Kint::$enabled_mode = false;
-        // if (defined('WP_ENV') && WP_ENV !== 'development') {
         if ($this->is_debug) {
             \Kint::$enabled_mode = true;
         }
@@ -114,37 +109,6 @@ class ThemeInit
         if (!defined('DISALLOW_FILE_EDIT')) {
             define('DISALLOW_FILE_EDIT', true);
         }
-
-        /**
-         * Dump total execution time into the page
-         */
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            add_action(
-                'shutdown',
-                function () {
-                    /**
-                     * Need to be sure we don't dump this into a JSON response or other structured data request
-                     *
-                     * TODO: Check code from wp-includes/admin-bar.php for skipping AJAX, JSON, etc.
-                     *       https://github.com/WordPress/WordPress/blob/42d52ce08099f9fae82a1977da0237b32c863e94/wp-includes/admin-bar.php#L1179-L1181
-                     *
-                     *      if ( defined( 'XMLRPC_REQUEST' ) || defined( 'DOING_AJAX' ) || defined( 'IFRAME_REQUEST' ) || wp_is_json_request() ) {
-                     *
-                     */
-                    // if (wp_doing_ajax()) {
-                    //     return;
-                    // }
-                    // error_log('SHUTDOWN');
-                    // error_log(print_r($_SERVER, true));
-
-                    // $time = microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
-                    // $msg = sprintf('Total processing time: %0.4f seconds', $time);
-                    // echo "\n<!--\n\n$msg\n -->";
-                    // printf('<script>console.log("%%c⏱", "font-weight: bold;", "%s");</script>', $msg);
-                },
-                9999
-            );
-        }
     }
 
     /**
@@ -154,7 +118,7 @@ class ThemeInit
     {
         $credit =
             'Design and development by <a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>.';
-        return preg_replace('%</span>$%', " $credit</span>", $default);
+        return preg_replace('%(\.?)</span>$%', "$1 $credit</span>", $default);
     }
 
     /**
@@ -168,6 +132,37 @@ class ThemeInit
             'id' => 'my-account',
             'title' => $account_title,
         ]);
+    }
+
+    /**
+     * Should be called as late as possible, either shutdown or something right before shutdown
+     * need to check that it's not breaking JSON or other API-ish responses by appending
+     * a blob of arbitrary text to the content.
+     *
+     * @codeCoverageIgnore
+     *
+     */
+    public function totalExecutionTime()
+    {
+        /**
+                     * Need to be sure we don't dump this into a JSON response or other structured data request
+                     *
+                     * TODO: Check code from wp-includes/admin-bar.php for skipping AJAX, JSON, etc.
+                     *       https://github.com/WordPress/WordPress/blob/42d52ce08099f9fae82a1977da0237b32c863e94/wp-includes/admin-bar.php#L1179-L1181
+                     *
+                     *      if ( defined( 'XMLRPC_REQUEST' ) || defined( 'DOING_AJAX' ) || defined( 'IFRAME_REQUEST' ) || wp_is_json_request() ) {
+                     *
+                     */
+        // if (wp_doing_ajax()) {
+        //     return;
+        // }
+        // error_log('SHUTDOWN');
+        // error_log(print_r($_SERVER, true));
+
+        // $time = microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
+        // $msg = sprintf('Total processing time: %0.4f seconds', $time);
+        // echo "\n<!--\n\n$msg\n -->";
+        // printf('<script>console.log("%%c⏱", "font-weight: bold;", "%s");</script>', $msg);
     }
 
     /**
@@ -212,7 +207,7 @@ class ThemeInit
      * Used to auto-update permalinks in development so we don't have to keep
      * the permalinks admin page open.  /wp-admin/options-permalink.php
      *
-     * https://codex.wordpress.org/Function_Reference/flush_rewrite_rules
+     * https://developer.wordpress.org/reference/functions/flush_rewrite_rules/
      */
     public function debugFlushRewriteRules()
     {
@@ -232,16 +227,18 @@ class ThemeInit
                 return false;
             }
 
-            $htaccess = file_exists(ABSPATH . '.htaccess');
-            $htaccess_log = $htaccess ? '' : ' including .htaccess file';
-
+            $htaccess = file_exists($this->abspath . '.htaccess');
+            $htaccess_log = $htaccess ? ' including .htaccess file' : '';
             $_SERVER['REQUEST_URI'] = '/test/placeholder/file.php';
             error_log(
                 "WP_DEBUG is true: Flushing rewrite rules{$htaccess_log}.\nRequest: {$_SERVER['REQUEST_URI']}"
             );
+            $htaccess = '12345';
 
-            flush_rewrite_rules(!$htaccess);
+            flush_rewrite_rules($htaccess);
+
         }
+
     }
 
     /**

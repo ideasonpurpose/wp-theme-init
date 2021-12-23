@@ -157,12 +157,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ideasonpurpose/wp-test-stubs.git",
-                "reference": "fcdbecb58e103e30ccb89ce76b215d2bf072fa4a"
+                "reference": "9d452fad5a2b54f6bf688a591a75975908c1d570"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ideasonpurpose/wp-test-stubs/zipball/fcdbecb58e103e30ccb89ce76b215d2bf072fa4a",
-                "reference": "fcdbecb58e103e30ccb89ce76b215d2bf072fa4a",
+                "url": "https://api.github.com/repos/ideasonpurpose/wp-test-stubs/zipball/9d452fad5a2b54f6bf688a591a75975908c1d570",
+                "reference": "9d452fad5a2b54f6bf688a591a75975908c1d570",
                 "shasum": ""
             },
             "default-branch": true,
@@ -190,7 +190,7 @@
                 "issues": "https://github.com/ideasonpurpose/wp-test-stubs/issues",
                 "source": "https://github.com/ideasonpurpose/wp-test-stubs/tree/main"
             },
-            "time": "2021-12-12T06:32:51+00:00"
+            "time": "2021-12-23T20:27:57+00:00"
         },
         {
             "name": "myclabs/deep-copy",

@@ -127,12 +127,27 @@ final class ThemeInitTest extends TestCase
         $this->assertEquals($opt, '42');
     }
 
+    /**
+     * Note that Kinsta strips off the last period from the string, we check for that
+     * and restore it if missing.
+     **/
     public function testIOPCredit()
     {
-        $credit = $this->ThemeInit->iopCredit('<span>Text</span>');
+        $default =
+            '<span id="footer-thankyou">Thank you for creating with <a href="https://wordpress.org/">WordPress</a>.</span>';
+        $kinsta =
+            '<span id="footer-thankyou">Thanks for creating with <a href="https://wordpress.org/">WordPress</a> and hosting with <a href="https://kinsta.com/?utm_source=client-wp-admin&utm_medium=bottom-cta" target="_blank">Kinsta</a></span>';
+        $credit = $this->ThemeInit->iopCredit($default);
         $this->assertStringContainsString('Design and development', $credit);
         $this->assertStringContainsString('ideasonpurpose.com', $credit);
         $this->assertStringContainsString('Ideas On Purpose', $credit);
+        $this->assertStringContainsString('.</span>', $credit);
+
+        $credit = $this->ThemeInit->iopCredit($kinsta);
+        $this->assertStringContainsString('Design and development', $credit);
+        $this->assertStringContainsString('ideasonpurpose.com', $credit);
+        $this->assertStringContainsString('Ideas On Purpose', $credit);
+        $this->assertStringContainsString('.</span>', $credit);
     }
 
     public function testDeHowdy()
@@ -148,25 +163,53 @@ final class ThemeInitTest extends TestCase
 
     public function testDebugFlushRewriteRules()
     {
-        global $is_admin, $flush_rewrite_rules, $error_log;
+        global $is_admin, $is_embed, $wp_is_json_request, $flush_rewrite_rules, $error_log;
         $error_log = '';
+        $flush_rewrite_rules = false;
         $is_admin = false;
+        $is_embed = true;
+        $wp_is_json_request = false;
 
         $this->ThemeInit->is_debug = true;
-
-        $actual = $this->ThemeInit->debugFlushRewriteRules();
-        $this->assertFalse($actual);
-        $this->assertEquals('', $error_log);
-
-        $abspath = __DIR__ . '/Fixtures/htaccess/';
-        if (!defined('ABSPATH')) {
-            define('ABSPATH', $abspath);
-        }
+        $this->ThemeInit->abspath = __DIR__ . '/Fixtures/htaccess/';
 
         $is_admin = true;
-        $expected = false;
-        $actual = $this->ThemeInit->debugFlushRewriteRules();
-        $this->assertEquals($expected, $flush_rewrite_rules);
+        $is_embed = false;
+        $error_log = '';
+
+        $this->ThemeInit->debugFlushRewriteRules();
+
+        $this->assertTrue($flush_rewrite_rules);
+        $this->assertStringContainsString('Flushing rewrite rules', $error_log);
+        $this->assertStringContainsString('including .htaccess file', $error_log);
+    }
+
+    public function testDebugFlushRewriteRulesNoHTACCESS()
+    {
+        global $error_log, $flush_rewrite_rules, $is_admin, $is_embed, $wp_is_json_request;
+        $error_log = '';
+        $flush_rewrite_rules = 5;
+        $is_admin = true;
+        $is_embed = false;
+        $wp_is_json_request = false;
+
+        $this->ThemeInit->is_debug = true;
+        $this->ThemeInit->abspath = __DIR__ . '/Fixtures/manifest/';
+
+        $this->ThemeInit->debugFlushRewriteRules();
+
+        $this->assertFalse(file_exists($this->ThemeInit->abspath . '.htaccess'));
+        $this->assertTrue($flush_rewrite_rules);
         $this->assertStringContainsString(' Flushing rewrite rules', $error_log);
+        $this->assertStringNotContainsString('including .htaccess file', $error_log);
+    }
+
+    public function testFlushRewriteRulesNoDebug()
+    {
+        global $is_embed;
+        $is_embed = true;
+        $this->ThemeInit->is_debug = true;
+        $expected = $this->ThemeInit->debugFlushRewriteRules();
+        $this->assertFalse($expected);
     }
 }

@@ -6,7 +6,9 @@ class ACF
 {
     public function __construct()
     {
-        add_action('rest_api_init', [$this, 'injectACF']);
+        if (function_exists('get_fields')) {
+            add_action('rest_api_init', [$this, 'injectACF']);
+        }
     }
 
     public function injectACF()

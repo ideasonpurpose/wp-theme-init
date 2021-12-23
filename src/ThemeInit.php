@@ -113,6 +113,7 @@ class ThemeInit
 
     /**
      * Insert design credit into admin footer
+     * @link https://github.com/WordPress/WordPress/blob/5.8.1/wp-admin/admin-footer.php#L33-L50
      */
     public function iopCredit($default)
     {

@@ -230,16 +230,12 @@ class ThemeInit
 
             $htaccess = file_exists($this->abspath . '.htaccess');
             $htaccess_log = $htaccess ? ' including .htaccess file' : '';
-            $_SERVER['REQUEST_URI'] = '/test/placeholder/file.php';
             error_log(
                 "WP_DEBUG is true: Flushing rewrite rules{$htaccess_log}.\nRequest: {$_SERVER['REQUEST_URI']}"
             );
-            $htaccess = '12345';
 
             flush_rewrite_rules($htaccess);
-
         }
-
     }
 
     /**

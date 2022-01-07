@@ -164,6 +164,9 @@ final class ThemeInitTest extends TestCase
     public function testDebugFlushRewriteRules()
     {
         global $is_admin, $is_embed, $wp_is_json_request, $flush_rewrite_rules, $error_log;
+        global $_SERVER;
+        $_SERVER['REQUEST_URI'] = 'phpunit mock request';
+
         $error_log = '';
         $flush_rewrite_rules = false;
         $is_admin = false;
@@ -187,8 +190,11 @@ final class ThemeInitTest extends TestCase
     public function testDebugFlushRewriteRulesNoHTACCESS()
     {
         global $error_log, $flush_rewrite_rules, $is_admin, $is_embed, $wp_is_json_request;
+        global $_SERVER;
+        $_SERVER['REQUEST_URI'] = 'phpunit mock request';
+
         $error_log = '';
-        $flush_rewrite_rules = 5;
+        $flush_rewrite_rules = false;
         $is_admin = true;
         $is_embed = false;
         $wp_is_json_request = false;
@@ -199,7 +205,7 @@ final class ThemeInitTest extends TestCase
         $this->ThemeInit->debugFlushRewriteRules();
 
         $this->assertFalse(file_exists($this->ThemeInit->abspath . '.htaccess'));
-        $this->assertTrue($flush_rewrite_rules);
+        $this->assertFalse($flush_rewrite_rules);
         $this->assertStringContainsString(' Flushing rewrite rules', $error_log);
         $this->assertStringNotContainsString('including .htaccess file', $error_log);
     }
@@ -207,6 +213,8 @@ final class ThemeInitTest extends TestCase
     public function testFlushRewriteRulesNoDebug()
     {
         global $is_embed;
+        global $_SERVER;
+        $_SERVER['REQUEST_URI'] = 'phpunit mock request';
         $is_embed = true;
         $this->ThemeInit->is_debug = true;
         $expected = $this->ThemeInit->debugFlushRewriteRules();

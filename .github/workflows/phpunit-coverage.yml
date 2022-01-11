@@ -24,7 +24,7 @@ jobs:
       - name: Run test suite
         env:
           XDEBUG_MODE: coverage
-        run: vendor/bin/phpunit
+        run: phpunit
 
       # The Coveralls repo token is found  on the project's Settings page
       - name: Upload to Coveralls

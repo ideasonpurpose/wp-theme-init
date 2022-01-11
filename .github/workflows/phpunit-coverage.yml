@@ -18,13 +18,13 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer global require phpunit/phpunit --update-with-all-dependencies
           composer install --prefer-dist --no-progress --no-suggest
+          composer require phpunit/phpunit
 
       - name: Run test suite
         env:
           XDEBUG_MODE: coverage
-        run: phpunit
+        run: vendor/bin/phpunit
 
       # The Coveralls repo token is found  on the project's Settings page
       - name: Upload to Coveralls

@@ -68,6 +68,11 @@ class Search
         if (is_admin()) {
             return;
         }
+
+        // \Kint::$mode_default = \Kint::MODE_CLI;
+        // error_log(@d($searchString, "sadfdsf"));
+        // \Kint::$mode_default = \Kint::MODE_RICH;
+
         /**
          * If the 'permalink_structure' options is empty, then the site is using
          * plain query links. Only redirect if the site is using pretty permalinks.
@@ -75,7 +80,11 @@ class Search
         $permlinks = get_option('permalink_structure');
 
         if (!empty($permlinks) && is_search() && isset($_GET['s'])) {
-            $searchString = urlencode(get_search_query());
+            $searchString = get_search_query();
+            if (preg_match('/^\W*/', $searchString)) {
+                $searchString = ' ' . trim($searchString);
+            }
+            $searchString = urlencode($searchString);
             wp_redirect(trailingslashit(home_url("/search/{$searchString}")));
             return $this->exit();
         }

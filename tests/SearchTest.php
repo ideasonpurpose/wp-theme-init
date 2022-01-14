@@ -120,4 +120,28 @@ final class SearchTest extends TestCase
         $this->assertStringContainsString('search', $wp_redirect[0]['location']);
         $this->assertEquals($actual, $this->exitMessage);
     }
+
+    public function testRedirectEscapesLeadingNonWordCharacters()
+    {
+        global $search_query, $options, $is_search, $wp_redirect;
+        $wp_redirect = [];
+        $is_search = true;
+        $options['permalink_structure'] = 'path';
+        $_GET['s'] = true;
+
+        $search_query = '.thing';
+        $query_encoded = '/' . urlencode(" {$search_query}");
+        $this->Search->redirect();
+        $this->assertStringContainsString($query_encoded, $wp_redirect[0]['location']);
+
+        $search_query = '/thing';
+        $query_encoded = '/' . urlencode(" {$search_query}");
+        $this->Search->redirect();
+        $this->assertStringContainsString($query_encoded, $wp_redirect[1]['location']);
+
+        $search_query = ' thing';
+        $query_encoded = '/' . urlencode("{$search_query}");
+        $this->Search->redirect();
+        $this->assertStringContainsString($query_encoded, $wp_redirect[2]['location']);
+    }
 }

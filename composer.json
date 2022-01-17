@@ -27,9 +27,10 @@
     }
   },
   "require-dev": {
-    "php-stubs/wordpress-stubs": "^5.8",
+    "ideasonpurpose/wp-test-stubs": "dev-main@dev",
     "php-stubs/acf-pro-stubs": "^5.10.2",
-    "ideasonpurpose/wp-test-stubs": "dev-main@dev"
+    "php-stubs/wordpress-stubs": "^5.8",
+    "phpunit/phpunit": "^9.5"
   },
   "archive": {
     "exclude": [

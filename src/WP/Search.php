@@ -20,6 +20,7 @@ class Search
         add_action('pre_get_posts', [$this, 'redirect']);
         add_action('init', [$this, 'rewrite']);
         add_filter('search_link', [$this, 'pad_dot_search']);
+        add_filter('get_search_query', 'trim'); // reverse the leading dot-search fop display on pages
     }
 
     /**
@@ -69,22 +70,42 @@ class Search
             return;
         }
 
-        // \Kint::$mode_default = \Kint::MODE_CLI;
-        // error_log(@d($searchString, "sadfdsf"));
-        // \Kint::$mode_default = \Kint::MODE_RICH;
-
         /**
          * If the 'permalink_structure' options is empty, then the site is using
          * plain query links. Only redirect if the site is using pretty permalinks.
          */
-        $permlinks = get_option('permalink_structure');
+        $permalinks = get_option('permalink_structure');
+        if (empty($permalinks)) {
+            return;
+        }
 
-        if (!empty($permlinks) && is_search() && isset($_GET['s'])) {
-            $searchString = get_search_query();
-            if (preg_match('/^\W*/', $searchString)) {
-                $searchString = ' ' . trim($searchString);
+        /**
+         * is_search() will always be true if $_GET['s'] is set, but $_GET['s']
+         * could be empty.
+         * @link https://github.com/WordPress/wordpress-develop/blob/ba943e113d3b31b121f77a2d30aebe14b047c69d/src/wp-includes/class-wp-query.php#L825-L827
+         */
+        if (isset($_GET['s'])) {
+            $searchString = get_search_query(false);
+            /**
+             * Fallback to native WordPress query-string search behavior
+             * for these two special cases:
+             *
+             *  - Search strings containing slashes
+             *    Normal URL processing squashes multiple slashes, and escaped
+             *    slashes (%2F) are intercepted by Apache and 404'd before
+             *    PHP/WordPress ever sees the request.
+             *
+             *  - Leading dots
+             *    Any path segment starting with a dot is rejected by Apache
+             *    and returns an odd 404-ish error page. This isn't the bare
+             *    Apache 404, but not the PHP 404 either.
+             */
+            if (strpos($searchString, '/') !== false || strpos($searchString, '.') === 0) {
+                return;
             }
-            $searchString = urlencode($searchString);
+
+            $searchString = urlencode(stripslashes($searchString));
+
             wp_redirect(trailingslashit(home_url("/search/{$searchString}")));
             return $this->exit();
         }
@@ -108,6 +129,6 @@ class Search
      */
     public function rewrite()
     {
-        add_rewrite_rule('search/?$', 'index.php?s=', 'top');
+        add_rewrite_rule('search/?(.+)?/?$', 'index.php?s=$matches[1]', 'top');
     }
 }

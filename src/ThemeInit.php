@@ -117,8 +117,15 @@ class ThemeInit
      */
     public function iopCredit($default)
     {
+        if (!$default) {
+            $default =
+                '<span id="footer-thankyou">Thank you for creating with <a href="https://wordpress.org/">WordPress</a>.</span>';
+        }
+
         $credit =
             'Design and development by <a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>.';
+
+        $default = preg_replace('%\.?</a>.?</span>%', '</a>.</span>', $default);
         return preg_replace('%(\.?)</span>$%', "$1 $credit</span>", $default);
     }
 

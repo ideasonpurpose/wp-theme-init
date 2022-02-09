@@ -138,13 +138,20 @@ final class ThemeInitTest extends TestCase
         $kinsta =
             '<span id="footer-thankyou">Thanks for creating with <a href="https://wordpress.org/">WordPress</a> and hosting with <a href="https://kinsta.com/?utm_source=client-wp-admin&utm_medium=bottom-cta" target="_blank">Kinsta</a></span>';
         $credit = $this->ThemeInit->iopCredit($default);
-        $this->assertStringContainsString('Design and development', $credit);
+        $this->assertStringContainsString('WordPress</a>. Design and development', $credit);
         $this->assertStringContainsString('ideasonpurpose.com', $credit);
         $this->assertStringContainsString('Ideas On Purpose', $credit);
         $this->assertStringContainsString('.</span>', $credit);
 
         $credit = $this->ThemeInit->iopCredit($kinsta);
-        $this->assertStringContainsString('Design and development', $credit);
+        $this->assertStringContainsString('Kinsta</a>. Design and development', $credit);
+        $this->assertStringContainsString('ideasonpurpose.com', $credit);
+        $this->assertStringContainsString('Ideas On Purpose', $credit);
+        $this->assertStringContainsString('.</span>', $credit);
+
+
+        $credit = $this->ThemeInit->iopCredit('');
+        $this->assertStringContainsString('WordPress</a>. Design and development', $credit);
         $this->assertStringContainsString('ideasonpurpose.com', $credit);
         $this->assertStringContainsString('Ideas On Purpose', $credit);
         $this->assertStringContainsString('.</span>', $credit);

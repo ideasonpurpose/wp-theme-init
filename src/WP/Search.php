@@ -129,6 +129,12 @@ class Search
      */
     public function rewrite()
     {
-        add_rewrite_rule('search/?(.+)?/?$', 'index.php?s=$matches[1]', 'top');
+        add_rewrite_rule(
+            'search/?(.+)(?:/page/(\d+))/?$',
+            'index.php?s=$matches[1]&paged=$matches[2]',
+            'top'
+        );
+        add_rewrite_rule('search/?((?!/).+)/?$', 'index.php?s=$matches[1]', 'top');
+        add_rewrite_rule('search/?$', 'index.php?s=', 'top');
     }
 }

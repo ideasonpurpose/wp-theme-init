@@ -95,7 +95,7 @@ final class SearchTest extends TestCase
         $this->assertCount(0, $rewrite_rules);
 
         $Search->rewrite();
-        $this->assertCount(1, $rewrite_rules);
+        $this->assertCount(3, $rewrite_rules);
     }
 
     public function testRedirect()

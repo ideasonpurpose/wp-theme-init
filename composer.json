@@ -23,6 +23,9 @@
       "IdeasOnPurpose\\": "src"
     }
   },
+  "config": {
+    "sort-packages": true
+  },
   "require": {
     "kint-php/kint": "^4.1"
   },
@@ -38,7 +41,6 @@
       "/tests",
       "CHANGELOG.md",
       "docker-compose.yml",
-      "Dockerfile",
       "package*",
       "phpunit.xml"
     ]

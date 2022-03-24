@@ -4,41 +4,36 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "523c0832c1640fe94d2f76907b042f2e",
+    "content-hash": "8cec8eb710f8980affb44894e92518e6",
     "packages": [
         {
             "name": "kint-php/kint",
-            "version": "3.3",
+            "version": "4.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kint-php/kint.git",
-                "reference": "335ac1bcaf04d87df70d8aa51e8887ba2c6d203b"
+                "reference": "fa53c4333cda79dc9cb002cfa029abe994d0ae00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kint-php/kint/zipball/335ac1bcaf04d87df70d8aa51e8887ba2c6d203b",
-                "reference": "335ac1bcaf04d87df70d8aa51e8887ba2c6d203b",
+                "url": "https://api.github.com/repos/kint-php/kint/zipball/fa53c4333cda79dc9cb002cfa029abe994d0ae00",
+                "reference": "fa53c4333cda79dc9cb002cfa029abe994d0ae00",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.6"
+                "php": ">=5.6"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.0",
-                "phpunit/phpunit": "^4.0",
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "phpspec/prophecy-phpunit": "^2",
+                "phpunit/phpunit": "^9.0",
                 "seld/phar-utils": "^1.0",
-                "symfony/finder": "^2.0 || ^3.0 || ^4.0",
-                "vimeo/psalm": "^3.0"
+                "symfony/finder": "^3.0 || ^4.0 || ^5.0",
+                "vimeo/psalm": "^4.0"
             },
             "suggest": {
-                "ext-ctype": "Simple data type tests",
-                "ext-iconv": "Provides fallback detection for ambiguous legacy string encodings such as the Windows and ISO 8859 code pages",
-                "ext-mbstring": "Provides string encoding detection",
-                "kint-php/kint-js": "Provides a simplified dump to console.log()",
-                "kint-php/kint-twig": "Provides d() and s() functions in twig templates",
-                "symfony/polyfill-ctype": "Replacement for ext-ctype if missing",
-                "symfony/polyfill-iconv": "Replacement for ext-iconv if missing",
-                "symfony/polyfill-mbstring": "Replacement for ext-mbstring if missing"
+                "kint-php/kint-helpers": "Provides extra helper functions",
+                "kint-php/kint-twig": "Provides d() and s() functions in twig templates"
             },
             "type": "library",
             "autoload": {
@@ -59,10 +54,6 @@
                     "homepage": "https://github.com/jnvsor"
                 },
                 {
-                    "name": "Rokas Šleinius",
-                    "homepage": "https://github.com/raveren"
-                },
-                {
                     "name": "Contributors",
                     "homepage": "https://github.com/kint-php/kint/graphs/contributors"
                 }
@@ -76,9 +67,9 @@
             ],
             "support": {
                 "issues": "https://github.com/kint-php/kint/issues",
-                "source": "https://github.com/kint-php/kint/tree/master"
+                "source": "https://github.com/kint-php/kint/tree/4.1.2"
             },
-            "time": "2019-10-17T18:05:24+00:00"
+            "time": "2022-02-22T20:32:24+00:00"
         }
     ],
     "packages-dev": [
@@ -1060,16 +1051,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.5.18",
+            "version": "9.5.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "1b5856028273bfd855e60a887278857d872ec67a"
+                "reference": "35ea4b7f3acabb26f4bb640f8c30866c401da807"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1b5856028273bfd855e60a887278857d872ec67a",
-                "reference": "1b5856028273bfd855e60a887278857d872ec67a",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/35ea4b7f3acabb26f4bb640f8c30866c401da807",
+                "reference": "35ea4b7f3acabb26f4bb640f8c30866c401da807",
                 "shasum": ""
             },
             "require": {
@@ -1099,7 +1090,7 @@
                 "sebastian/global-state": "^5.0.1",
                 "sebastian/object-enumerator": "^4.0.3",
                 "sebastian/resource-operations": "^3.0.3",
-                "sebastian/type": "^2.3.4",
+                "sebastian/type": "^3.0",
                 "sebastian/version": "^3.0.2"
             },
             "require-dev": {
@@ -1147,7 +1138,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.18"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.19"
             },
             "funding": [
                 {
@@ -1159,7 +1150,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-03-08T06:52:28+00:00"
+            "time": "2022-03-15T09:57:31+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -2018,28 +2009,28 @@
         },
         {
             "name": "sebastian/type",
-            "version": "2.3.4",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/type.git",
-                "reference": "b8cd8a1c753c90bc1a0f5372170e3e489136f914"
+                "reference": "b233b84bc4465aff7b57cf1c4bc75c86d00d6dad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/type/zipball/b8cd8a1c753c90bc1a0f5372170e3e489136f914",
-                "reference": "b8cd8a1c753c90bc1a0f5372170e3e489136f914",
+                "url": "https://api.github.com/repos/sebastianbergmann/type/zipball/b233b84bc4465aff7b57cf1c4bc75c86d00d6dad",
+                "reference": "b233b84bc4465aff7b57cf1c4bc75c86d00d6dad",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.3"
             },
             "require-dev": {
-                "phpunit/phpunit": "^9.3"
+                "phpunit/phpunit": "^9.5"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -2062,7 +2053,7 @@
             "homepage": "https://github.com/sebastianbergmann/type",
             "support": {
                 "issues": "https://github.com/sebastianbergmann/type/issues",
-                "source": "https://github.com/sebastianbergmann/type/tree/2.3.4"
+                "source": "https://github.com/sebastianbergmann/type/tree/3.0.0"
             },
             "funding": [
                 {
@@ -2070,7 +2061,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-06-15T12:49:02+00:00"
+            "time": "2022-03-15T09:54:48+00:00"
         },
         {
             "name": "sebastian/version",

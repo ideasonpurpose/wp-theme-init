@@ -1,7 +1,8 @@
 services:
+  # Utility service for running composer, provides a local volume for storing access tokens
   # https://hub.docker.com/_/composer
   composer:
-    image: composer:2.2.7
+    image: composer:2.2.9
     user: "${UID:-1000}:${GID:-1000}"
     environment:
       COMPOSER_HOME: /.composer

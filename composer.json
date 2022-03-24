@@ -18,13 +18,13 @@
       "email": "joe@ideasonpurpose.com"
     }
   ],
-  "require": {
-    "kint-php/kint": "^3.3"
-  },
   "autoload": {
     "psr-4": {
       "IdeasOnPurpose\\": "src"
     }
+  },
+  "require": {
+    "kint-php/kint": "^4.1"
   },
   "require-dev": {
     "ideasonpurpose/wp-test-stubs": "dev-main@dev",

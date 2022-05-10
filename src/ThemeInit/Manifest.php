@@ -115,6 +115,10 @@ class Manifest
             $cssDeps = [];
             $themeName = preg_replace('/\bv?[0-9.-]+$/', '', wp_get_theme()->get('Name'));
 
+            // TODO: Instead of the Theme Name, which is long, use get_stylesheet() which is just the
+            //       directory/slug of the theme.
+            // @link https://wordpress.stackexchange.com/a/319678/71132
+
             foreach ($assets['dependencies'] as $src => $file) {
                 ['extension' => $ext, 'filename' => $filename] = str_replace(
                     '~',

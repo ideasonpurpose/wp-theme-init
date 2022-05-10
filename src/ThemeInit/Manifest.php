@@ -18,7 +18,13 @@ class Manifest
         'editor' => [],
     ];
 
-    // TODO: This part sucks, there's got to be a better way of specifying baseline dependencies
+    /**
+     * TODO: This part sucks, there's got to be a better way of specifying baseline dependencies
+     *
+     * See WordPress dependency-extraction-webpack-plugin
+     * @link https://developer.wordpress.org/block-editor/reference-guides/packages/packages-dependency-extraction-webpack-plugin/
+     */
+
     public $deps = [
         'editor' => ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor'],
         'assets' => ['jquery'],
@@ -113,11 +119,7 @@ class Manifest
         foreach ($this->manifest as $entry => $assets) {
             $jsDeps = [];
             $cssDeps = [];
-            $themeName = preg_replace('/\bv?[0-9.-]+$/', '', wp_get_theme()->get('Name'));
-
-            // TODO: Instead of the Theme Name, which is long, use get_stylesheet() which is just the
-            //       directory/slug of the theme.
-            // @link https://wordpress.stackexchange.com/a/319678/71132
+            $themeName = get_stylesheet();
 
             foreach ($assets['dependencies'] as $src => $file) {
                 ['extension' => $ext, 'filename' => $filename] = str_replace(

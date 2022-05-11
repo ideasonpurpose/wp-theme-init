@@ -15,6 +15,20 @@ A common baseline of repeated functions, filters and actions used across our Wor
 - **Webpack dependency manifest asset loading**<br>
   Uses the [Dependency Manifest Plugin](https://github.com/ideasonpurpose/docker-build/blob/master/lib/DependencyManifestPlugin.js) from [ideasonpurpose/docker-build](https://github.com/ideasonpurpose/docker-build).
 
+  Scripts will be enqueued using the stylesheet "slug" combined with their entrypoint name.
+
+  For example, if the theme directory was `ldco` the following manifest entry would be enqueued as `ldco-main-js`
+
+  ```json
+  {
+    "main": {
+      "files": {
+        "main.js": "/wp-content/themes/ldco/dist/main-b4216f6b.js"
+      }
+    }
+  }
+  ```
+
 - **Miscellaneous Fixes and Cleanup**
 
   - Add a design credit to the WordPress dashboard.

@@ -148,6 +148,8 @@ class Manifest
                  *       the tag, which will be `id="iop-menu-js"`
                  *
                  * @link https://www.php.net/manual/en/function.pathinfo.php
+                 * @see  /wp-includes/class.wp-scripts.php#L394
+                 * @link https://github.com/WordPress/WordPress/blob/70e7eec1751a6aca14b4853c10e0d961e2baddf1/wp-includes/class.wp-scripts.php#L394
                  */
                 ['extension' => $ext, 'filename' => $filename] = pathinfo($src);
                 $assetHandle = sanitize_title("$themeName-$filename");

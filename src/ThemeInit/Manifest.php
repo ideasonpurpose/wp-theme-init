@@ -139,8 +139,16 @@ class Manifest
                 }
             }
 
-            // TODO: Why are there two identical loops here?
             foreach ($assets['files'] as $src => $file) {
+                /**
+                 * Note: PHP's pathinfo returns the filename without its extension
+                 *       So theme `iop` with an entrypoint file named `menu.js` would
+                 *       enqueue the script as `iop-menu` (no extension). Remember
+                 *       also that WordPress will append the file type when injecting
+                 *       the tag, which will be `id="iop-menu-js"`
+                 *
+                 * @link https://www.php.net/manual/en/function.pathinfo.php
+                 */
                 ['extension' => $ext, 'filename' => $filename] = pathinfo($src);
                 $assetHandle = sanitize_title("$themeName-$filename");
 

@@ -19,18 +19,6 @@ class Manifest
     ];
 
     /**
-     * TODO: This part sucks, there's got to be a better way of specifying baseline dependencies
-     *
-     * See WordPress dependency-extraction-webpack-plugin
-     * @link https://developer.wordpress.org/block-editor/reference-guides/packages/packages-dependency-extraction-webpack-plugin/
-     */
-
-    public $deps = [
-        'editor' => ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor'],
-        'assets' => ['jquery'],
-    ];
-
-    /**
      * The manifest file is expected to live here:
      *      get_template_directory() . '/dist/manifest.json'
      *
@@ -139,6 +127,17 @@ class Manifest
                 }
             }
 
+            /**
+             * Note: this is dependent on the $entry value being used as the base of $files keys
+             */
+            if (array_key_exists("{$entry}.php", $assets['files'])) {
+                $script_asset_path = get_template_directory() . $assets['files']["{$entry}.php"];
+                if (file_exists($script_asset_path)) {
+                    $asset_php = require $script_asset_path;
+                    $jsDeps = array_merge($jsDeps, $asset_php['dependencies']);
+                }
+            }
+
             foreach ($assets['files'] as $src => $file) {
                 /**
                  * Note: PHP's pathinfo returns the filename without its extension
@@ -158,15 +157,13 @@ class Manifest
                 $isEditor = stripos($entry, 'editor') === 0;
                 $showInHead = stripos($src, 'head') === 0 || stripos($src, 'admin-head') === 0;
 
-                $wpDeps = $isEditor ? $this->deps['editor'] : $this->deps['assets'];
-
                 $asset = [
                     'handle' => $assetHandle,
                     'entry' => $entry,
                     'file' => $file,
                     'showInHead' => $showInHead,
                     'ext' => $ext,
-                    'deps_js' => array_merge($wpDeps, $jsDeps),
+                    'deps_js' => $jsDeps,
                     'deps_css' => $cssDeps,
                     'isAdmin' => $isAdmin,
                     'isEditor' => $isEditor,

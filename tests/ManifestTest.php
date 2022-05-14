@@ -71,10 +71,9 @@ final class ManifestTest extends TestCase
             ->disableOriginalConstructor()
             ->onlyMethods([])
             ->getMock();
-    }
 
-    public function loadManifest()
-    {
+        global $template_directory;
+        $template_directory = __DIR__;
     }
 
     public function testLoadManifest()
@@ -119,6 +118,34 @@ final class ManifestTest extends TestCase
         $enqueued = [];
         $manifest->enqueue_editor_assets();
         $this->assertCount(2, $enqueued);
+    }
+
+    public function testIncludeDependenciesFromAssetFiles()
+    {
+        global $enqueued;
+
+        $manifest = new Manifest(__DIR__ . '/Fixtures/manifest/dependency-manifest.json');
+
+        $enqueued = [];
+        $manifest->enqueue_wp_assets();
+        $this->assertCount(3, $enqueued[1]['deps']);
+        $this->assertContains('jquery', $enqueued[1]['deps']);
+        $this->assertNotContains('react', $enqueued[1]['deps']);
+        $this->assertNotContains('lodash', $enqueued[1]['deps']);
+
+        $enqueued = [];
+        $manifest->enqueue_admin_assets();
+        $this->assertCount(1, $enqueued[1]['deps']);
+        $this->assertNotContains('jquery', $enqueued[1]['deps']);
+        $this->assertNotContains('react', $enqueued[1]['deps']);
+        $this->assertNotContains('lodash', $enqueued[1]['deps']);
+
+        $enqueued = [];
+        $manifest->enqueue_editor_assets();
+        $this->assertCount(6, $enqueued[1]['deps']);
+        $this->assertContains('jquery', $enqueued[1]['deps']);
+        $this->assertContains('react', $enqueued[1]['deps']);
+        $this->assertNotContains('lodash', $enqueued[1]['deps']);
     }
 
     public function testErrorHandler()

@@ -3,6 +3,7 @@
     "files": {
       "main.css": "/wp-content/themes/iop/dist/main.css",
       "main.js": "/wp-content/themes/iop/dist/main.js",
+      "main.php": "/Fixtures/manifest/asset-snippet/main.asset.php",
       "main.map": "/wp-content/themes/iop/dist/main.js.map"
     },
     "dependencies": {
@@ -17,6 +18,7 @@
     "files": {
       "admin.css": "/wp-content/themes/iop/dist/admin.css",
       "admin.js": "/wp-content/themes/iop/dist/admin.js",
+      "admin.php": "/this/file/does/not/exist/admin.asset.php",
       "admin.map": "/wp-content/themes/iop/dist/admin.js.map"
     },
     "dependencies": {
@@ -28,6 +30,7 @@
     "files": {
       "editor.css": "/wp-content/themes/iop/dist/editor.css",
       "editor.js": "/wp-content/themes/iop/dist/editor.js",
+      "editor.php": "/Fixtures/manifest/asset-snippet/editor.asset.php",
       "editor.map": "/wp-content/themes/iop/dist/editor.js.map"
     },
     "dependencies": {

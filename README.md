@@ -17,7 +17,7 @@ A common baseline of repeated functions, filters and actions used across our Wor
 
   Scripts will be enqueued using the stylesheet "slug" combined with their entrypoint name.
 
-  For example, if the theme directory was `ldco` the following manifest entry would be enqueued as `ldco-main-js`
+  For example, if the theme directory was `ldco`, the following manifest entry would be enqueued as `ldco-main`
 
   ```json
   {
@@ -64,6 +64,12 @@ A common baseline of repeated functions, filters and actions used across our Wor
   - Hide the author's name
   - Move the metabox to the bottom of admin pages
   - Show the default image from the first post in archives
+
+## WordPress Integration
+
+Dependency manifest processing is designed to work with the WordPress [Dependency Extraction Webpack Plugin](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-dependency-extraction-webpack-plugin/). This omits a subset of script libraries included with WordPress, and outputs a PHP snippet for each entry point which includes a dependency list for enqueuing scripts.
+
+The set of WordPress scripts which will be omitted is listed [here](https://github.com/WordPress/gutenberg/tree/trunk/packages/dependency-extraction-webpack-plugin#webpack) and includes `jquery`, `lodash`, `moment`, `react` and `react-dom` as well as all scripts from the `@wordpress` namespace.
 
 ## Development
 

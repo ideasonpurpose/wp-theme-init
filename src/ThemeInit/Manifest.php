@@ -131,11 +131,9 @@ class Manifest
              * Note: this is dependent on the $entry value being used as the base of $files keys
              */
             if (array_key_exists("{$entry}.php", $assets['files'])) {
-                $script_asset_path =  dirname(get_theme_root(), 2) . $assets['files']["{$entry}.php"];
-                d($script_asset_path, get_theme_root(), dirname(get_theme_root(), 2));
-                if (file_exists($script_asset_path)) {
-                    d('I HERE');
-                    $asset_php = require $script_asset_path;
+                $asset_filepath = dirname(get_theme_root(), 2) . $assets['files']["{$entry}.php"];
+                if (file_exists($asset_filepath)) {
+                    $asset_php = require $asset_filepath;
                     $jsDeps = array_merge($jsDeps, $asset_php['dependencies']);
                 }
             }

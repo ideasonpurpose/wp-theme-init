@@ -72,8 +72,8 @@ final class ManifestTest extends TestCase
             ->onlyMethods([])
             ->getMock();
 
-        global $template_directory;
-        $template_directory = __DIR__;
+        global $theme_root;
+        $theme_root = __DIR__ . '/wp-content/themes';
     }
 
     public function testLoadManifest()

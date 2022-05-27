@@ -17,7 +17,7 @@ class Search
     public function __construct()
     {
         add_filter('posts_search', [$this, 'no_short_search'], 10, 2);
-        add_action('pre_get_posts', [$this, 'redirect']);
+        add_action('wp', [$this, 'redirect']);
         add_action('init', [$this, 'rewrite']);
         add_filter('search_link', [$this, 'pad_dot_search']);
         add_filter('get_search_query', 'trim'); // reverse the leading dot-search fop display on pages
@@ -85,7 +85,13 @@ class Search
          * @link https://github.com/WordPress/wordpress-develop/blob/ba943e113d3b31b121f77a2d30aebe14b047c69d/src/wp-includes/class-wp-query.php#L825-L827
          */
         if (isset($_GET['s'])) {
+            /**
+             * NOTE: WordPress 6.0 stopped populating the search query from $_GET in
+             *       the `pre_get_posts` hook.  We're now using the `wp` hook, but if
+             *       this ever fails again, we can switch to using $_GET['s'] instead.
+             */
             $searchString = get_search_query(false);
+            // $searchString = $_GET['s'];
             /**
              * Fallback to native WordPress query-string search behavior
              * for these two special cases:

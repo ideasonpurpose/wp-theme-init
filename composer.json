@@ -29,7 +29,7 @@
   "require-dev": {
     "ideasonpurpose/wp-test-stubs": "dev-main@dev",
     "php-stubs/acf-pro-stubs": "dev-master",
-    "php-stubs/wordpress-stubs": "dev-master"
+    "php-stubs/wordpress-stubs": "^6"
   },
   "archive": {
     "exclude": [

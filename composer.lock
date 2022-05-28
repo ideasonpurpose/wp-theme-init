@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e8b1fa32aba7486a9b93046b19f0d295",
+    "content-hash": "4a9e6e1c77690c319dbb50c69c608a07",
     "packages": [],
     "packages-dev": [
         {
@@ -57,10 +57,10 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/joemaller/acf-pro-stubs",
-                "reference": "209cad35962044abf54f74c75b0cf3a05fdeeeaf"
+                "reference": "9ca2d6762b494d6ff41f45ff21ca4854475ef7b5"
             },
             "require": {
-                "php-stubs/wordpress-stubs": "^4.7 || ^5.0 || ^6 || dev-master"
+                "php-stubs/wordpress-stubs": "^4.7 || ^5.0 || ^6.0"
             },
             "require-dev": {
                 "php": "~7.1",
@@ -83,11 +83,11 @@
                 "static analysis",
                 "wordpress"
             ],
-            "time": "2022-05-28T00:09:48+00:00"
+            "time": "2022-05-28T13:53:13+00:00"
         },
         {
             "name": "php-stubs/wordpress-stubs",
-            "version": "dev-master",
+            "version": "v6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/wordpress-stubs.git",
@@ -114,7 +114,6 @@
                 "symfony/polyfill-php73": "Symfony polyfill backporting some PHP 7.3+ features to lower PHP versions",
                 "szepeviktor/phpstan-wordpress": "WordPress extensions for PHPStan"
             },
-            "default-branch": true,
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -138,8 +137,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "ideasonpurpose/wp-test-stubs": 20,
-        "php-stubs/acf-pro-stubs": 20,
-        "php-stubs/wordpress-stubs": 20
+        "php-stubs/acf-pro-stubs": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

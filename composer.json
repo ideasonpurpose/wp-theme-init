@@ -26,14 +26,10 @@
   "config": {
     "sort-packages": true
   },
-  "require": {
-    "kint-php/kint": "^4"
-  },
   "require-dev": {
     "ideasonpurpose/wp-test-stubs": "dev-main@dev",
-    "php-stubs/acf-pro-stubs": "^5.10",
-    "php-stubs/wordpress-stubs": "^5.8",
-    "phpunit/phpunit": "^9.5"
+    "php-stubs/acf-pro-stubs": "dev-master",
+    "php-stubs/wordpress-stubs": "dev-master"
   },
   "archive": {
     "exclude": [
@@ -44,5 +40,13 @@
       "package*",
       "phpunit.xml"
     ]
-  }
+  },
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/joemaller/acf-pro-stubs",
+      "no-api": true
+    }
+  ]
+
 }

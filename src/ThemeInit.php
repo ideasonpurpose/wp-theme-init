@@ -30,6 +30,11 @@ class ThemeInit
         add_filter('admin_footer_text', [$this, 'iopCredit'], 500);
 
         /**
+         * Disable WordPress auto-updates
+         */
+        add_filter('automatic_updater_disabled', '__return_true');
+
+        /**
          * Strip version from theme name when reading/writing options
          */
         $stylesheet = get_option('stylesheet');

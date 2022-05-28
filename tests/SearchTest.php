@@ -42,7 +42,7 @@ final class SearchTest extends TestCase
         /**
          * These checks correspond to individual tests in this file
          **/
-        $this->assertContains(['pre_get_posts', 'redirect'], all_added_actions());
+        $this->assertContains(['wp', 'redirect'], all_added_actions());
         $this->assertContains(['init', 'rewrite'], all_added_actions());
         $this->assertContains(['search_link', 'pad_dot_search'], all_added_filters());
         $this->assertContains(['posts_search', 'no_short_search'], all_added_filters());

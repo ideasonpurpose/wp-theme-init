@@ -73,10 +73,14 @@ class ThemeInit
         new ThemeInit\Extras\Shortcodes();
 
         // TODO: Is this too permissive? Reason not to disable unless WP_ENV == 'development'?
-        \Kint::$enabled_mode = false;
-        if ($this->is_debug) {
-            \Kint::$enabled_mode = true;
+        // @codeCoverageIgnoreStart
+        if (class_exists('Kint')) {
+            \Kint::$enabled_mode = false;
+            if ($this->is_debug) {
+                \Kint::$enabled_mode = true;
+            }
         }
+        // @codeCoverageIgnoreEnd
     }
 
     /**

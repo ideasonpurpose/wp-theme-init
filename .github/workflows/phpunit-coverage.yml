@@ -12,7 +12,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
+      
+      - name: Global install PHPUnit & update $PATH
+        run: |
+          composer global require phpunit/phpunit --prefer-dist
+          echo "$HOME/.composer/vendor/bin" >> $GITHUB_PATH
+        
       - name: Validate composer.json and composer.lock
         run: composer validate
 
@@ -22,7 +27,7 @@ jobs:
       - name: Run test suite
         env:
           XDEBUG_MODE: coverage
-        run: vendor/bin/phpunit
+        run: phpunit
 
       # The Coveralls repo token is found on the project's Settings page
       - name: Upload to Coveralls

@@ -60,6 +60,11 @@ class ThemeInit
          */
         new ThemeInit\Admin\PostStates();
 
+        /**
+         * Add the Template Audit column and wp-admin page
+         */
+        new ThemeInit\Admin\TemplateAudit();
+
         new ThemeInit\Plugins\ACF();
         new ThemeInit\Plugins\SEOFramework();
 

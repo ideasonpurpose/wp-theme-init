@@ -17,14 +17,22 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
 
 /**
  * @covers \IdeasOnPurpose\ThemeInit\Admin\TemplateAudit
- * @covers WP_List_Table
  */
 final class TemplateAuditTest extends TestCase
 {
-
     public function testTemplates()
     {
-        $this->assertEquals(1, 1);
+        global $actions, $filters;
+        $Audit = new Admin\TemplateAudit();
 
+        // d($actions, $filters, );
+        $this->assertContains(['admin_menu', 'addTemplateAdminMenu'], all_added_actions());
+    }
+
+    public function testListTableClass()
+    {
+        new Admin\TemplateAudit\ListTable();
+
+        $this->assertEqual(1, 4);
     }
 }

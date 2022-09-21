@@ -107,9 +107,13 @@ final class MediaTest extends TestCase
      */
     public function testMetadataPassThrough()
     {
-        global $pdf;
+        global $pdf, $mp4;
         $Media = new Media();
         $metadata = $Media->compressAllImages($pdf, 1);
         $this->assertEquals($metadata, $pdf);
+
+        $metadata = $Media->compressAllImages($mp4, 1);
+        $this->assertEquals($metadata, $mp4);
+
     }
 }

@@ -1,9 +1,11 @@
 <?php
 namespace IdeasOnPurpose\ThemeInit\Admin;
 
+// @codeCoverageIgnoreStart
 if (!class_exists('WP_List_Table')) {
     require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
+// @codeCoverageIgnoreEnd
 
 // use \WP_List_Table;
 /**
@@ -18,12 +20,6 @@ class TemplateAudit
 {
     public function __construct($args = [])
     {
-        // d(class_exists('WP_List_Table'));
-
-        if (!class_exists('WP_List_Table')) {
-            return;
-        }
-
         $this->option_per_page = 'template_audit_templates_per_page';
 
         add_filter('manage_edit-page_columns', [$this, 'addColumns']);

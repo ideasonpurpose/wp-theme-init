@@ -1,5 +1,5 @@
 <?php
-namespace IdeasOnPurpose\ThemeInit\Admin;
+namespace IdeasOnPurpose\ThemeInit\Admin\TemplateAudit;
 
 // @codeCoverageIgnoreStart
 if (!class_exists('WP_List_Table')) {

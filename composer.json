@@ -29,7 +29,8 @@
   "require-dev": {
     "ideasonpurpose/wp-test-stubs": "dev-main@dev",
     "php-stubs/acf-pro-stubs": "dev-master",
-    "php-stubs/wordpress-stubs": "^6"
+    "php-stubs/wordpress-stubs": "^6",
+    "phpunit/phpunit": "^9.5"
   },
   "archive": {
     "exclude": [
@@ -46,7 +47,11 @@
       "type": "git",
       "url": "https://github.com/joemaller/acf-pro-stubs",
       "no-api": true
+    },
+    {
+      "type": "git",
+      "url": "https://github.com/ideasonpurpose/wp-test-stubs",
+      "no-api": true
     }
   ]
-
 }

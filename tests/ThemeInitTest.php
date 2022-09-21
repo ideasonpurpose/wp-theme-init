@@ -21,6 +21,7 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
 /**
  * @covers \IdeasOnPurpose\ThemeInit
  * @covers \IdeasOnPurpose\ThemeInit\Admin\PostStates
+ * @covers \IdeasOnPurpose\ThemeInit\Admin\TemplateAudit
  * @covers \IdeasOnPurpose\ThemeInit\Debug\ShowIncludes
  * @covers \IdeasOnPurpose\ThemeInit\Extras\GlobalCommentsDisable
  * @covers \IdeasOnPurpose\ThemeInit\Extras\Shortcodes
@@ -30,6 +31,8 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
  */
 final class ThemeInitTest extends TestCase
 {
+    const ABSPATH = '';
+
     protected function setUp(): void
     {
         /** @var \IdeasOnPurpose\ThemeInit $this->ThemeInit */

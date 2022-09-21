@@ -4,7 +4,7 @@ namespace IdeasOnPurpose\ThemeInit;
 
 class Media
 {
-    public function __construct($manifest_file = null)
+    public function __construct()
     {
         // bridge constants for better testing
         $this->WP_DEBUG = defined('WP_DEBUG') && WP_DEBUG;
@@ -46,6 +46,14 @@ class Media
          * If not, save out an optimized copy and update image metadata
          */
         if (array_key_exists('original_image', $metadata)) {
+            return $metadata;
+        }
+
+        /**
+         * Check to see if $metadata['file'] is set. As of WordPress v6, this will be
+         * missing for formats which can not be edited. (pdf, mp4)
+         */
+        if (!array_key_exists('file', $metadata)) {
             return $metadata;
         }
 

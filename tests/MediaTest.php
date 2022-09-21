@@ -16,11 +16,35 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
 }
 
 /**
+ * Fixtures
+ *
+ * These are $metadata arguments to be passed to Media->compressAllImages()
+ */
+$pdf = ['filesize' => 1506261];
+$mp4 = [
+    'filesize' => 44075028,
+    'mime_type' => 'video/mp4',
+    'width' => 1280,
+    'height' => 720,
+    'fileformat' => 'mp4',
+    'dataformat' => 'quicktime',
+    'audio' => [
+        'dataformat' => 'mp4',
+        'codec' => 'ISO/IEC 14496-3 AAC',
+        'sample_rate' => 48000,
+        'channels' => 2,
+        'lossless' => false,
+        'channelmode' => 'stereo',
+    ],
+];
+
+/**
  * @covers \IdeasOnPurpose\ThemeInit\Media
  * @covers \IdeasOnPurpose\ThemeInit\Media\Imagick\HQ
  */
 final class MediaTest extends TestCase
 {
+
     public function testJPEGQuality()
     {
         $Media = new Media();
@@ -73,5 +97,19 @@ final class MediaTest extends TestCase
         $method = $reflector->getMethod('thumbnail_image');
         $method->setAccessible(true);
         $this->assertTrue($method->invokeArgs($HqEditor, [1, 1]));
+    }
+
+    /**
+     * Different file types provide alternate $metadata to the
+     * compressAllImages method. If $metadata['file'] is not set,
+     * $metadata should be returned unchanged.
+     *
+     */
+    public function testMetadataPassThrough()
+    {
+        global $pdf;
+        $Media = new Media();
+        $metadata = $Media->compressAllImages($pdf, 1);
+        $this->assertEquals($metadata, $pdf);
     }
 }

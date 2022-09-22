@@ -16,6 +16,7 @@ class TemplateAudit
     public function __construct($args = [])
     {
         $this->option_per_page = 'template_audit_templates_per_page';
+        $this->ListTable = new ListTable();
 
         add_filter('manage_edit-page_columns', [$this, 'addColumns']);
         add_action('manage_page_posts_custom_column', [$this, 'renderColumns'], 10, 2);
@@ -100,10 +101,6 @@ class TemplateAudit
             [$this, 'templateAdminPage']
         );
 
-\Kint::$mode_default = \Kint::MODE_CLI;
-error_log(@d($this->id));
-\Kint::$mode_default = \Kint::MODE_RICH;
-
         add_action('load-appearance_page_iop-template-audit', [
             $this,
             'templateAdminPageScreenOptions',
@@ -115,13 +112,10 @@ error_log(@d($this->id));
      */
     public function templateAdminPage()
     {
-        $table = new ListTable();
-        $table->prepare_items();
-
+        $this->ListTable->prepare_items();
         echo '<div class="wrap">';
         echo "<h1 class=\"wp-heading-inline\">Template Audit: {$this->theme_name}</h1>";
-        $table->display();
-
+        $this->ListTable->display();
         echo '</div>';
     }
 

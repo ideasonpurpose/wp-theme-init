@@ -5,6 +5,7 @@ namespace IdeasOnPurpose\ThemeInit;
 use PHPUnit\Framework\TestCase;
 use IdeasOnPurpose\WP\Test;
 use PhpParser\Node\Expr\Cast\Object_;
+use WP_Screen;
 
 Test\Stubs::init();
 
@@ -23,19 +24,10 @@ final class TemplateAuditTest extends TestCase
 {
     public function testTemplates()
     {
-        // global $actions, $filters;
-        $Audit = new Admin\TemplateAudit();
+        new Admin\TemplateAudit();
 
-        // d($actions, $filters, );
         $this->assertContains(['admin_menu', 'addTemplateAdminMenu'], all_added_actions());
     }
-
-    // public function testListTableClass()
-    // {
-    //     new Admin\TemplateAudit\ListTable();
-
-    //     $this->assertEquals(4, 4);
-    // }
 
     public function testAddCol()
     {
@@ -48,15 +40,12 @@ final class TemplateAuditTest extends TestCase
 
     public function testRenderColumns_null()
     {
-        // global $post_meta, $page_templates;
+        global $post_meta, $page_templates;
+
+        $post_meta = null;
+        $page_templates = null;
 
         $Audit = new Admin\TemplateAudit();
-        // $post_meta = 'template.php';
-        // $actual = 'Template Title';
-        // $page_templates = [
-        //     $post_meta => $actual,
-        // ];
-
         $Audit->renderColumns('template', 1);
 
         $this->expectOutputRegex('/span aria-hidden/');
@@ -73,14 +62,11 @@ final class TemplateAuditTest extends TestCase
             $post_meta => $title,
         ];
 
-        //     // $this->expectOutputString('');
-
         $Audit->renderColumns('template', 1);
         $this->expectOutputRegex('/<strong>/');
 
         $actual = $this->getActualOutput();
-        d($actual);
-        //     $this->assertStringContainsString($actual, $title);
+        $this->assertStringContainsString($title, $actual);
     }
 
     public function testTemplateAdminPageScreenOption()
@@ -118,5 +104,34 @@ final class TemplateAuditTest extends TestCase
             ['load-appearance_page_iop-template-audit', 'templateAdminPageScreenOptions'],
             all_added_actions()
         );
+    }
+
+    public function testTemplateAdminPage()
+    {
+        /** @var \IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable $ListTable */
+        $ListTable = $this->getMockBuilder(
+            '\IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable'
+        )
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->disableArgumentCloning()
+            ->disallowMockingUnknownTypes()
+            ->onlyMethods(['prepare_items'])
+            ->addMethods(['display'])
+            ->getMock();
+
+        $ListTable->expects($this->once())->method('prepare_items');
+        $ListTable->expects($this->once())->method('display');
+
+        $expected = 'Theme Name';
+
+        $Audit = new Admin\TemplateAudit();
+        $Audit->ListTable = $ListTable;
+        $Audit->theme_name = $expected;
+        $Audit->templateAdminPage();
+        $this->expectOutputRegex('/div/');
+
+        $actual = $this->getActualOutput();
+        $this->assertStringContainsString($expected, $actual);
     }
 }

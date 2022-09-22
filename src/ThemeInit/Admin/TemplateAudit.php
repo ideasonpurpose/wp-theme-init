@@ -16,25 +16,16 @@ class TemplateAudit
     public function __construct($args = [])
     {
         $this->option_per_page = 'template_audit_templates_per_page';
-        $this->ListTable = new ListTable();
 
         add_filter('manage_edit-page_columns', [$this, 'addColumns']);
         add_action('manage_page_posts_custom_column', [$this, 'renderColumns'], 10, 2);
-        add_action('admin_menu', [$this, 'addTemplateAdminMenu']);
-
-        // $theme = wp_get_theme();
-        // $this->named_templates = $theme->get_page_templates();
+        add_action('admin_menu', [$this, 'addTemplateAdminMenuInit']);
 
         /**
          * This filter is needed to actually store our option value in metadata
          */
         add_filter('set-screen-option', [$this, 'setOption'], 10, 3);
     }
-
-    // public function getTemplates()
-    // {
-    //     $this->named_templates = wp_get_theme()->get_page_templates();
-    // }
 
     /**
      * Store our option value in metadata
@@ -84,15 +75,15 @@ class TemplateAudit
 
     /**
      *
-     * Add a submenu to Appearance
+     * Add a submenu to Appearance and define several admin-only properties
+     *
+     * Also defines $this->submenu_id and $this->ListTable for use in later admin-only methods
      */
-    public function addTemplateAdminMenu()
+    public function addTemplateAdminMenuInit()
     {
-        // $theme = wp_get_theme();
-        // $this->named_templates = $theme->get_page_templates();
-        // $this->theme_name = $theme->get('Name');
+        $this->ListTable = new ListTable();
 
-        $this->id = add_submenu_page(
+        $this->submenu_id = add_submenu_page(
             'themes.php',
             'Template Audit',
             'Template Audit',
@@ -112,9 +103,11 @@ class TemplateAudit
      */
     public function templateAdminPage()
     {
+        $theme_name = wp_get_theme()->get('Name');
+
         $this->ListTable->prepare_items();
         echo '<div class="wrap">';
-        echo "<h1 class=\"wp-heading-inline\">Template Audit: {$this->theme_name}</h1>";
+        echo "<h1 class=\"wp-heading-inline\">Template Audit: {$theme_name}</h1>";
         $this->ListTable->display();
         echo '</div>';
     }
@@ -127,10 +120,10 @@ class TemplateAudit
         $screen = get_current_screen();
 
         /**
-         * Note: $this->id is set in $this->addTemplateAdminMenu
+         * Note: $this->submenu_id is set in $this->addTemplateAdminMenuInit
          *       which seems kind of fragile.
          */
-        if (!is_object($screen) || $screen->id != $this->id) {
+        if (!is_object($screen) || $screen->id != $this->submenu_id) {
             return;
         }
 

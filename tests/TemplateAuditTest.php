@@ -26,7 +26,7 @@ final class TemplateAuditTest extends TestCase
     {
         new Admin\TemplateAudit();
 
-        $this->assertContains(['admin_menu', 'addTemplateAdminMenu'], all_added_actions());
+        $this->assertContains(['admin_menu', 'addTemplateAdminMenuInit'], all_added_actions());
     }
 
     public function testAddCol()
@@ -69,18 +69,18 @@ final class TemplateAuditTest extends TestCase
         $this->assertStringContainsString($title, $actual);
     }
 
-    public function testTemplateAdminPageScreenOption()
+    public function testTemplateAdminPageScreenOptions()
     {
         global $screen_option, $current_screen;
         $id = 123;
         $current_screen = (object) ['id' => $id];
         $Audit = new Admin\TemplateAudit();
 
-        $Audit->id = 0;
+        $Audit->submenu_id = 0;
         $Audit->templateAdminPageScreenOptions();
         $this->assertNull($screen_option);
 
-        $Audit->id = $id;
+        $Audit->submenu_id = $id;
         $Audit->templateAdminPageScreenOptions();
         $this->assertArrayHasKey('per_page', $screen_option);
     }
@@ -96,10 +96,10 @@ final class TemplateAuditTest extends TestCase
         $this->assertEquals($actual, $expected);
     }
 
-    public function testAddTemplateAdminMenu()
+    public function testAddTemplateAdminMenuInit()
     {
         $Audit = new Admin\TemplateAudit();
-        $Audit->addTemplateAdminMenu();
+        $Audit->addTemplateAdminMenuInit();
         $this->assertContains(
             ['load-appearance_page_iop-template-audit', 'templateAdminPageScreenOptions'],
             all_added_actions()
@@ -108,6 +108,7 @@ final class TemplateAuditTest extends TestCase
 
     public function testTemplateAdminPage()
     {
+        global $wp_get_theme;
         /** @var \IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable $ListTable */
         $ListTable = $this->getMockBuilder(
             '\IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable'
@@ -124,6 +125,7 @@ final class TemplateAuditTest extends TestCase
         $ListTable->expects($this->once())->method('display');
 
         $expected = 'Theme Name';
+        $wp_get_theme = new \WP_Theme($expected);
 
         $Audit = new Admin\TemplateAudit();
         $Audit->ListTable = $ListTable;

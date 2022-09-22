@@ -113,7 +113,7 @@ class TemplateAudit
     }
 
     /**
-     * Enable the Screen Options menuF on Admin screens
+     * Enable the Screen Options menu on Admin screens
      */
     public function templateAdminPageScreenOptions()
     {

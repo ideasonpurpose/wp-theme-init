@@ -251,9 +251,16 @@ class ThemeInit
 
             $htaccess = file_exists($this->abspath . '.htaccess');
             $htaccess_log = $htaccess ? ' including .htaccess file' : '';
-            error_log(
-                "WP_DEBUG is true: Flushing rewrite rules{$htaccess_log}.\nRequest: {$_SERVER['REQUEST_URI']}"
-            );
+
+            /**
+             * Log a reminder about flushing rewrite rules every 15 minutes
+             */
+            if (get_transient('flush_rewrite_log') === false && !isset($_GET['service-worker'])) {
+                error_log(
+                    "WP_DEBUG is true: Flushing rewrite rules{$htaccess_log}.\nRequest: {$_SERVER['REQUEST_URI']}"
+                );
+                set_transient('flush_rewrite_log', true, 15 * MINUTE_IN_SECONDS);
+            }
 
             flush_rewrite_rules($htaccess);
         }

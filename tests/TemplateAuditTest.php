@@ -4,8 +4,6 @@ namespace IdeasOnPurpose\ThemeInit;
 
 use PHPUnit\Framework\TestCase;
 use IdeasOnPurpose\WP\Test;
-use PhpParser\Node\Expr\Cast\Object_;
-use WP_Screen;
 
 Test\Stubs::init();
 
@@ -109,6 +107,7 @@ final class TemplateAuditTest extends TestCase
     public function testTemplateAdminPage()
     {
         global $wp_get_theme;
+
         /** @var \IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable $ListTable */
         $ListTable = $this->getMockBuilder(
             '\IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable'

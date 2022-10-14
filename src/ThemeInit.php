@@ -65,6 +65,11 @@ class ThemeInit
          */
         new ThemeInit\Admin\TemplateAudit();
 
+        /**
+         * Display a notice in admin when DISALLOW_FILE_EDIT is false
+         */
+        new ThemeInit\Admin\DisallowFileEditCheck();
+
         new ThemeInit\Plugins\ACF();
         new ThemeInit\Plugins\SEOFramework();
 

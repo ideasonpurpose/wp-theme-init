@@ -44,11 +44,10 @@ class ThemeInit
         add_action('admin_init', [$this, 'debugFlushRewriteRules']);
 
         $this->cleanWPHead();
-        $this->init();
         $this->debugFlushRewriteRules();
 
         /**
-         * Set JPEG_Quality
+         * Sets JPEG_QUALITY
          * Add Imagick\HQ scaling
          * Compress all newly added images
          */
@@ -66,9 +65,10 @@ class ThemeInit
         new ThemeInit\Admin\TemplateAudit();
 
         /**
-         * Display a notice in admin when DISALLOW_FILE_EDIT is false
+         * Attempts to set the DISALLOW_FILE_EDIT constant to true (disabling the Theme File Editor)
+         * or displays a notice when the values is explicitly set to false.
          */
-        new ThemeInit\Admin\DisallowFileEditCheck();
+        new ThemeInit\Admin\DisallowFileEdit();
 
         new ThemeInit\Plugins\ACF();
         new ThemeInit\Plugins\SEOFramework();
@@ -115,19 +115,6 @@ class ThemeInit
         remove_filter('comment_text_rss', 'wp_staticize_emoji');
         remove_filter('the_content_feed', 'wp_staticize_emoji');
         remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
-    }
-
-    /**
-     * Miscellaneous stuff
-     */
-    private function init()
-    {
-        /**
-         * Disable Plugin and Theme editors
-         */
-        if (!defined('DISALLOW_FILE_EDIT')) {
-            define('DISALLOW_FILE_EDIT', true);
-        }
     }
 
     /**

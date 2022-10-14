@@ -2,35 +2,35 @@
 namespace IdeasOnPurpose\ThemeInit\Admin;
 
 /**
- * Self-contained class to check for the DISALLOW_FILE_EDIT constant and print an admin notice
- * when the setting is explicitly set to false.
+ * This class handles setting DISALLOW_FILE_EDIT and also displays an admin notice
+ * when the constant is explicitly set to `false`.
  */
-
-class DisallowFileEditCheck
+class DisallowFileEdit
 {
     /**
      * A placeholder for DISALLOW_FILE_EDIT which can be mocked in tests
      */
     public $disallowFileEdit = null;
 
-    // __construct calls init (for  easier testing)
-    // init checks for the constant (should be already set? )
-
-    // if init finds the constant is set to false, run admin_notices, which adds the hook to display the warning notice
-
+    /**
+     * Attempts to define the constant
+     * @return void
+     */
     public function __construct()
     {
+        if (!defined('DISALLOW_FILE_EDIT')) {
+            define('DISALLOW_FILE_EDIT', true);
+        }
+
         $this->disallowFileEdit = defined('DISALLOW_FILE_EDIT') ? DISALLOW_FILE_EDIT : null;
         $this->init();
     }
 
     /**
      * Check value of disallowFileEdit and add display the admin_notices action if == false
-     * @return void
      */
     public function init()
     {
-        // TODO: not working right?
         if ($this->disallowFileEdit === false) {
             add_action('admin_notices', [$this, 'display']);
         }

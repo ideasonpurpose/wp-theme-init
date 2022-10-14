@@ -22,6 +22,7 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
  * @covers \IdeasOnPurpose\ThemeInit
  * @covers \IdeasOnPurpose\ThemeInit\Admin\PostStates
  * @covers \IdeasOnPurpose\ThemeInit\Admin\TemplateAudit
+ * @covers \IdeasOnPurpose\ThemeInit\Admin\DisallowFileEdit
  * @covers \IdeasOnPurpose\ThemeInit\Debug\ShowIncludes
  * @covers \IdeasOnPurpose\ThemeInit\Extras\GlobalCommentsDisable
  * @covers \IdeasOnPurpose\ThemeInit\Extras\Shortcodes

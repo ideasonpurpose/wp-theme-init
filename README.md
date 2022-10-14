@@ -34,10 +34,14 @@ A common baseline of repeated functions, filters and actions used across our Wor
   - Add a design credit to the WordPress dashboard.
   - "Howdy" is removed from the admin menu bar.
   - Lots of junk is removed from wp_head. Many optimizations come from the [Soil plugin](https://roots.io/plugins/soil/).
-  - WordPress will attempt to trigger a [Browsersync]() reload from the `save_post` hook.
+  - WordPress will attempt to trigger a webpack devServer reload from the `save_post` hook.
+  - Set the [`DISALLOW_FILE_EDIT`][dfe] constant and displays an admin notice when the constant is explicitly set to false.
 
 - **ShowIncludes**
   A div showing all included theme files will be appended to the page when `WP_DEBUG` is true. To disable it, initialize the class with an array containing: `['showIncludes' => false]`
+
+- **Template Audit**  
+   Adds a Template column to Pages admin and a summary table to the Appearance menu showing which templates have been assigned to pages.
 
 - **Global Comments Disable**
   Comments and Trackbacks are completely disabled. To re-enable comments, initialize the ThemeInit class with an array containing: `['enableComments' => true]`
@@ -48,7 +52,7 @@ A common baseline of repeated functions, filters and actions used across our Wor
 - **Media**
   Several media related features will be enabled:
 
-  - The JPEG Compression value can be set by defining a `JPEG_QUALITY` constant before invoking `ThemeInit()`. Numeric values will be clamped between 0-100 then passed to the [WordPress `jpeg_quality` filter](https://developer.wordpress.org/reference/hooks/jpeg_quality/).
+  - The JPEG Compression value can be set by defining a `JPEG_QUALITY` constant before invoking `ThemeInit()`. Numeric values will be clamped between 0-100 then passed to the [WordPress `jpeg_quality` filter](https://developer.wordpress.org/reference/hooks/jpeg_quality/). `JPEG_QUALITY` defaults to `82`.
   - A high-quality Lanczos scaling filter will be used for scaling images.
   - All image uploads will be re-compressed if their filesize can be reduced by at least 75%.
 
@@ -84,3 +88,5 @@ Run the PHPUnit test suite with: `npm run test`
 <a href="https://www.ideasonpurpose.com"><img src="https://raw.githubusercontent.com/ideasonpurpose/ideasonpurpose/master/IOP_monogram_circle_512x512_mint.png" height="44" align="top" alt="IOP Logo"></a><img src="https://raw.githubusercontent.com/ideasonpurpose/ideasonpurpose/master/spacer.png" align="middle" width="4" height="54"> This project is actively developed and used in production at <a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>.
 
 <!-- END IOP CREDIT BLURB -->
+
+- [dfe]: https://developer.wordpress.org/apis/wp-config-php/#disable-the-plugin-and-theme-file-editor

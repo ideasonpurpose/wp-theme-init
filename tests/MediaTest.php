@@ -49,7 +49,7 @@ final class MediaTest extends TestCase
     {
         $Media = new Media();
         $quality = $Media->jpeg_quality();
-        $this->assertEquals(65, $quality);
+        $this->assertEquals(77, $quality);
 
         $Media->JPEG_QUALITY = 12;
         $quality = $Media->jpeg_quality();

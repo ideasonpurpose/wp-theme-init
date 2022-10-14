@@ -8,7 +8,7 @@ class Media
     {
         // bridge constants for better testing
         $this->WP_DEBUG = defined('WP_DEBUG') && WP_DEBUG;
-        $this->JPEG_QUALITY = defined('JPEG_QUALITY') && JPEG_QUALITY;
+        $this->JPEG_QUALITY = defined('JPEG_QUALITY') ? JPEG_QUALITY : false;
 
         add_filter('jpeg_quality', [$this, 'jpeg_quality']);
         add_filter('wp_image_editors', [$this, 'addHQImageEditor']);
@@ -21,7 +21,7 @@ class Media
      */
     public function jpeg_quality()
     {
-        $q = 65; // Default value
+        $q = 82; // Default value
         if ($this->JPEG_QUALITY && is_integer($this->JPEG_QUALITY)) {
             $q = max(0, min(100, $this->JPEG_QUALITY)); // Clamp constant value in the 0-100 range
         }

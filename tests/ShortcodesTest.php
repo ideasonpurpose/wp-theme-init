@@ -35,6 +35,10 @@ final class ShortcodesTest extends TestCase
 
     public function testProtectEmail()
     {
+        /**
+         * NOTE: `antispambot` comes from the stub function in ideasonpurpose/wp-test-stubs:
+         * @link https://github.com/ideasonpurpose/wp-test-stubs/blob/7ed5c1eac670a956ea98ca2774766563bb28e78d/src/Fixtures/stubs.php#L386-L389
+         */
         $expected = 'not email';
         $actual = $this->Shortcode->protectEmail([], $expected);
         $this->assertEquals($expected, $actual);
@@ -55,5 +59,11 @@ final class ShortcodesTest extends TestCase
         $expected = 'content goes here';
         $actual = $this->Shortcode->protectEmail(['user@example.com'], $expected);
         $this->assertStringContainsString($expected, $actual);
+
+        $expected = '';
+        $actual = $this->Shortcode->protectEmail(['class' => 'no-email']);
+        $this->assertStringNotContainsString('class', $actual);
+        $this->assertStringNotContainsString('antispambot', $actual);
+        $this->assertEquals($expected, $actual);
     }
 }

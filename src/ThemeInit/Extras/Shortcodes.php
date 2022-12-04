@@ -35,14 +35,14 @@ class Shortcodes
      *  Example 2: [email name@example.com]email us![/email]
      *  returns <a href="mailto:&#106;&#111;h&#110;&#99;&#111;&#109;">email us!</a>
      */
-    public function protectEmail(array $atts, ?string $content = "")
+    public function protectEmail(array $atts, ?string $content = '')
     {
-        if (empty($atts) || !filter_var($atts[0], FILTER_VALIDATE_EMAIL)) {
+        if (empty($atts) || !isset($atts[0]) || !filter_var($atts[0], FILTER_VALIDATE_EMAIL)) {
             return $content;
         }
         $munged_mail = antispambot($atts[0]);
-        $content = ($content) ?: $munged_mail;
-        $classes = (isset($atts['class'])) ? "class=\"$atts[class]\"" : '';
+        $content = $content ?: $munged_mail;
+        $classes = isset($atts['class']) ? "class=\"$atts[class]\"" : '';
         return "<a $classes href='mailto:$munged_mail'>$content</a>";
     }
 }

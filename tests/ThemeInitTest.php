@@ -153,7 +153,6 @@ final class ThemeInitTest extends TestCase
         $this->assertStringContainsString('Ideas On Purpose', $credit);
         $this->assertStringContainsString('.</span>', $credit);
 
-
         $credit = $this->ThemeInit->iopCredit('');
         $this->assertStringContainsString('WordPress</a>. Design and development', $credit);
         $this->assertStringContainsString('ideasonpurpose.com', $credit);
@@ -230,5 +229,10 @@ final class ThemeInitTest extends TestCase
         $this->ThemeInit->is_debug = true;
         $expected = $this->ThemeInit->debugFlushRewriteRules();
         $this->assertFalse($expected);
+    }
+
+    public function testRevisionsOverride()
+    {
+        $this->assertContains(['wp_revisions_to_keep', 6], all_added_filters());
     }
 }

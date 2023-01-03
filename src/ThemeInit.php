@@ -60,6 +60,13 @@ class ThemeInit
         new ThemeInit\Admin\PostStates();
 
         /**
+         * Override WP_POST_REVISIONS
+         *
+         * Default to 6 revisions
+         */
+        add_filter('wp_revisions_to_keep', fn() => 6);
+
+        /**
          * Add the Template Audit column and wp-admin page
          */
         new ThemeInit\Admin\TemplateAudit();

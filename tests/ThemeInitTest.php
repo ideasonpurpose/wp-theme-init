@@ -33,6 +33,7 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
 final class ThemeInitTest extends TestCase
 {
     const ABSPATH = '';
+    public $ThemeInit;
 
     protected function setUp(): void
     {

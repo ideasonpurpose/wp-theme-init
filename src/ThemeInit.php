@@ -7,6 +7,8 @@ class ThemeInit
      * A placeholder for WP_DEBUG which can be mocked
      */
     // public $is_debug = false;
+    public $is_debug;
+    public $abspath;
 
     public function __construct($options = [])
     {

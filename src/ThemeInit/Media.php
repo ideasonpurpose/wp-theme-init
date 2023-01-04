@@ -4,6 +4,9 @@ namespace IdeasOnPurpose\ThemeInit;
 
 class Media
 {
+    public $WP_DEBUG;
+    public $JPEG_QUALITY;
+
     public function __construct()
     {
         // bridge constants for better testing

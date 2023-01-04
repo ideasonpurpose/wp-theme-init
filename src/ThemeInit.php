@@ -37,6 +37,14 @@ class ThemeInit
         add_filter('automatic_updater_disabled', '__return_true');
 
         /**
+         * Override WP_POST_REVISIONS
+         *
+         * Default to 6 revisions
+         * @link https://developer.wordpress.org/reference/functions/wp_revisions_to_keep/
+         */
+        add_filter('wp_revisions_to_keep', fn() => 6);
+
+        /**
          * Strip version from theme name when reading/writing options
          */
         $stylesheet = get_option('stylesheet');
@@ -60,13 +68,6 @@ class ThemeInit
          *  - Includes "404 Page" label
          */
         new ThemeInit\Admin\PostStates();
-
-        /**
-         * Override WP_POST_REVISIONS
-         *
-         * Default to 6 revisions
-         */
-        add_filter('wp_revisions_to_keep', fn() => 6);
 
         /**
          * Add the Template Audit column and wp-admin page

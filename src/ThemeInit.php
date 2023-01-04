@@ -3,10 +3,6 @@ namespace IdeasOnPurpose;
 
 class ThemeInit
 {
-    /**
-     * A placeholder for WP_DEBUG which can be mocked
-     */
-    // public $is_debug = false;
     public $is_debug;
     public $abspath;
 
@@ -79,6 +75,11 @@ class ThemeInit
          * or displays a notice when the values is explicitly set to false.
          */
         new ThemeInit\Admin\DisallowFileEdit();
+
+        /**
+         * Log time of last_login for all users
+         */
+        new ThemeInit\Admin\LastLogin();
 
         new ThemeInit\Plugins\ACF();
         new ThemeInit\Plugins\SEOFramework();

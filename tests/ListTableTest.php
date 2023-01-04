@@ -20,6 +20,11 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
  */
 final class ListTableTest extends TestCase
 {
+    public function setUp(): void
+    {
+        unset($GLOBALS['user_meta']);
+    }
+
     public function testTemplates()
     {
         new Admin\TemplateAudit\ListTable();

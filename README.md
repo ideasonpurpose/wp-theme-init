@@ -43,6 +43,12 @@ A common baseline of repeated functions, filters and actions used across our Wor
 - **Template Audit**  
    Adds a Template column to Pages admin and a summary table to the Appearance menu showing which templates have been assigned to pages.
 
+- **Record Users' Last Login time**
+  Timestamps of successful logins are stored in user_meta and displayed in the WordPress Admin dashboard User listings for administrators.
+
+- **Enable and limit WP_POST_REVISIONS**
+  Revisions are set to 6, this overrides any constants set in wp-config.php.
+
 - **Global Comments Disable**
   Comments and Trackbacks are completely disabled. To re-enable comments, initialize the ThemeInit class with an array containing: `['enableComments' => true]`
 

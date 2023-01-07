@@ -44,7 +44,7 @@ A common baseline of repeated functions, filters and actions used across our Wor
    Adds a Template column to Pages admin and a summary table to the Appearance menu showing which templates have been assigned to pages.
 
 - **Record Users' Last Login time**
-  Timestamps of successful logins are stored in user_meta and displayed in the WordPress Admin dashboard User listings for administrators.
+  User's last successful login are recorded and added to the WordPress Admin User table.
 
 - **Enable and limit WP_POST_REVISIONS**
   Revisions are set to 6, this overrides any constants set in wp-config.php.

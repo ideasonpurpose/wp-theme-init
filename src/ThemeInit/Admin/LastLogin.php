@@ -1,8 +1,15 @@
 <?php
 namespace IdeasOnPurpose\ThemeInit\Admin;
 
+use DateTimeZone;
+use DateTimeImmutable;
+
 /**
  * Store a timestamp of the last_login time to user_meta
+ *
+ * NOTE: WordPress convention uses snake_case for meta_key values
+ * but kebab-case for column IDs. So this file uses both last_login
+ * and last-login.
  */
 class LastLogin
 {
@@ -51,7 +58,18 @@ class LastLogin
             if ($last == 0) {
                 return '--';
             }
-            $date = date('r', $last);
+
+            $dateTime = new DateTimeImmutable("@{$last}");
+            $timezone = new DateTimeZone(wp_timezone_string());
+            $dateTime = $dateTime->setTimezone($timezone);
+            $date_format = get_option('date_format');
+            $time_format = get_option('time_format');
+            $date = sprintf(
+                '%s at %s',
+                $dateTime->format($date_format),
+                $dateTime->format($time_format)
+            );
+
             return sprintf('<span title="%s">%s ago</span>', $date, human_time_diff($last));
         }
         return $output;

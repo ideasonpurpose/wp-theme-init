@@ -89,7 +89,7 @@ class ResetMetaBoxOrder
         $meta_keys = [
             '_' => '(empty)',
             '_dashboard' => 'Dashboard',
-            '_nav_menus' => 'Nav Menus',
+            '_nav-menus' => 'Nav Menus',
         ];
 
         foreach ($post_types as $post_type) {

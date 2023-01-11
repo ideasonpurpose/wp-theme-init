@@ -46,6 +46,9 @@ A common baseline of repeated functions, filters and actions used across our Wor
 - **Record Users' Last Login time**
   User's last successful login are recorded and added to the WordPress Admin User table.
 
+- **Reset Metabox Order & Visibility**
+  Adds buttons to the bottom of user profiles which will reset all metabox order and visibility from user_meta. 
+
 - **Enable and limit WP_POST_REVISIONS**
   Revisions are set to 6, this overrides any constants set in wp-config.php.
 

@@ -81,6 +81,12 @@ class ThemeInit
          */
         new ThemeInit\Admin\LastLogin();
 
+        /**
+         * Add Metabox Reset buttons to Admin User Profiles
+         */
+        new ThemeInit\Admin\ResetMetaboxes();
+
+
         new ThemeInit\Plugins\ACF();
         new ThemeInit\Plugins\SEOFramework();
 

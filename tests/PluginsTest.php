@@ -4,7 +4,6 @@ namespace IdeasOnPurpose\ThemeInit;
 
 use PHPUnit\Framework\TestCase;
 use IdeasOnPurpose\WP\Test;
-use stdClass;
 
 Test\Stubs::init();
 
@@ -51,8 +50,8 @@ final class PluginsTest extends TestCase
     {
         global $wp_query, $is_archive, $has_post_thumbnail, $wp_get_attachment_image_src;
         $is_archive = true;
-        $wp_query = new stdClass();
-        $post = new stdClass();
+        $wp_query = new \stdClass();
+        $post = new \stdClass();
         $post->ID = 1;
         $wp_query->posts = [$post];
 

@@ -23,6 +23,7 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
  * @covers \IdeasOnPurpose\ThemeInit\Admin\DisallowFileEdit
  * @covers \IdeasOnPurpose\ThemeInit\Admin\LastLogin
  * @covers \IdeasOnPurpose\ThemeInit\Admin\PostStates
+ * @covers \IdeasOnPurpose\ThemeInit\Admin\ResetMetaboxes
  * @covers \IdeasOnPurpose\ThemeInit\Admin\TemplateAudit
  * @covers \IdeasOnPurpose\ThemeInit\Debug\ShowIncludes
  * @covers \IdeasOnPurpose\ThemeInit\Extras\GlobalCommentsDisable

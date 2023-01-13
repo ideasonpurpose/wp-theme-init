@@ -7,7 +7,7 @@ use IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable;
  * This class adds buttons to Admin Dashboard User Profile pages. These allow users
  * to reset (purge) all metabox order and visibiliyt from the user_meta store.
  */
-class ResetMetaBoxOrder
+class ResetMetaboxes
 {
     public $action;
 
@@ -98,16 +98,19 @@ class ResetMetaBoxOrder
         // TODO: Bet we just end up rolling these into one...
         $class_name = $_POST['class_name'];
         $message = '';
+        $status_code = 200; // TODO: Return other status code?
         if ($class_name === 'iop-reset-metabox-order') {
             foreach ($meta_keys as $key => $label) {
                 delete_user_meta($uid, "meta-box-order{$key}");
             }
             $message = 'Metabox order has been reset.';
+            $status_code = 200;
         } elseif ($class_name === 'iop-reset-metabox-visibility') {
             foreach ($meta_keys as $key => $label) {
                 delete_user_meta($uid, "metaboxhidden{$key}");
             }
             $message = 'Metabox visibility has been reset.';
+            $status_code = 200;
         }
 
         $result = [
@@ -115,6 +118,6 @@ class ResetMetaBoxOrder
             'message' => $message,
         ];
 
-        wp_send_json($result);
+        wp_send_json($result, $status_code);
     }
 }

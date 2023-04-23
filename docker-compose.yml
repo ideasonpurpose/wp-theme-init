@@ -2,7 +2,7 @@ services:
   # Utility service for running composer, provides a local volume for storing access tokens
   # https://hub.docker.com/_/composer
   composer:
-    image: composer:2.4
+    image: composer:2.5
     user: "${UID:-1000}:${GID:-1000}"
     environment:
       COMPOSER_HOME: /.composer
@@ -11,9 +11,8 @@ services:
       - ~/.composer:/.composer
     command: install
 
-  # https://www.github.com/ideasonpurpose/docker-phpunit-watch
+  # https://hub.docker.com/r/ideasonpurpose/phpunit-watch
   test:
-    # image: ideasonpurpose/phpunit-watch:dev
     image: ideasonpurpose/phpunit-watch:0.3.1
     volumes:
       - ./:/app

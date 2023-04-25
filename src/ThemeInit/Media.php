@@ -34,7 +34,7 @@ class Media
     /**
      * Enable our WP_Image_Editor_Imagick_HQ class for better scaling
      */
-    public function addHQImageEditor($editors)
+    public function addHQImageEditor($editors): array
     {
         return array_merge([__NAMESPACE__ . '\Media\Imagick\HQ'], $editors);
     }

@@ -5,7 +5,6 @@ namespace IdeasOnPurpose;
 use PHPUnit\Framework\TestCase;
 use WP_Admin_Bar;
 use IdeasOnPurpose\WP\Test;
-// use ThemeInit;
 
 Test\Stubs::init();
 require_once 'Fixtures/WP_Image_Editor_Imagick.php';
@@ -39,11 +38,8 @@ final class ThemeInitTest extends TestCase
 
     protected function setUp(): void
     {
-        /** @var \IdeasOnPurpose\ThemeInit $this->ThemeInit */
-        $this->ThemeInit = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit')
-            ->disableOriginalConstructor()
-            ->addMethods([])
-            ->getMock();
+        $ref = new \ReflectionClass('\IdeasOnPurpose\ThemeInit');
+        $this->ThemeInit = $ref->newInstanceWithoutConstructor();
     }
 
     /**
@@ -73,15 +69,6 @@ final class ThemeInitTest extends TestCase
          *     - https://stackoverflow.com/questions/69813091/how-to-best-preserve-some-methods-when-mocking-a-class-with-phpunit-10
          */
 
-        $methods = get_class_methods(ThemeInit::class);
-        $methods = array_diff($methods, ['readOption']);
-
-        /** @var \IdeasOnPurpose\ThemeInit $ThemeInit */
-        $ThemeInit = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit')
-            ->disableOriginalConstructor()
-            ->onlyMethods($methods)
-            ->getMock();
-
         /**
          * Alternate method: Use Reflection API to get a copy of the readOption method
          */
@@ -94,7 +81,7 @@ final class ThemeInitTest extends TestCase
          */
         $expected = 'SomeValue';
         $options['theme-name'] = $expected;
-        $opt = $ThemeInit->readOption('Other Value', 'theme-name-1_2_3');
+        $opt = $this->ThemeInit->readOption('Other Value', 'theme-name-1_2_3');
         $this->assertEquals($opt, $expected);
         /**
          * Check the ReflectionMethod too
@@ -110,7 +97,7 @@ final class ThemeInitTest extends TestCase
          * Option values attached to un-versioned theme-names pass through directly
          */
         $expected = '42';
-        $opt = $ThemeInit->readOption($expected, 'theme-name');
+        $opt = $this->ThemeInit->readOption($expected, 'theme-name');
         $this->assertEquals($opt, $expected);
 
         $opt = $readOption->invoke(

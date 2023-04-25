@@ -4,21 +4,6 @@ namespace IdeasOnPurpose\ThemeInit;
 
 use PHPUnit\Framework\TestCase;
 use IdeasOnPurpose\WP\Test;
-use ReflectionException;
-use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\InvalidArgumentException;
-use PHPUnit\Event\NoPreviousThrowableException;
-use PHPUnit\Framework\MockObject\CannotUseAddMethodsException;
-use PHPUnit\Framework\MockObject\ReflectionException as MockObjectReflectionException;
-use PHPUnit\Framework\MockObject\RuntimeException;
-use PHPUnit\Framework\MockObject\ClassAlreadyExistsException;
-use PHPUnit\Framework\MockObject\ClassIsEnumerationException;
-use PHPUnit\Framework\MockObject\ClassIsFinalException;
-use PHPUnit\Framework\MockObject\ClassIsReadonlyException;
-use PHPUnit\Framework\MockObject\DuplicateMethodException;
-use PHPUnit\Framework\MockObject\InvalidMethodNameException;
-use PHPUnit\Framework\MockObject\OriginalConstructorInvocationRequiredException;
-use PHPUnit\Framework\MockObject\UnknownTypeException;
 
 Test\Stubs::init();
 
@@ -101,6 +86,7 @@ final class MediaCompressImagesTest extends TestCase
          * is_wp_error() is called twice, creating a mock lets us
          * return different values from that call so we can test
          * states between those calls.
+         * TODO: should be a stub
          */
         $is_wp_error = $this->getMockBuilder('\StdClass')
             ->disableOriginalConstructor()

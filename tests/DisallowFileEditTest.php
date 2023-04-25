@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace IdeasOnPurpose\ThemeInit;
 
@@ -27,7 +27,7 @@ final class DisallowFileEditTest extends TestCase
         $DisallowFileEdit->display();
 
         $this->expectOutputRegex('/notice-warning/');
-        $actual = $this->getActualOutput();
+        $actual = $this->output();
         $this->assertStringContainsString('svg', $actual);
     }
 }

@@ -63,7 +63,7 @@ final class TemplateAuditTest extends TestCase
         $Audit->renderColumns('template', 1);
         $this->expectOutputRegex('/<strong>/');
 
-        $actual = $this->getActualOutput();
+        $actual = $this->output();
         $this->assertStringContainsString($title, $actual);
     }
 
@@ -132,7 +132,7 @@ final class TemplateAuditTest extends TestCase
         $Audit->templateAdminPage();
         $this->expectOutputRegex('/div/');
 
-        $actual = $this->getActualOutput();
+        $actual = $this->output();
         $this->assertStringContainsString($expected, $actual);
     }
 }

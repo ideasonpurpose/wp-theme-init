@@ -30,7 +30,7 @@
     "ideasonpurpose/wp-test-stubs": "dev-main@dev",
     "php-stubs/acf-pro-stubs": "dev-master",
     "php-stubs/wordpress-stubs": "^6",
-    "phpunit/phpunit": "^9.5"
+    "phpunit/phpunit": "^10"
   },
   "archive": {
     "exclude": [

@@ -55,6 +55,9 @@ A common baseline of repeated functions, filters and actions used across our Wor
 - **Global Comments Disable**
   Comments and Trackbacks are completely disabled. To re-enable comments, initialize the ThemeInit class with an array containing: `['enableComments' => true]`
 
+- **Remove jQuery Migrate**  (optional)
+  Prevent jQuery Migrate from loading by removing it from the list of WordPress dependencies. To remove jquery-migrate,  initialize the ThemeInit class with an array containing: `['jQueryMigrate' => false]` 
+
 - **Admin Separators**
   Admin Separators have been moved to their own library: [wp-admin-separators](https://github.com/ideasonpurpose/wp-admin-separators)
 
@@ -98,4 +101,4 @@ Run the PHPUnit test suite with: `npm run test`
 
 <!-- END IOP CREDIT BLURB -->
 
-- [dfe]: https://developer.wordpress.org/apis/wp-config-php/#disable-the-plugin-and-theme-file-editor
+[dfe]: https://developer.wordpress.org/apis/wp-config-php/#disable-the-plugin-and-theme-file-editor

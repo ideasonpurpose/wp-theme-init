@@ -11,7 +11,7 @@ class ThemeInit
         $this->is_debug = defined('WP_DEBUG') && WP_DEBUG;
         $this->abspath = defined('ABSPATH') && ABSPATH;
 
-        $defaults = ['showIncludes' => true, 'enableComments' => false];
+        $defaults = ['showIncludes' => true, 'enableComments' => false, 'jQueryMigrate' => true];
         $options = array_merge($defaults, $options);
 
         /**
@@ -86,7 +86,6 @@ class ThemeInit
          */
         new ThemeInit\Admin\ResetMetaboxes();
 
-
         new ThemeInit\Plugins\ACF();
         new ThemeInit\Plugins\SEOFramework();
 
@@ -96,6 +95,14 @@ class ThemeInit
 
         if ($options['enableComments'] === false) {
             new ThemeInit\Extras\GlobalCommentsDisable();
+        }
+
+        /**
+         * TODO: EXPERIMENTAL
+         * Provide a switch to remove jquery-migrate
+         */
+        if ($options['jQueryMigrate'] === false) {
+            new ThemeInit\Extras\RemoveJQueryMigrate();
         }
         new ThemeInit\Extras\Shortcodes();
 

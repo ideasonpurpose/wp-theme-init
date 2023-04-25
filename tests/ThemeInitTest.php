@@ -26,6 +26,7 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
  * @covers \IdeasOnPurpose\ThemeInit\Admin\TemplateAudit
  * @covers \IdeasOnPurpose\ThemeInit\Debug\ShowIncludes
  * @covers \IdeasOnPurpose\ThemeInit\Extras\GlobalCommentsDisable
+ * @covers \IdeasOnPurpose\ThemeInit\Extras\RemoveJQueryMigrate
  * @covers \IdeasOnPurpose\ThemeInit\Extras\Shortcodes
  * @covers \IdeasOnPurpose\ThemeInit\Media
  * @covers \IdeasOnPurpose\ThemeInit\Plugins\ACF
@@ -56,6 +57,38 @@ final class ThemeInitTest extends TestCase
             ['wp_head', 'adjacent_posts_rel_link_wp_head'],
             all_removed_actions()
         );
+    }
+
+    public function testConstructorOptions()
+    {
+        global $actions;
+        $actions = [];
+
+        // NOTE: WP_DEBUG is set to TRUE in phpunit.xml
+        new ThemeInit(['showIncludes' => true]); // default
+        $this->assertContains(['wp_footer', 'show'], all_added_actions());
+        $actions = [];
+
+        new ThemeInit(['showIncludes' => false]);
+        $this->assertNotContains(['wp_footer', 'show'], all_added_actions());
+        $actions = [];
+
+        // d(all_added_actions());
+
+        new ThemeInit(['enableComments' => false]); // default
+        $this->assertContains(['init', 'removeFromAdminBar'], all_added_actions());
+        $actions = [];
+
+        new ThemeInit(['enableComments' => true]);
+        $this->assertNotContains(['init', 'removeFromAdminBar'], all_added_actions());
+        $actions = [];
+
+        new ThemeInit(['jQueryMigrate' => true]); // default
+        $this->assertNotContains(['wp_default_scripts', 'deRegister'], all_added_actions());
+        $actions = [];
+
+        new ThemeInit(['jQueryMigrate' => false]);
+        $this->assertContains(['wp_default_scripts', 'deRegister'], all_added_actions());
     }
 
     public function testReadOption()

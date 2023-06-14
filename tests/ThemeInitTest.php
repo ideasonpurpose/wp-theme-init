@@ -30,6 +30,7 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
  * @covers \IdeasOnPurpose\ThemeInit\Extras\Shortcodes
  * @covers \IdeasOnPurpose\ThemeInit\Media
  * @covers \IdeasOnPurpose\ThemeInit\Plugins\ACF
+ * @covers \IdeasOnPurpose\ThemeInit\Plugins\EnableMediaReplace
  * @covers \IdeasOnPurpose\ThemeInit\Plugins\SEOFramework
  */
 final class ThemeInitTest extends TestCase

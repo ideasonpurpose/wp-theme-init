@@ -87,6 +87,7 @@ class ThemeInit
         new ThemeInit\Admin\ResetMetaboxes();
 
         new ThemeInit\Plugins\ACF();
+        new ThemeInit\Plugins\EnableMediaReplace();
         new ThemeInit\Plugins\SEOFramework();
 
         if ($options['showIncludes'] !== false) {

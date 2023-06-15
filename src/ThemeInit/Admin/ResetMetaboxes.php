@@ -38,7 +38,7 @@ class ResetMetaboxes
 
     public function addForm()
     {
-        readfile(__DIR__ . '/ResetMetaboxes/admin-form.js');
+        readfile(__DIR__ . '/ResetMetaboxes/admin-form.html');
     }
 
     public function handler()

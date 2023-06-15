@@ -13,16 +13,12 @@ const handler = (e) => {
     class_name: className,
   };
 
+  /**
+   * fetch either doesn't need headers or they're inherited from URLSearchParams
+   */
   fetch(iop_metabox_config.url, {
     method: "POST",
     body: new URLSearchParams(data),
-
-    /**
-     * Headers aren't needed? Inheriting from URLSearchParams?
-     */
-    // headers: {
-    //   "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-    // },
   })
     .then((response) => response.json())
     .then((data) => {
@@ -41,18 +37,3 @@ const handler = (e) => {
 document
   .querySelectorAll("button[class*=iop-reset-metabox]")
   .forEach((el) => el.addEventListener("click", handler));
-
-/**
- * Leftover, fetch() is working and faster...
- */
-// jQuery.post(
-//   iop_metabox_config.url,
-//   {
-//     _ajax_nonce: iop_metabox_config.nonce,
-//     action: iop_metabox_config.action,
-//     title: "hello i am title",
-//   },
-//   function (result) {
-//     console.log({ result, data });
-//   }
-// );

@@ -38,31 +38,7 @@ class ResetMetaboxes
 
     public function addForm()
     {
-        ?>
-
-<h2>Metabox Settings</h2>
-    <table class="form-table">
-        <tbody>
-            <tr>
-            <th><label for="reset-metabox-order">Reset Order</label></th>
-            <td>
-                <button type="button" name="reset-metabox-order" class="button iop-reset-metabox-order hide-if-no-js">
-                Reset Metabox Order
-                </button>
-            </td>
-            </tr>
-            <tr>
-            <th><label for="reset-metabox-visibility">Reset Visibility</label></th>
-            <td>
-                <button type="button" name="reset-metabox-visibility" class="button iop-reset-metabox-visibility hide-if-no-js">
-                Reset Metabox Visibility
-                </button>
-            </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <?php
+        readfile(__DIR__ . '/ResetMetaboxes/admin-form.js');
     }
 
     public function handler()

@@ -2,11 +2,9 @@
 
 namespace IdeasOnPurpose\ThemeInit;
 
-// use IdeasOnPurpose\ThemeInit\Admin\ResetMetaboxes;
 use PHPUnit\Framework\TestCase;
 use IdeasOnPurpose\WP\Test;
 
-use function PHPUnit\Framework\assertArrayHasKey;
 
 Test\Stubs::init();
 

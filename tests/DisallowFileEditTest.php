@@ -12,22 +12,26 @@ Test\Stubs::init();
  */
 final class DisallowFileEditTest extends TestCase
 {
-    public function testDISALLOW_FILE_EDITisFalse()
+    public function testBlockEdit()
     {
         $DisallowFileEdit = new Admin\DisallowFileEdit();
-        $DisallowFileEdit->disallowFileEdit = false;
-        $DisallowFileEdit->init();
 
-        $this->assertTrue(action_was_added('admin_notices'));
+        $cap = 'edit_themes';
+        $expected = ['do_not_allow'];
+        $actual = $DisallowFileEdit->blockEdit([$cap], $cap);
+
+        $this->assertNotEquals($actual, [$cap]);
+        $this->assertEquals($actual, $expected);
     }
 
-    public function testDisplayHasIcon()
+    public function testDontBlockOthers()
     {
         $DisallowFileEdit = new Admin\DisallowFileEdit();
-        $DisallowFileEdit->display();
 
-        $this->expectOutputRegex('/notice-warning/');
-        $actual = $this->output();
-        $this->assertStringContainsString('svg', $actual);
+        $cap = 'not_edit_themes';
+        $expected = [$cap];
+        $actual = $DisallowFileEdit->blockEdit([$cap], $cap);
+
+        $this->assertEquals($actual, $expected);
     }
 }

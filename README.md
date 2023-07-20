@@ -35,7 +35,7 @@ A common baseline of repeated functions, filters and actions used across our Wor
   - "Howdy" is removed from the admin menu bar.
   - Lots of junk is removed from wp_head. Many optimizations come from the [Soil plugin](https://roots.io/plugins/soil/).
   - WordPress will attempt to trigger a webpack devServer reload from the `save_post` hook.
-  - Set the [`DISALLOW_FILE_EDIT`][dfe] constant and displays an admin notice when the constant is explicitly set to false.
+  - Override the [`DISALLOW_FILE_EDIT`](https://developer.wordpress.org/apis/wp-config-php/#disable-the-plugin-and-theme-file-editor) constant and block access to the [Theme File Editor](https://wordpress.org/documentation/article/appearance-theme-file-editor-screen/).
 
 - **ShowIncludes**
   A div showing all included theme files will be appended to the page when `WP_DEBUG` is true. To disable it, initialize the class with an array containing: `['showIncludes' => false]`
@@ -47,7 +47,7 @@ A common baseline of repeated functions, filters and actions used across our Wor
   User's last successful login are recorded and added to the WordPress Admin User table.
 
 - **Reset Metabox Order & Visibility**
-  Adds buttons to the bottom of user profiles which will reset all metabox order and visibility from user_meta. 
+  Adds buttons to the bottom of user profiles which will reset all metabox order and visibility from user_meta.
 
 - **Enable and limit WP_POST_REVISIONS**
   Revisions are set to 6, this overrides any constants set in wp-config.php.
@@ -55,8 +55,8 @@ A common baseline of repeated functions, filters and actions used across our Wor
 - **Global Comments Disable**
   Comments and Trackbacks are completely disabled. To re-enable comments, initialize the ThemeInit class with an array containing: `['enableComments' => true]`
 
-- **Remove jQuery Migrate**  (optional)
-  Prevent jQuery Migrate from loading by removing it from the list of WordPress dependencies. To remove jquery-migrate,  initialize the ThemeInit class with an array containing: `['jQueryMigrate' => false]` 
+- **Remove jQuery Migrate** (optional)
+  Prevent jQuery Migrate from loading by removing it from the list of WordPress dependencies. To remove jquery-migrate, initialize the ThemeInit class with an array containing: `['jQueryMigrate' => false]`
 
 - **Admin Separators**
   Admin Separators have been moved to their own library: [wp-admin-separators](https://github.com/ideasonpurpose/wp-admin-separators)
@@ -100,5 +100,3 @@ Run the PHPUnit test suite with: `npm run test`
 <a href="https://www.ideasonpurpose.com"><img src="https://raw.githubusercontent.com/ideasonpurpose/ideasonpurpose/master/IOP_monogram_circle_512x512_mint.png" height="44" align="top" alt="IOP Logo"></a><img src="https://raw.githubusercontent.com/ideasonpurpose/ideasonpurpose/master/spacer.png" align="middle" width="4" height="54"> This project is actively developed and used in production at <a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>.
 
 <!-- END IOP CREDIT BLURB -->
-
-[dfe]: https://developer.wordpress.org/apis/wp-config-php/#disable-the-plugin-and-theme-file-editor

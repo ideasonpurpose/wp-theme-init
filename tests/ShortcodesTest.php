@@ -12,6 +12,8 @@ Test\Stubs::init();
  */
 final class ShortcodesTest extends TestCase
 {
+    public $Shortcode;
+
     protected function setUp(): void
     {
         global $shortcodes;

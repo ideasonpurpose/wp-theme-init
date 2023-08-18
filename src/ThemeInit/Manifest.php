@@ -56,6 +56,8 @@ class Manifest
     /**
      * Load the Manifest from a filepath
      */
+    public $manifest_file;
+    public $manifest;
     public function load_manifest($manifest_file)
     {
         $this->manifest_file = realpath(

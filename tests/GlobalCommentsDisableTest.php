@@ -13,6 +13,8 @@ Test\Stubs::init();
  */
 final class GlobalCommentsDisableTest extends TestCase
 {
+    public $GlobalCommentsDisable;
+
     protected function setUp(): void
     {
         global $actions;

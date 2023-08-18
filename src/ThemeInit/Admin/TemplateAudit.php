@@ -13,6 +13,11 @@ use IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable;
  */
 class TemplateAudit
 {
+    public $option_per_page;
+    public $ListTable;
+    public $submenu_id;
+    public $theme_name;
+
     public function __construct($args = [])
     {
         $this->option_per_page = 'template_audit_templates_per_page';

@@ -4,6 +4,8 @@ namespace IdeasOnPurpose\ThemeInit\Debug;
 
 class ShowIncludes
 {
+    public $is_debug = false;
+
     public function __construct()
     {
         $this->is_debug = defined('WP_DEBUG') && WP_DEBUG;

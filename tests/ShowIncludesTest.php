@@ -12,6 +12,8 @@ Test\Stubs::init();
  */
 final class ShowIncludesTest extends TestCase
 {
+    public $ShowIncludes;
+
     protected function setUp(): void
     {
         $this->ShowIncludes = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Debug\ShowIncludes')

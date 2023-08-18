@@ -12,6 +12,9 @@ if (!class_exists('WP_List_Table')) {
  */
 class ListTable extends \WP_List_Table
 {
+    public $_column_headers;
+    public $items;
+
     public function prepare_items()
     {
         $columns = $this->get_columns();

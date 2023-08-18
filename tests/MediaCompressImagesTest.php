@@ -60,10 +60,11 @@ final class MediaCompressImagesTest extends TestCase
     private $Editor;
 
     /**
-     *
      * @var Array
      */
     private $metadata;
+
+    public $editor_error_mock;
 
     protected function setUp(): void
     {

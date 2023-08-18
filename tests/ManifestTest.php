@@ -58,6 +58,9 @@ function wp_register_style($handle, $src, $deps, $ver, $media = '')
  */
 final class ManifestTest extends TestCase
 {
+    public $Manifest;
+    public $ManifestErrorHandler;
+
     protected function setUp(): void
     {
         /** @var \IdeasOnPurpose\ThemeInit $this->Manifest */

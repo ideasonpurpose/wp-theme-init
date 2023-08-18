@@ -12,6 +12,8 @@ Test\Stubs::init();
  */
 final class AdminPostStatesTest extends TestCase
 {
+    public $post;
+
     public function setUp(): void
     {
         global $filters;

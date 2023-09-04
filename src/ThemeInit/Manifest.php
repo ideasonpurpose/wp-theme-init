@@ -109,6 +109,7 @@ class Manifest
         foreach ($this->manifest as $entry => $assets) {
             $jsDeps = [];
             $cssDeps = [];
+            $asset_versions = [];
             $themeName = get_stylesheet();
 
             foreach ($assets['dependencies'] as $src => $file) {
@@ -131,12 +132,15 @@ class Manifest
 
             /**
              * Note: this is dependent on the $entry value being used as the base of $files keys
+             * TODO: In development, *.asset.php files are being generated for dependencies as well,
+             *       but they're always empty. Those should probably be checked as well, just in case.
              */
             if (array_key_exists("{$entry}.php", $assets['files'])) {
                 $asset_filepath = dirname(get_theme_root(), 2) . $assets['files']["{$entry}.php"];
                 if (file_exists($asset_filepath)) {
                     $asset_php = require $asset_filepath;
                     $jsDeps = array_merge($jsDeps, $asset_php['dependencies']);
+                    $asset_versions[$entry] = $asset_php['version'];
                 }
             }
 
@@ -152,6 +156,7 @@ class Manifest
                  * @see  /wp-includes/class.wp-scripts.php#L394
                  * @link https://github.com/WordPress/WordPress/blob/70e7eec1751a6aca14b4853c10e0d961e2baddf1/wp-includes/class.wp-scripts.php#L394
                  */
+
                 ['extension' => $ext, 'filename' => $filename] = pathinfo($src);
                 $assetHandle = sanitize_title("$themeName-$filename");
 
@@ -169,6 +174,7 @@ class Manifest
                     'deps_css' => $cssDeps,
                     'isAdmin' => $isAdmin,
                     'isEditor' => $isEditor,
+                    'version' => $asset_versions[$entry],
                 ];
 
                 if ($isAdmin) {
@@ -232,7 +238,7 @@ class Manifest
                     $asset['handle'],
                     $asset['file'],
                     $asset['deps_js'],
-                    null,
+                    $asset['version'],
                     !$asset['showInHead']
                 );
             }
@@ -240,9 +246,19 @@ class Manifest
                 if ($asset['isEditor']) {
                     // NOTE: Leaving this here in case Gutenberg starts working this way again
                     // add_editor_style($asset['file']);
-                    wp_enqueue_style($asset['handle'], $asset['file'], $asset['deps_css'], null);
+                    wp_enqueue_style(
+                        $asset['handle'],
+                        $asset['file'],
+                        $asset['deps_css'],
+                        $asset['version']
+                    );
                 } else {
-                    wp_enqueue_style($asset['handle'], $asset['file'], $asset['deps_css'], null);
+                    wp_enqueue_style(
+                        $asset['handle'],
+                        $asset['file'],
+                        $asset['deps_css'],
+                        $asset['version']
+                    );
                 }
             }
         }

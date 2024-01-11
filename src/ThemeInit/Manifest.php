@@ -12,6 +12,13 @@ class Manifest
      */
     public $is_debug = false;
 
+    public $js_handles;
+
+    /**
+     * A placeholder for ABSPATH which can be mocked
+     */
+    public $ABSPATH;
+
     public $assets = [
         'wp' => [],
         'admin' => [],
@@ -22,12 +29,15 @@ class Manifest
      * The manifest file is expected to live here:
      *      get_template_directory() . '/dist/manifest.json'
      *
+     * It is also expected that all files referenced in the manifest are either relative to the manifest file or absolute paths.
+     *
      * NOTE: This now uses our DependencyManifestPlugin which generates a tree of entrypoints and their dependencies
      * See here: https://github.com/ideasonpurpose/docker-build/blob/master/lib/DependencyManifestPlugin.js
      */
     public function __construct($manifest_file = null)
     {
         $this->is_debug = defined('WP_DEBUG') && WP_DEBUG;
+        $this->ABSPATH = ABSPATH;
 
         $this->load_manifest($manifest_file);
 
@@ -35,6 +45,11 @@ class Manifest
         add_action('wp_enqueue_scripts', [$this, 'enqueue_wp_assets']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
         add_action('enqueue_block_editor_assets', [$this, 'enqueue_editor_assets']);
+
+        /**
+         * Treat all scripts as modules
+         */
+        add_filter('script_loader_tag', [$this, 'script_type_module'], 10, 3);
     }
 
     /**
@@ -62,7 +77,7 @@ class Manifest
     {
         $this->manifest_file = realpath(
             is_null($manifest_file)
-                ? get_template_directory() . '/dist/dependency-manifest.json'
+                ? get_template_directory() . '/dist/dependency-manifest.json' // TODO: get_template_directory is theme-dependent
                 : $manifest_file
         );
 
@@ -110,7 +125,7 @@ class Manifest
             $jsDeps = [];
             $cssDeps = [];
             $asset_versions = [];
-            $themeName = get_stylesheet();
+            $handle = basename(dirname(dirname($this->manifest_file))); // TODO: hack. do better
 
             foreach ($assets['dependencies'] as $src => $file) {
                 ['extension' => $ext, 'filename' => $filename] = str_replace(
@@ -118,15 +133,16 @@ class Manifest
                     '-',
                     pathinfo($src)
                 );
-                $assetHandle = sanitize_title("$themeName-$filename");
+                $asset_handle = sanitize_title("{$handle}-{$filename}");
 
                 if (strtolower($ext) === 'js') {
-                    $jsDeps[] = $assetHandle;
-                    $this->register_scripts[$assetHandle] = $file;
+                    $jsDeps[] = $asset_handle;
+                    $this->register_scripts[$asset_handle] = $file;
+                    $this->js_handles[] = $asset_handle;
                 }
                 if (strtolower($ext) === 'css') {
-                    $cssDeps[] = $assetHandle;
-                    $this->register_styles[$assetHandle] = $file;
+                    $cssDeps[] = $asset_handle;
+                    $this->register_styles[$asset_handle] = $file;
                 }
             }
 
@@ -136,7 +152,11 @@ class Manifest
              *       but they're always empty. Those should probably be checked as well, just in case.
              */
             if (array_key_exists("{$entry}.php", $assets['files'])) {
-                $asset_filepath = dirname(get_theme_root(), 2) . $assets['files']["{$entry}.php"];
+                // $asset_filepath =
+                //     untrailingslashit($this->ABSPATH) . $assets['files']["{$entry}.php"];
+
+                $asset_filepath = realpath($this->ABSPATH . $assets['files']["{$entry}.php"]);
+
                 if (file_exists($asset_filepath)) {
                     $asset_php = require $asset_filepath;
                     $jsDeps = array_merge($jsDeps, $asset_php['dependencies']);
@@ -158,14 +178,17 @@ class Manifest
                  */
 
                 ['extension' => $ext, 'filename' => $filename] = pathinfo($src);
-                $assetHandle = sanitize_title("$themeName-$filename");
+                $asset_handle = sanitize_title("$handle-$filename");
 
                 $isAdmin = stripos($entry, 'admin') === 0;
                 $isEditor = stripos($entry, 'editor') === 0;
                 $showInHead = stripos($src, 'head') === 0 || stripos($src, 'admin-head') === 0;
 
+                if ($ext === 'js') {
+                    $this->js_handles[] = $asset_handle;
+                }
                 $asset = [
-                    'handle' => $assetHandle,
+                    'handle' => $asset_handle,
                     'entry' => $entry,
                     'file' => $file,
                     'showInHead' => $showInHead,
@@ -186,6 +209,7 @@ class Manifest
                 }
             }
         }
+        $this->js_handles = array_unique($this->js_handles);
     }
 
     /**
@@ -262,5 +286,27 @@ class Manifest
                 }
             }
         }
+    }
+
+    /**
+     * Add `type="module"` to script tags for JS assets in this the dependency manifest
+     * @param mixed $tag
+     * @param mixed $handle
+     * @param mixed $src
+     * @return mixed
+     */
+    public function script_type_module($tag, $handle, $src)
+    {
+        if (in_array($handle, $this->js_handles)) {
+            $new_tag = sprintf(
+                "<script type='module' src='%s' id='%s'></script>",
+                esc_url($src),
+                $handle
+            );
+
+            return $new_tag;
+        }
+
+        return $tag;
     }
 }

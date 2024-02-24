@@ -81,6 +81,12 @@ class ThemeInit
          */
         new ThemeInit\Admin\LastLogin();
 
+
+        /**
+         * Clear stale wordpress_logged_in cookies
+         */
+        New ThemeInit\Admin\LoginCookieCleaner();
+
         /**
          * Add Metabox Reset buttons to Admin User Profiles
          */

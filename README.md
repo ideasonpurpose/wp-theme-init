@@ -61,6 +61,9 @@ A common baseline of repeated functions, filters and actions used across our Wor
 - **Admin Separators**
   Admin Separators have been moved to their own library: [wp-admin-separators](https://github.com/ideasonpurpose/wp-admin-separators)
 
+- **Remove Stale Login Cookies**
+  Repeatedly spinning up local dev environments often bloats **localhost** cookies with stale `wordpress_logged_in` entries. Once these accumulate, the local server will eventually fail with a bad request and the error message *"Your browser sent a request that this server could not understand. Size of a request header field exceeds server limit."* The cookie can be removed using the browser's dev tools, if the error is recognized -- but it often isn't. Instead, wp-theme-init removes stale login cookies from the `wp_login` hook, preventing the issue. This only runs on development environments when WP_DEBUG is set.
+
 - **Media**
   Several media related features will be enabled:
 

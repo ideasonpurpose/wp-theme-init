@@ -3,13 +3,16 @@ namespace IdeasOnPurpose;
 
 class ThemeInit
 {
-    public $is_debug;
-    public $abspath;
+    /**
+     * Placeholders for mocking
+     */
+    public $ABSPATH;
+    public $WP_DEBUG = false;
 
     public function __construct($options = [])
     {
-        $this->is_debug = defined('WP_DEBUG') && WP_DEBUG;
-        $this->abspath = defined('ABSPATH') && ABSPATH;
+        $this->ABSPATH = defined('ABSPATH') ? ABSPATH : '/'; // WordPress always defines this
+        $this->WP_DEBUG = defined('WP_DEBUG') && WP_DEBUG;
 
         $defaults = ['showIncludes' => true, 'enableComments' => false, 'jQueryMigrate' => true];
         $options = array_merge($defaults, $options);
@@ -81,11 +84,10 @@ class ThemeInit
          */
         new ThemeInit\Admin\LastLogin();
 
-
         /**
          * Clear stale wordpress_logged_in cookies
          */
-        New ThemeInit\Admin\LoginCookieCleaner();
+        new ThemeInit\Admin\LoginCookieCleaner();
 
         /**
          * Add Metabox Reset buttons to Admin User Profiles
@@ -117,7 +119,7 @@ class ThemeInit
         // @codeCoverageIgnoreStart
         if (class_exists('Kint')) {
             \Kint::$enabled_mode = false;
-            if ($this->is_debug) {
+            if ($this->WP_DEBUG) {
                 \Kint::$enabled_mode = true;
             }
         }
@@ -256,7 +258,7 @@ class ThemeInit
      */
     public function debugFlushRewriteRules()
     {
-        if ($this->is_debug) {
+        if ($this->WP_DEBUG) {
             /*
              * This code is adapted from wp-includes/admin-bar.php for skipping AJAX, JSON, etc.
              *       https://github.com/WordPress/WordPress/blob/42d52ce08099f9fae82a1977da0237b32c863e94/wp-includes/admin-bar.php#L1179-L1181
@@ -272,7 +274,7 @@ class ThemeInit
                 return false;
             }
 
-            $htaccess = file_exists($this->abspath . '.htaccess');
+            $htaccess = file_exists($this->ABSPATH . '.htaccess');
             $htaccess_log = $htaccess ? ' including .htaccess file' : '';
 
             /**

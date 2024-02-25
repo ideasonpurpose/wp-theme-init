@@ -4,20 +4,16 @@ namespace IdeasOnPurpose\ThemeInit;
 
 class Manifest
 {
+    /**
+     * Placeholders for mocking
+     */
+    public $ABSPATH;
+    public $WP_DEBUG = false;
+
     public $register_scripts = [];
     public $register_styles = [];
 
-    /**
-     * A placeholder for WP_DEBUG which can be mocked
-     */
-    public $is_debug = false;
-
     public $js_handles;
-
-    /**
-     * A placeholder for ABSPATH which can be mocked
-     */
-    public $ABSPATH;
 
     public $assets = [
         'wp' => [],
@@ -27,7 +23,7 @@ class Manifest
 
     /**
      * The manifest file is expected to live here:
-     *      get_template_directory() . '/dist/manifest.json'
+     *      get_template_directory() . '/dist/dependency-manifest.json'
      *
      * It is also expected that all files referenced in the manifest are either relative to the manifest file or absolute paths.
      *
@@ -36,8 +32,10 @@ class Manifest
      */
     public function __construct($manifest_file = null)
     {
-        $this->is_debug = defined('WP_DEBUG') && WP_DEBUG;
-        $this->ABSPATH = ABSPATH;   // WordPress always defines this
+        $this->ABSPATH = defined('ABSPATH') ? ABSPATH : '/'; // WordPress always defines this
+        $this->WP_DEBUG = defined('WP_DEBUG') && WP_DEBUG;
+
+        // NEED TO MAN UYALLY LOAD THE MANIFEST, NOT RUN THE constructor
 
         $this->load_manifest($manifest_file);
 
@@ -60,7 +58,9 @@ class Manifest
      */
     public function error_handler($msg)
     {
-        if ($this->is_debug) {
+        // d('debug', $this->WP_DEBUG, $msg);
+        if ($this->WP_DEBUG) {
+            // d('hi');
             add_action('wp_head', function () use ($msg) {
                 echo "\n<!-- $msg --> \n\n";
             });
@@ -124,7 +124,8 @@ class Manifest
         foreach ($this->manifest as $entry => $assets) {
             $jsDeps = [];
             $cssDeps = [];
-            $asset_versions = [];
+            $asset_versions = [$entry => substr(sha1_file($this->manifest_file), 0, 12)];
+            $this->js_handles = [];
             $handle = basename(dirname(dirname($this->manifest_file))); // TODO: hack. do better
 
             foreach ($assets['dependencies'] as $src => $file) {
@@ -151,18 +152,22 @@ class Manifest
              * TODO: In development, *.asset.php files are being generated for dependencies as well,
              *       but they're always empty. Those should probably be checked as well, just in case.
              */
+            // d("{$entry}.php", $assets['files'], array_key_exists("{$entry}.php", $assets['files']));
             if (array_key_exists("{$entry}.php", $assets['files'])) {
-                // $asset_filepath =
-                //     untrailingslashit($this->ABSPATH) . $assets['files']["{$entry}.php"];
-
                 $asset_filepath = realpath($this->ABSPATH . $assets['files']["{$entry}.php"]);
 
                 if (file_exists($asset_filepath)) {
                     $asset_php = require $asset_filepath;
-                    $jsDeps = array_merge($jsDeps, $asset_php['dependencies']);
-                    $asset_versions[$entry] = $asset_php['version'];
+                    if ($asset_php['dependencies']) {
+                        $jsDeps = array_merge($jsDeps, $asset_php['dependencies']);
+                    }
+                    if ($asset_php['version']) {
+                        $asset_versions[$entry] = $asset_php['version'];
+                    }
                 }
             }
+
+            // d($this->ABSPATH, $asset_versions);
 
             foreach ($assets['files'] as $src => $file) {
                 /**
@@ -187,6 +192,7 @@ class Manifest
                 if ($ext === 'js') {
                     $this->js_handles[] = $asset_handle;
                 }
+
                 $asset = [
                     'handle' => $asset_handle,
                     'entry' => $entry,
@@ -303,10 +309,8 @@ class Manifest
                 esc_url($src),
                 $handle
             );
-
             return $new_tag;
         }
-
         return $tag;
     }
 }

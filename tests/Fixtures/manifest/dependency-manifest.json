@@ -1,43 +1,35 @@
 {
   "main": {
     "files": {
-      "main.css": "/wp-content/themes/iop/dist/main.css",
-      "main.js": "/wp-content/themes/iop/dist/main.js",
-      "main.php": "/Fixtures/manifest/asset-snippet/main.asset.php",
-      "main.map": "/wp-content/themes/iop/dist/main.js.map"
+      "main.css": "/Fixtures/asset_placeholders/main.css",
+      "main.js": "/Fixtures/asset_placeholders/main.js",
+      "main.php": "/Fixtures/asset_placeholders/main.asset.php"
     },
     "dependencies": {
-      "fake-main.css": "/wp-content/themes/iop/dist/fake-main-f16e48.css",
-      "vendors~admin~editor~main.js": "/wp-content/themes/iop/dist/vendors~admin~editor~main-f16e48.js",
-      "vendors~admin~editor~main.map": "/wp-content/themes/iop/dist/vendors~admin~editor~main-f16e48.js.map",
-      "vendors~main.js": "/wp-content/themes/iop/dist/vendors~main-66cefa.js",
-      "vendors~main.map": "/wp-content/themes/iop/dist/vendors~main-66cefa.js.map"
+      "fake-main.css": "/no-file/fake-main-f16e48.css",
+      "vendors~admin~editor~main.js": "/no-file/vendors~admin~editor~main-f16e48.js",
+      "vendors~main.js": "no-file/vendors~main-66cefa.js"
     }
   },
   "admin": {
     "files": {
-      "admin.css": "/wp-content/themes/iop/dist/admin.css",
-      "admin.js": "/wp-content/themes/iop/dist/admin.js",
-      "admin.php": "/this/file/does/not/exist/admin.asset.php",
-      "admin.map": "/wp-content/themes/iop/dist/admin.js.map"
+      "admin.css": "/no-file/admin.css",
+      "admin.js": "/no-file/admin.js",
+      "admin.php": "/no-file/admin.asset.php"
     },
     "dependencies": {
-      "vendors~admin~editor~main.js": "/wp-content/themes/iop/dist/vendors~admin~editor~main-f16e48.js",
-      "vendors~admin~editor~main.map": "/wp-content/themes/iop/dist/vendors~admin~editor~main-f16e48.js.map"
+      "vendors~admin~editor~main.js": "/no-file/vendors~admin~editor~main-f16e48.js"
     }
   },
   "editor": {
     "files": {
-      "editor.css": "/wp-content/themes/iop/dist/editor.css",
-      "editor.js": "/wp-content/themes/iop/dist/editor.js",
-      "editor.php": "/Fixtures/manifest/asset-snippet/editor.asset.php",
-      "editor.map": "/wp-content/themes/iop/dist/editor.js.map"
+      "editor.css": "/no-file/editor.css",
+      "editor.js": "/no-file/editor.js",
+      "editor.php": "/Fixtures/asset_placeholders/editor.asset.php"
     },
     "dependencies": {
-      "vendors~admin~editor~main.js": "/wp-content/themes/iop/dist/vendors~admin~editor~main-f16e48.js",
-      "vendors~admin~editor~main.map": "/wp-content/themes/iop/dist/vendors~admin~editor~main-f16e48.js.map",
-      "vendors~editor.js": "/wp-content/themes/iop/dist/vendors~editor-888b83.js",
-      "vendors~editor.map": "/wp-content/themes/iop/dist/vendors~editor-888b83.js.map"
+      "vendors~admin~editor~main.js": "/no-file/vendors~admin~editor~main-f16e48.js",
+      "vendors~editor.js": "/no-file/vendors~editor-888b83.js"
     }
   }
 }

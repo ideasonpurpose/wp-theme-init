@@ -20,12 +20,14 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
  */
 final class SearchTest extends TestCase
 {
-
     public $Search;
     public $exitMessage;
 
     protected function setUp(): void
     {
+        global $actions;
+        $actions = [];
+
         $this->exitMessage = 'Exited!';
         /** @var \IdeasOnPurpose\ThemeInit $this->ThemeInit */
         $this->Search = $this->getMockBuilder('\IdeasOnPurpose\WP\Search')

@@ -7,26 +7,6 @@ use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
-/**
- * Simple spy for wp_enqueue_style to collect called arguments
- */
-
-function wp_enqueue_script($handle, $file, $deps = [], $version = false, $showInHead = false)
-{
-    global $enqueued;
-    $enqueued[] = [
-        'handle' => $handle,
-        'file' => $file,
-        'deps' => $deps,
-        'showInHead' => $showInHead,
-    ];
-}
-
-function wp_enqueue_style($handle, $file, $deps = [], $version = false)
-{
-    global $enqueued;
-    $enqueued[] = ['handle' => $handle, 'file' => $file, 'deps' => $deps];
-}
 
 if (!function_exists(__NAMESPACE__ . '\error_log')) {
     function error_log($err)
@@ -36,22 +16,6 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
     }
 }
 
-function add_action($hook, $func)
-{
-    call_user_func($func);
-}
-
-function wp_register_script($handle, $src, $deps, $ver, $in_footer)
-{
-    global $scripts;
-    $scripts[] = ['handle' => $handle, 'src' => $src, 'ver' => $ver, 'in_footer' => $in_footer];
-}
-
-function wp_register_style($handle, $src, $deps, $ver, $media = '')
-{
-    global $styles;
-    $scripts[] = ['handle' => $handle, 'src' => $src, 'ver' => $ver, 'media' => $media];
-}
 
 /**
  * @covers IdeasOnPurpose\ThemeInit\Manifest
@@ -81,8 +45,14 @@ final class ManifestTest extends TestCase
 
     public function testLoadManifest()
     {
-        $manifest = new Manifest(__DIR__ . '/Fixtures/manifest/dependency-manifest.json');
-        $this->assertStringEndsWith('manifest/dependency-manifest.json', $manifest->manifest_file);
+        // $manifest = new Manifest(__DIR__ . '/Fixtures/manifest/dependency-manifest.json');
+        $this->Manifest->ABSPATH = __DIR__;
+        $this->Manifest->load_manifest(__DIR__ . '/Fixtures/manifest/dependency-manifest.json');
+
+        $this->assertStringEndsWith(
+            'manifest/dependency-manifest.json',
+            $this->Manifest->manifest_file
+        );
     }
 
     public function testLoadManifestMissing()
@@ -108,18 +78,22 @@ final class ManifestTest extends TestCase
     {
         global $enqueued;
 
-        $manifest = new Manifest(__DIR__ . '/Fixtures/manifest/dependency-manifest.json');
+        // d($this->Manifest);
+        // $manifest = new Manifest(__DIR__ . '/Fixtures/manifest/dependency-manifest.json');
+        // d($manifest);
+        $this->Manifest->ABSPATH = __DIR__;
+        $this->Manifest->load_manifest(__DIR__ . '/Fixtures/manifest/dependency-manifest.json');
 
         $enqueued = [];
-        $manifest->enqueue_wp_assets();
+        $this->Manifest->enqueue_wp_assets();
         $this->assertCount(2, $enqueued);
 
         $enqueued = [];
-        $manifest->enqueue_admin_assets();
+        $this->Manifest->enqueue_admin_assets();
         $this->assertCount(2, $enqueued);
 
         $enqueued = [];
-        $manifest->enqueue_editor_assets();
+        $this->Manifest->enqueue_editor_assets();
         $this->assertCount(2, $enqueued);
     }
 
@@ -127,24 +101,25 @@ final class ManifestTest extends TestCase
     {
         global $enqueued;
 
-        $manifest = new Manifest(__DIR__ . '/Fixtures/manifest/dependency-manifest.json');
+        $this->Manifest->ABSPATH = __DIR__;
+        $this->Manifest->load_manifest(__DIR__ . '/Fixtures/manifest/dependency-manifest.json');
 
         $enqueued = [];
-        $manifest->enqueue_wp_assets();
+        $this->Manifest->enqueue_wp_assets();
         $this->assertCount(3, $enqueued[1]['deps']);
         $this->assertContains('jquery', $enqueued[1]['deps']);
         $this->assertNotContains('react', $enqueued[1]['deps']);
         $this->assertNotContains('lodash', $enqueued[1]['deps']);
 
         $enqueued = [];
-        $manifest->enqueue_admin_assets();
+        $this->Manifest->enqueue_admin_assets();
         $this->assertCount(1, $enqueued[1]['deps']);
         $this->assertNotContains('jquery', $enqueued[1]['deps']);
         $this->assertNotContains('react', $enqueued[1]['deps']);
         $this->assertNotContains('lodash', $enqueued[1]['deps']);
 
         $enqueued = [];
-        $manifest->enqueue_editor_assets();
+        $this->Manifest->enqueue_editor_assets();
         $this->assertCount(6, $enqueued[1]['deps']);
         $this->assertContains('jquery', $enqueued[1]['deps']);
         $this->assertContains('react', $enqueued[1]['deps']);
@@ -156,27 +131,25 @@ final class ManifestTest extends TestCase
         global $error_log;
         $error_log = '';
 
-        $this->ManifestErrorHandler->is_debug = false;
+        // $this->ManifestErrorHandler->WP_DEBUG = false;
 
-        $err_msg = 'Test error_message';
+        $err_msg = 'Test error_message: no WP_DEBUG';
         $this->ManifestErrorHandler->error_handler($err_msg);
 
-        $this->expectOutputString('');
+        // $this->expectOutputString('');
         $this->assertEquals($err_msg, $error_log);
     }
 
     public function testErrorHandlerDebug()
     {
         global $error_log;
+
         $error_log = '';
+        $err_msg = 'Test error_message: WP_DEBUG';
 
-        $this->ManifestErrorHandler->is_debug = true;
-
-        $err_msg = 'Test error_message';
+        $this->ManifestErrorHandler->WP_DEBUG = true;
         $this->ManifestErrorHandler->error_handler($err_msg);
-
         $this->assertEquals($err_msg, $error_log);
-
-        $this->expectOutputString("\n<!-- {$err_msg} --> \n\n");
+        $this->assertTrue(action_was_added('wp_head'));
     }
 }

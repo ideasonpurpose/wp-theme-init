@@ -37,7 +37,7 @@ class Manifest
     public function __construct($manifest_file = null)
     {
         $this->is_debug = defined('WP_DEBUG') && WP_DEBUG;
-        $this->ABSPATH =  defined('ABSPATH') && ABSPATH;
+        $this->ABSPATH = ABSPATH;   // WordPress always defines this
 
         $this->load_manifest($manifest_file);
 

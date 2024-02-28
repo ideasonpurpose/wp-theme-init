@@ -11,7 +11,7 @@ class ThemeInit
 
     public function __construct($options = [])
     {
-        $this->ABSPATH = defined('ABSPATH') ? ABSPATH : '/'; // WordPress always defines this
+        $this->ABSPATH = defined('ABSPATH') ? ABSPATH : getcwd(); // WordPress always defines this
         $this->WP_DEBUG = defined('WP_DEBUG') && WP_DEBUG;
 
         $defaults = ['showIncludes' => true, 'enableComments' => false, 'jQueryMigrate' => true];

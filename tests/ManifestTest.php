@@ -7,7 +7,6 @@ use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
-
 if (!function_exists(__NAMESPACE__ . '\error_log')) {
     function error_log($err)
     {
@@ -15,7 +14,6 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
         $error_log = $err;
     }
 }
-
 
 /**
  * @covers IdeasOnPurpose\ThemeInit\Manifest
@@ -71,16 +69,13 @@ final class ManifestTest extends TestCase
         $this->Manifest->load_manifest(__DIR__ . '/Fixtures/manifest/empty.json');
     }
 
-    /**
-     * @covers IdeasOnPurpose\ThemeInit\Manifest::enqueue_editor_assets
-     */
     public function testEnqueueAssets()
     {
         global $enqueued;
+        global $is_admin;
 
-        // d($this->Manifest);
-        // $manifest = new Manifest(__DIR__ . '/Fixtures/manifest/dependency-manifest.json');
-        // d($manifest);
+        $is_admin = false;
+
         $this->Manifest->ABSPATH = __DIR__;
         $this->Manifest->load_manifest(__DIR__ . '/Fixtures/manifest/dependency-manifest.json');
 
@@ -93,13 +88,23 @@ final class ManifestTest extends TestCase
         $this->assertCount(2, $enqueued);
 
         $enqueued = [];
-        $this->Manifest->enqueue_editor_assets();
-        $this->assertCount(2, $enqueued);
+        $this->Manifest->enqueue_editor_scripts();
+        $this->assertCount(1, $enqueued);
+
+        $enqueued = [];
+        $this->Manifest->enqueue_editor_styles();
+        $this->assertCount(0, $enqueued);
+
+        $enqueued = [];
+        $is_admin = true;
+        $this->Manifest->enqueue_editor_styles();
+        $this->assertCount(1, $enqueued);
     }
 
     public function testIncludeDependenciesFromAssetFiles()
     {
         global $enqueued;
+        global $is_admin;
 
         $this->Manifest->ABSPATH = __DIR__;
         $this->Manifest->load_manifest(__DIR__ . '/Fixtures/manifest/dependency-manifest.json');
@@ -118,12 +123,29 @@ final class ManifestTest extends TestCase
         $this->assertNotContains('react', $enqueued[1]['deps']);
         $this->assertNotContains('lodash', $enqueued[1]['deps']);
 
+        // $enqueued = [];
+        // $is_admin = false;
+        // $this->Manifest->enqueue_editor_scripts();
+        // d($enqueued);
+        // $this->assertEmpty($enqueued);
+
         $enqueued = [];
-        $this->Manifest->enqueue_editor_assets();
-        $this->assertCount(6, $enqueued[1]['deps']);
-        $this->assertContains('jquery', $enqueued[1]['deps']);
-        $this->assertContains('react', $enqueued[1]['deps']);
-        $this->assertNotContains('lodash', $enqueued[1]['deps']);
+        // $is_admin = true;
+        $this->Manifest->enqueue_editor_scripts();
+        $this->assertCount(6, $enqueued[0]['deps']);
+        $this->assertContains('jquery', $enqueued[0]['deps']);
+        $this->assertContains('react', $enqueued[0]['deps']);
+        $this->assertNotContains('lodash', $enqueued[0]['deps']);
+
+        $enqueued = [];
+        $is_admin = false;
+        $this->Manifest->enqueue_editor_styles();
+        $this->assertEmpty($enqueued);
+
+        $enqueued = [];
+        $is_admin = true;
+        $this->Manifest->enqueue_editor_styles();
+        $this->assertCount(0, $enqueued[0]['deps']);
     }
 
     public function testErrorHandler()
@@ -131,25 +153,55 @@ final class ManifestTest extends TestCase
         global $error_log;
         $error_log = '';
 
-        // $this->ManifestErrorHandler->WP_DEBUG = false;
-
         $err_msg = 'Test error_message: no WP_DEBUG';
+
+        $this->ManifestErrorHandler->WP_DEBUG = true;
         $this->ManifestErrorHandler->error_handler($err_msg);
 
-        // $this->expectOutputString('');
         $this->assertEquals($err_msg, $error_log);
     }
 
     public function testErrorHandlerDebug()
     {
         global $error_log;
+        global $actions;
+        $actions = [];
 
         $error_log = '';
         $err_msg = 'Test error_message: WP_DEBUG';
+        $err_regex = '/\s+<!--\s*' . $err_msg . '\s+-->\s+/';
+        $this->expectOutputRegex($err_regex);
 
         $this->ManifestErrorHandler->WP_DEBUG = true;
         $this->ManifestErrorHandler->error_handler($err_msg);
         $this->assertEquals($err_msg, $error_log);
         $this->assertTrue(action_was_added('wp_head'));
+        $added = all_added_actions();
+        d($added, $actions);
+    }
+
+    public function testInitRegisterAssets()
+    {
+        global $styles;
+        global $scripts;
+
+        $scripts = [];
+        $styles = [];
+        $this->Manifest->ABSPATH = __DIR__;
+        $this->Manifest->load_manifest(__DIR__ . '/Fixtures/manifest/dependency-manifest.json');
+        $this->Manifest->init_register_assets();
+
+        $this->assertCount(3, $scripts);
+        $this->assertCount(1, $styles);
+    }
+
+    public function testScriptTypeModuleFilter()
+    {
+        $this->Manifest->js_handles = ['dog'];
+        $actual = $this->Manifest->script_type_module('<tag>', 'dog', 'source');
+        $this->assertStringStartsWith("<script type='module'", $actual);
+
+        $actual = $this->Manifest->script_type_module('<tag>', 'cat', 'source');
+        $this->assertEquals('<tag>', $actual);
     }
 }

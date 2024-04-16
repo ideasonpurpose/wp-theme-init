@@ -42,7 +42,8 @@ class Manifest
         add_action('init', [$this, 'init_register_assets']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_wp_assets']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
-        add_action('enqueue_block_editor_assets', [$this, 'enqueue_editor_assets']);
+        add_action('enqueue_block_assets', [$this, 'enqueue_editor_styles']);
+        add_action('enqueue_block_editor_assets', [$this, 'enqueue_editor_scripts']);
 
         /**
          * Treat all scripts as modules
@@ -58,9 +59,7 @@ class Manifest
      */
     public function error_handler($msg)
     {
-        // d('debug', $this->WP_DEBUG, $msg);
         if ($this->WP_DEBUG) {
-            // d('hi');
             add_action('wp_head', function () use ($msg) {
                 echo "\n<!-- $msg --> \n\n";
             });
@@ -167,8 +166,6 @@ class Manifest
                 }
             }
 
-            // d($this->ABSPATH, $asset_versions);
-
             foreach ($assets['files'] as $src => $file) {
                 /**
                  * Note: PHP's pathinfo returns the filename without its extension
@@ -249,11 +246,40 @@ class Manifest
     }
 
     /**
-     * Enqueue editor assets
+     * Enqueue editor scripts
+     * Use this with 'enqueue_block_editor_assets'
+     * @link https://developer.wordpress.org/reference/hooks/enqueue_block_editor_assets/
      */
-    public function enqueue_editor_assets()
+    public function enqueue_editor_scripts()
     {
-        $this->enqueue_webpack_assets($this->assets['editor']);
+        $editor_js = [];
+        foreach ($this->assets['editor'] as $asset) {
+            if (strtolower($asset['ext']) === 'js') {
+                $editor_js[] = $asset;
+            }
+        }
+        $this->enqueue_webpack_assets($editor_js);
+    }
+
+    /**
+     * Enqueue editor styles
+     * Use this with 'enqueue_block_assets' so they're available to iframed editor content
+     * @link https://developer.wordpress.org/reference/hooks/enqueue_block_assets/
+     */
+    public function enqueue_editor_styles()
+    {
+        if (!is_admin()) {
+            return;
+        }
+
+        $editor_css = [];
+        foreach ($this->assets['editor'] as $asset) {
+            if (strtolower($asset['ext']) === 'css') {
+                $editor_css[] = $asset;
+            }
+        }
+
+        $this->enqueue_webpack_assets($editor_css);
     }
 
     /**

@@ -1,7 +1,6 @@
 {
   "name": "ideasonpurpose/wp-theme-init",
   "description": "A common baseline of repeated functions, filters and actions used across WordPress themes.",
-  "version": "2.14.1",
   "license": "MIT",
   "keywords": [
     "wordpress",

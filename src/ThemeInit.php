@@ -94,6 +94,14 @@ class ThemeInit
          */
         new ThemeInit\Admin\ResetMetaboxes();
 
+        /**
+         * Clean up the wp-admin dashboard
+         */
+        new ThemeInit\Admin\CleanDashboard();
+
+        /**
+         * Common plugin tweaks
+         */
         new ThemeInit\Plugins\ACF();
         new ThemeInit\Plugins\EnableMediaReplace();
         new ThemeInit\Plugins\SEOFramework();

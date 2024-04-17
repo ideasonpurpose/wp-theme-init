@@ -5,7 +5,7 @@ use IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable;
 
 /**
  * This class adds buttons to Admin Dashboard User Profile pages. These allow users
- * to reset (purge) all metabox order and visibiliyt from the user_meta store.
+ * to reset (purge) all metabox order and visibility from the user_meta store.
  */
 class ResetMetaboxes
 {

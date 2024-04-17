@@ -14,6 +14,6 @@ class CleanDashboard
     public function clean()
     {
         remove_meta_box('dashboard_primary', 'dashboard', 'side');
-        remove_meta_box('health_check_status', 'dashboard', 'normal');
+        remove_meta_box('dashboard_site_health', 'dashboard', 'normal');
     }
 }

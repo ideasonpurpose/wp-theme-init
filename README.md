@@ -1,6 +1,6 @@
 # wp-theme-init
 
-#### Version: 2.14.1
+#### Version: 2.14.2
 
 A common baseline of repeated functions, filters and actions used across our WordPress themes.
 

@@ -19,8 +19,10 @@ class ThemeInit
 
         /**
          * De-Howdy the WordPress Admin menu
+         * NOTE: Changed priority in WP v6.6.1, filter priority bumped from 25 to 9992
+         * @link https://github.com/WordPress/wordpress-develop/commit/fc71dae8db2c057eab88f026b7b394ab0990ba9e
          */
-        add_filter('admin_bar_menu', [$this, 'deHowdy'], 25);
+        add_filter('admin_bar_menu', [$this, 'deHowdy'], 9992);
 
         /**
          * IOP Design Credit

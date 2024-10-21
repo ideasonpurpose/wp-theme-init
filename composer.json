@@ -44,14 +44,9 @@
   },
   "repositories": [
     {
-      "type": "git",
-      "url": "https://github.com/joemaller/acf-pro-stubs",
-      "no-api": true
-    },
-    {
-      "type": "git",
-      "url": "https://github.com/ideasonpurpose/wp-test-stubs",
-      "no-api": true
+      "type": "vcs",
+      "url": "https://github.com/ideasonpurpose/wp-test-stubs"
+
     }
   ]
 }

@@ -3,13 +3,13 @@
 namespace IdeasOnPurpose\ThemeInit;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+
 use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
-/**
- * @covers \IdeasOnPurpose\ThemeInit\Admin\PostStates
- */
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\PostStates::class)]
 final class AdminPostStatesTest extends TestCase
 {
     public $post;

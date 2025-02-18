@@ -3,21 +3,13 @@
 namespace IdeasOnPurpose\WP;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+
 use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
-if (!function_exists(__NAMESPACE__ . '\error_log')) {
-    function error_log($err)
-    {
-        global $error_log;
-        $error_log = $err;
-    }
-}
-
-/**
- * @covers \IdeasOnPurpose\WP\Search
- */
+#[CoversClass(\IdeasOnPurpose\WP\Search::class)]
 final class SearchTest extends TestCase
 {
     public $Search;

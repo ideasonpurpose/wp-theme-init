@@ -3,14 +3,14 @@
 namespace IdeasOnPurpose\ThemeInit;
 
 use PHPUnit\Framework\TestCase;
-use IdeasOnPurpose\WP\Test;
+use PHPUnit\Framework\Attributes\CoversClass;
+
 use WP_User;
+use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
-/**
- * @covers \IdeasOnPurpose\ThemeInit\Admin\LastLogin
- */
+#[CoversClass(\IdeasOnPurpose\Themeinit\Admin\LastLogin::class)]
 final class LastLoginTest extends TestCase
 {
     public function setUp(): void

@@ -3,14 +3,14 @@
 namespace IdeasOnPurpose;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+
 use IdeasOnPurpose\WP\Test;
 use IdeasOnPurpose\ThemeInit\Extras\GlobalCommentsDisable;
 
 Test\Stubs::init();
 
-/**
- * @covers \IdeasOnPurpose\ThemeInit\Extras\GlobalCommentsDisable
- */
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Extras\GlobalCommentsDisable::class)]
 final class GlobalCommentsDisableTest extends TestCase
 {
     public $GlobalCommentsDisable;

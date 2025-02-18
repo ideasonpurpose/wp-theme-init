@@ -3,13 +3,13 @@
 namespace IdeasOnPurpose;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+
 use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
-/**
- * @covers \IdeasOnPurpose\ThemeInit\Extras\Shortcodes
- */
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Extras\Shortcodes::class)]
 final class ShortcodesTest extends TestCase
 {
     public $Shortcode;

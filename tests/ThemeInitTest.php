@@ -3,37 +3,38 @@
 namespace IdeasOnPurpose;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+
 use WP_Admin_Bar;
 use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
+
 require_once 'Fixtures/WP_Image_Editor_Imagick.php';
 
 if (!function_exists(__NAMESPACE__ . '\error_log')) {
     function error_log($err)
     {
-        global $error_log;
-        $error_log = $err;
+        Test\Stubs::error_log($err);
     }
 }
 
-/**
- * @covers \IdeasOnPurpose\ThemeInit
- * @covers \IdeasOnPurpose\ThemeInit\Admin\DisallowFileEdit
- * @covers \IdeasOnPurpose\ThemeInit\Admin\LastLogin
- * @covers \IdeasOnPurpose\ThemeInit\Admin\LoginCookieCleaner
- * @covers \IdeasOnPurpose\ThemeInit\Admin\PostStates
- * @covers \IdeasOnPurpose\ThemeInit\Admin\ResetMetaboxes
- * @covers \IdeasOnPurpose\ThemeInit\Admin\TemplateAudit
- * @covers \IdeasOnPurpose\ThemeInit\Debug\ShowIncludes
- * @covers \IdeasOnPurpose\ThemeInit\Extras\GlobalCommentsDisable
- * @covers \IdeasOnPurpose\ThemeInit\Extras\RemoveJQueryMigrate
- * @covers \IdeasOnPurpose\ThemeInit\Extras\Shortcodes
- * @covers \IdeasOnPurpose\ThemeInit\Media
- * @covers \IdeasOnPurpose\ThemeInit\Plugins\ACF
- * @covers \IdeasOnPurpose\ThemeInit\Plugins\EnableMediaReplace
- * @covers \IdeasOnPurpose\ThemeInit\Plugins\SEOFramework
- */
+#[CoversClass(\IdeasOnPurpose\ThemeInit::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\CleanDashboard::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\DisallowFileEdit::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\LastLogin::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\LoginCookieCleaner::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\PostStates::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\ResetMetaboxes::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\TemplateAudit::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Debug\ShowIncludes::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Extras\GlobalCommentsDisable::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Extras\RemoveJQueryMigrate::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Extras\Shortcodes::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Media::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\ACF::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\EnableMediaReplace::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\SEOFramework::class)]
 final class ThemeInitTest extends TestCase
 {
     // const ABSPATH = '';
@@ -59,6 +60,9 @@ final class ThemeInitTest extends TestCase
      */
     public function testInstantiation()
     {
+        global $_SERVER;
+        $_SERVER['REQUEST_URI'] = 'test-request-uri';
+
         new ThemeInit();
 
         $this->assertContains(['admin_bar_menu', 'deHowdy'], all_added_filters());
@@ -208,6 +212,7 @@ final class ThemeInitTest extends TestCase
         global $_SERVER,
             $error_log,
             $flush_rewrite_rules,
+            $get_transient,
             $is_admin,
             $is_embed,
             $wp_is_json_request;
@@ -223,9 +228,10 @@ final class ThemeInitTest extends TestCase
         $this->ThemeInit->WP_DEBUG = true;
         $this->ThemeInit->ABSPATH = __DIR__ . '/Fixtures/htaccess/';
 
+        $get_transient['flush_rewrite_log'] = false;
+
         $is_admin = true;
         $is_embed = false;
-        $error_log = '';
 
         $this->ThemeInit->debugFlushRewriteRules();
 

@@ -3,16 +3,16 @@
 namespace IdeasOnPurpose;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+
 use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
 require_once 'Fixtures/WP_Image_Editor_Imagick.php';
 
-/**
- * @covers \IdeasOnPurpose\ThemeInit\Media
- * @covers \IdeasOnPurpose\ThemeInit\Media\Imagick\HQ
- */
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Media::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Media\Imagick\HQ::class)]
 final class ImagickHQTest extends TestCase
 {
     public function testAddHQImageEditors()
@@ -20,7 +20,8 @@ final class ImagickHQTest extends TestCase
         /** @var \IdeasOnPurpose\ThemeInit\Media $Media */
         $Media = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Media')
             ->disableOriginalConstructor()
-            ->addMethods([])
+            // ->addMethods([])
+            ->onlyMethods([])
             ->getMock();
 
         /**

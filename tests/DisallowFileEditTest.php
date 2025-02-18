@@ -3,13 +3,13 @@
 namespace IdeasOnPurpose\ThemeInit;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+
 use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
-/**
- * @covers \IdeasOnPurpose\ThemeInit\Admin\DisallowFileEdit
- */
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\DisallowFileEdit::class)]
 final class DisallowFileEditTest extends TestCase
 {
     public function testBlockEdit()

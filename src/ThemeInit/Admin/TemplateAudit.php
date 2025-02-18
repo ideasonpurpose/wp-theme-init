@@ -18,7 +18,7 @@ class TemplateAudit
     public $submenu_id;
     public $theme_name;
 
-    public function __construct($args = [])
+    public function __construct()
     {
         $this->option_per_page = 'template_audit_templates_per_page';
 

@@ -3,14 +3,14 @@
 namespace IdeasOnPurpose\ThemeInit;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+
 use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
-/**
- * @covers \IdeasOnPurpose\ThemeInit\Plugins\ACF
- * @covers \IdeasOnPurpose\ThemeInit\Plugins\SEOFramework
- */
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\ACF::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\SEOFramework::class)]
 final class PluginsTest extends TestCase
 {
     public function testInjectACF()
@@ -22,7 +22,8 @@ final class PluginsTest extends TestCase
         /** @var \IdeasOnPurpose\ThemeInit\Plugins\ACF $ACF */
         $ACF = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Plugins\ACF')
             ->disableOriginalConstructor()
-            ->addMethods([])
+            // ->addMethods([])
+            ->onlyMethods([])
             ->getMock();
 
         $ACF->injectACF();
@@ -38,7 +39,8 @@ final class PluginsTest extends TestCase
         /** @var \IdeasOnPurpose\ThemeInit\Plugins\SEOFramework $seo */
         $seo = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Plugins\SEOFramework')
             ->disableOriginalConstructor()
-            ->addMethods([])
+            // ->addMethods([])
+            ->onlyMethods([])
             ->getMock();
 
         $expected = 'low';
@@ -58,7 +60,8 @@ final class PluginsTest extends TestCase
         /** @var \IdeasOnPurpose\ThemeInit\Plugins\SEOFramework $seo */
         $seo = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Plugins\SEOFramework')
             ->disableOriginalConstructor()
-            ->addMethods([])
+            // ->addMethods([])
+            ->onlyMethods([])
             ->getMock();
 
         $expected = ['image' => 'fake/image.jpg'];

@@ -3,14 +3,13 @@
 namespace IdeasOnPurpose\ThemeInit;
 
 use PHPUnit\Framework\TestCase;
-use IdeasOnPurpose\WP\Test;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
-/**
- * @covers \IdeasOnPurpose\ThemeInit\Admin\ResetMetaboxes
- */
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\ResetMetaboxes::class)]
 final class ResetMetaboxesTest extends TestCase
 {
     protected function setUp(): void

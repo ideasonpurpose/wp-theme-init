@@ -3,13 +3,13 @@
 namespace IdeasOnPurpose;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+
 use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
-/**
- * @covers \IdeasOnPurpose\ThemeInit\Debug\ShowIncludes
- */
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Debug\ShowIncludes::class)]
 final class ShowIncludesTest extends TestCase
 {
     public $ShowIncludes;

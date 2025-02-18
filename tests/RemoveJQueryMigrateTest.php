@@ -3,15 +3,16 @@
 namespace IdeasOnPurpose;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+
 use IdeasOnPurpose\WP\Test;
+
 use IdeasOnPurpose\ThemeInit\Extras\RemoveJQueryMigrate;
 use ReflectionClass;
 
 Test\Stubs::init();
 
-/**
- * @covers \IdeasOnPurpose\ThemeInit\Extras\RemoveJQueryMigrate
- */
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Extras\RemoveJQueryMigrate::class)]
 final class RemoveJQueryMigrateTest extends TestCase
 {
     protected $RemoveJQueryMigrate;

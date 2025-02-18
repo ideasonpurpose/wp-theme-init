@@ -8,7 +8,10 @@ class ACF
     {
         if (function_exists('get_fields')) {
             add_action('rest_api_init', [$this, 'injectACF']);
+        } else {
+            require_once 'acf_get_field.php';
         }
+
     }
 
     public function injectACF()

@@ -9,15 +9,6 @@ use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
-// if (!function_exists(__NAMESPACE__ . '\error_log')) {
-//     function error_log($err)
-//     {
-//         Test\Stubs::error_log($err);
-//     }
-// }
-
-
-
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable::class)]
 final class ListTableTest extends TestCase
 {
@@ -26,34 +17,23 @@ final class ListTableTest extends TestCase
         unset($GLOBALS['user_meta']);
     }
 
-    public function testTemplates()
-    {
-        new Admin\TemplateAudit\ListTable();
-
-        $this->assertEquals(4, 4);
-        // $this->assertContains(['admin_menu', 'addTemplateAdminMenuInit'], all_added_actions());
-    }
-
     public function testColumnDefault()
     {
         $ListTable = new Admin\TemplateAudit\ListTable();
 
         $item = [
-            // 'name' => 'item_name',
             'count' => 3,
             'id' => 4321,
             'file' => 'file://fake-template-file.php',
         ];
 
         $expected = [
-            // 'name' => "<strong>{$item['name']}</strong>",
             'count' => 3,
             'id' => 4321,
             'file' => 'file://fake-template-file.php',
         ];
 
         foreach ($item as $key => $value) {
-            # code...
             $actual = $ListTable->column_default($item, $key);
             $this->assertEquals($actual, $expected[$key]);
         }
@@ -120,37 +100,14 @@ final class ListTableTest extends TestCase
         $this->assertEquals(2, $actual[0]['count']);
     }
 
-    // public function testPrepareItems()
-    // {
-    //     global $pages, $user_meta;
+    public function testPrepareItems()
+    {
+        $reflection = new \ReflectionClass(Admin\TemplateAudit\ListTable::class);
+        $ListTable = $reflection->newInstanceWithoutConstructor();
 
-    //     /** @var \IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable $ListTable */
-    //     $ListTable = $this->getMockBuilder(
-    //         '\IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable'
-    //     )
-    //         ->disableOriginalConstructor()
-    //         // ->disableOriginalClone()
-    //         // ->disableArgumentCloning()
-    //         // ->disallowMockingUnknownTypes()
-    //         ->onlyMethods(['data'])
-    //         // ->addMethods(['get_pagenum', 'set_pagination_args'])
-    //         ->getMock();
+        $ListTable->prepare_items();
 
-    //     $post = (object) ['meta_value' => 'template.php'];
-    //     $pages = [$post, $post];
-
-    //     $data = [['name' => 'Data 1', 'count' => 3], ['name' => 'Data 2', 'count' => 6]];
-    //     $ListTable
-    //         ->expects($this->exactly(2))
-    //         ->method('data')
-    //         ->willReturn(...$data);
-
-    //     $ListTable->prepare_items();
-    //     $this->assertCount(2, $ListTable->items);
-
-    //     $user_meta = 1; // set per_page to 1
-
-    //     $ListTable->prepare_items();
-    //     $this->assertCount(1, $ListTable->items);
-    // }
+        $this->assertObjectHasProperty('items', $ListTable);
+        $this->assertObjectHasProperty('_column_headers', $ListTable);
+    }
 }

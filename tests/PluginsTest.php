@@ -4,11 +4,25 @@ namespace IdeasOnPurpose\ThemeInit;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversFunction;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 use IdeasOnPurpose\WP\Test;
+use PHPUnit\Framework\Attributes\UsesFunction;
 
 Test\Stubs::init();
 
+if (!function_exists(__NAMESPACE__ . '\error_log')) {
+    function error_log($err)
+    {
+        Test\Stubs::error_log($err);
+    }
+}
+
+/**
+ * Run in separate process to so get_field doesn't leak in from other tests
+ */
+#[RunTestsInSeparateProcesses]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\ACF::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\SEOFramework::class)]
 final class PluginsTest extends TestCase
@@ -39,7 +53,6 @@ final class PluginsTest extends TestCase
         /** @var \IdeasOnPurpose\ThemeInit\Plugins\SEOFramework $seo */
         $seo = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Plugins\SEOFramework')
             ->disableOriginalConstructor()
-            // ->addMethods([])
             ->onlyMethods([])
             ->getMock();
 
@@ -60,7 +73,6 @@ final class PluginsTest extends TestCase
         /** @var \IdeasOnPurpose\ThemeInit\Plugins\SEOFramework $seo */
         $seo = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Plugins\SEOFramework')
             ->disableOriginalConstructor()
-            // ->addMethods([])
             ->onlyMethods([])
             ->getMock();
 
@@ -74,5 +86,51 @@ final class PluginsTest extends TestCase
         $has_post_thumbnail = false;
         $actual = $seo->useFeaturedImage($expected);
         $this->assertEquals($expected['image'], $actual['image']);
+    }
+
+    public function testAcfLoadGetFieldPolyfill()
+    {
+        $reflection = new \ReflectionClass(Plugins\ACF::class);
+        $Acf = $reflection->newInstanceWithoutConstructor();
+
+        $this->assertFalse(function_exists('get_field'));
+
+        $Acf->acf_active = true;
+        $Acf->init();
+
+        $this->assertFalse(function_exists('get_field'));
+
+        $Acf->acf_active = false;
+        $Acf->init();
+
+        $this->assertTrue(function_exists('get_field'));
+    }
+
+    public function testAcfGetFieldPolyfill()
+    {
+        global $is_admin, $actions;
+        $actions = [];
+
+        // This prevents error_log from messing up the PHPUnit console
+        ini_set('error_log', sys_get_temp_dir() . '/phpunit_error.log');
+
+        $reflection = new \ReflectionClass(Plugins\ACF::class);
+        $Acf = $reflection->newInstanceWithoutConstructor();
+
+        // $this->expectOutputRegex('/get_field/');
+
+        $is_admin = true;
+        $Acf->acf_active = false;
+        $Acf->init();
+
+        $this->assertTrue(function_exists('get_field'));
+
+        // $expected = 'get_field test string';
+        // $actual = \get_field($expected, 123);
+
+        // $actions[0]['action']();
+
+        // $this->assertNull($actual);
+        // $this->assertTrue(action_was_added('admin_notices'));
     }
 }

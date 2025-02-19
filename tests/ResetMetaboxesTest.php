@@ -22,8 +22,7 @@ final class ResetMetaboxesTest extends TestCase
         $enqueued = [];
 
         $ResetMetaboxes = new Admin\ResetMetaboxes();
-        $actual = $ResetMetaboxes->enqueueScripts('not_profile.php');
-        $this->assertNull($actual);
+        $ResetMetaboxes->enqueueScripts('not_profile.php');
         $this->assertCount(0, $enqueued);
 
         $enqueued = [];

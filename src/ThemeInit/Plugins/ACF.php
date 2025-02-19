@@ -4,14 +4,25 @@ namespace ideasonpurpose\ThemeInit\Plugins;
 
 class ACF
 {
+    /**
+     * Lightweight dependency-injection-ish pattern for testing
+     * Skip the constructor in tests and flip the var to hit both
+     * pathways of init().
+     */
+    public $acf_active;
+
     public function __construct()
     {
-        if (function_exists('get_fields')) {
+        $this->acf_active = function_exists('get_fields');
+    }
+
+    public function init()
+    {
+        if ($this->acf_active) {
             add_action('rest_api_init', [$this, 'injectACF']);
         } else {
             require_once 'acf_get_field.php';
         }
-
     }
 
     public function injectACF()

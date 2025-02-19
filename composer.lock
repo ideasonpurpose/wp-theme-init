@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "11d18c9772967cf3109b64e709901e18",
+    "content-hash": "13fe3ebe3bed838a0891e938f9327bd6",
     "packages": [],
     "packages-dev": [
         {
@@ -276,59 +276,6 @@
                 "source": "https://github.com/phar-io/version/tree/3.2.1"
             },
             "time": "2022-02-21T01:04:05+00:00"
-        },
-        {
-            "name": "php-stubs/acf-pro-stubs",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-stubs/acf-pro-stubs.git",
-                "reference": "a81f843fd55d02e8fd65af5f2bf80513426d8452"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/acf-pro-stubs/zipball/a81f843fd55d02e8fd65af5f2bf80513426d8452",
-                "reference": "a81f843fd55d02e8fd65af5f2bf80513426d8452",
-                "shasum": ""
-            },
-            "require": {
-                "php-stubs/wordpress-stubs": "^4.7 || ^5.0 || ^6.0"
-            },
-            "require-dev": {
-                "php": "~7.1 || ^8.0",
-                "php-stubs/generator": "^0.8",
-                "phpdocumentor/reflection-docblock": "^5.3"
-            },
-            "suggest": {
-                "symfony/polyfill-php73": "Symfony polyfill backporting some PHP 7.3+ features to lower PHP versions",
-                "szepeviktor/phpstan-wordpress": "WordPress extensions for PHPStan"
-            },
-            "default-branch": true,
-            "type": "library",
-            "extra": {
-                "installer-paths": {
-                    "source/{$name}/": [
-                        "type:wordpress-plugin"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Advanced Custom Fields PRO stubs for static analysis.",
-            "homepage": "https://github.com/php-stubs/acf-pro-stubs",
-            "keywords": [
-                "PHPStan",
-                "acf",
-                "static analysis",
-                "wordpress"
-            ],
-            "support": {
-                "issues": "https://github.com/php-stubs/acf-pro-stubs/issues",
-                "source": "https://github.com/php-stubs/acf-pro-stubs/tree/master"
-            },
-            "time": "2024-11-06T12:58:48+00:00"
         },
         {
             "name": "php-stubs/wordpress-stubs",
@@ -1834,8 +1781,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "ideasonpurpose/wp-test-stubs": 20,
-        "php-stubs/acf-pro-stubs": 20
+        "ideasonpurpose/wp-test-stubs": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

@@ -14,6 +14,7 @@ class ACF
     public function __construct()
     {
         $this->acf_active = function_exists('get_fields');
+        $this->init();
     }
 
     public function init()

@@ -12,7 +12,7 @@ function get_field(...$args)
     $file = $caller['file'];
     $line = $caller['line'];
 
-    error_log("get_field was called from {$file}:{$line} with arguments: " . print_r($args, true));
+    error_log("[ACF Pro] get_field was called from {$file}:{$line} with arguments: " . print_r($args, true));
 
     // Add a dashboard notification if called from a WordPress admin screen
     if (is_admin()) {
@@ -20,6 +20,7 @@ function get_field(...$args)
             $args_list = htmlspecialchars(print_r($args, true), ENT_QUOTES);
             echo "<div class='notice notice-warning is-dismissible'>
                     <p>
+                      This theme requires the <strong>ACF Pro</strong> plugin.<br>
                       get_field was called from {$file}:{$line} with arguments:
                       <pre>{$args_list}</pre>
                     </p>

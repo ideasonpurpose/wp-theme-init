@@ -2,6 +2,7 @@
 
 namespace IdeasOnPurpose;
 
+use IdeasOnPurpose\ThemeInit\AdminPostStatesTest;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -48,9 +49,10 @@ final class ThemeInitTest extends TestCase
 
     protected function beforeEach(): void
     {
-        global $error_log, $transients;
-        $transients = [];
+        global $error_log,  $meta_boxes, $transients;
         $error_log = '';
+        $meta_boxes = [];
+        $transients = [];
     }
 
     /**
@@ -287,5 +289,17 @@ final class ThemeInitTest extends TestCase
         // which is mocked, so this is never registered and can't be tested as is
         // $this->assertContains(['wp_revisions_to_keep', 6], all_added_filters());
         $this->assertTrue(true);
+    }
+
+    public function testCleanDashboard()
+    {
+        global $meta_boxes;
+        $ref = new \ReflectionClass(ThemeInit\Admin\CleanDashboard::class);
+        $CleanDashboard = $ref->newInstanceWithoutConstructor();
+
+        $CleanDashboard->clean();
+        $ids = array_map(fn($box) => $box['id'], $meta_boxes);
+        $this->assertContains('dashboard_primary', $ids);
+        $this->assertContains('dashboard_site_health', $ids);
     }
 }

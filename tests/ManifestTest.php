@@ -9,7 +9,6 @@ use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
-
 if (!function_exists(__NAMESPACE__ . '\error_log')) {
     function error_log($err)
     {
@@ -17,12 +16,10 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
     }
 }
 
-
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Manifest::class)]
 final class ManifestTest extends TestCase
 {
     public $Manifest;
-    public $ManifestErrorHandler;
 
     protected function setUp(): void
     {
@@ -32,14 +29,13 @@ final class ManifestTest extends TestCase
             ->onlyMethods(['error_handler'])
             ->getMock();
 
-        /** @var \IdeasOnPurpose\ThemeInit $this->Manifest */
-        $this->ManifestErrorHandler = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Manifest')
-            ->disableOriginalConstructor()
-            ->onlyMethods([])
-            ->getMock();
+        global $enqueued, $actions, $error_log, $styles, $scripts;
 
-        global $theme_root;
-        $theme_root = __DIR__ . '/wp-content/themes';
+        unset($actions);
+        unset($enqueued);
+        unset($error_log);
+        unset($scripts);
+        unset($styles);
     }
 
     public function testLoadManifest()
@@ -124,14 +120,7 @@ final class ManifestTest extends TestCase
         $this->assertNotContains('react', $enqueued[1]['deps']);
         $this->assertNotContains('lodash', $enqueued[1]['deps']);
 
-        // $enqueued = [];
-        // $is_admin = false;
-        // $this->Manifest->enqueue_editor_scripts();
-        // d($enqueued);
-        // $this->assertEmpty($enqueued);
-
         $enqueued = [];
-        // $is_admin = true;
         $this->Manifest->enqueue_editor_scripts();
         $this->assertCount(6, $enqueued[0]['deps']);
         $this->assertContains('jquery', $enqueued[0]['deps']);
@@ -149,36 +138,29 @@ final class ManifestTest extends TestCase
         $this->assertCount(0, $enqueued[0]['deps']);
     }
 
-    // public function testErrorHandler()
-    // {
-    //     global $error_log;
-    //     $error_log = '';
+    public function testErrorHandler()
+    {
+        global $error_log, $actions;
 
-    //     $err_msg = 'Test error_message: no WP_DEBUG';
+        /**
+         * TODO: Why is actions not being cleared by setUp unsetting $actions?
+         */
+        $actions = [];
 
-    //     $this->ManifestErrorHandler->WP_DEBUG = true;
-    //     $this->ManifestErrorHandler->error_handler($err_msg);
+        $err_msg = 'Test error_message';
 
-    //     $this->assertStringContainsString($err_msg, $error_log);
-    // }
+        $this->expectOutputRegex('/Test error_message/');
 
-    // public function testErrorHandlerDebug()
-    // {
-    //     global $error_log;
-    //     global $actions;
-    //     $actions = [];
+        $ref = new \ReflectionClass(Manifest::class);
+        $Manifest = $ref->newInstanceWithoutConstructor();
+        $Manifest->WP_DEBUG = true;
 
-    //     $error_log = '';
-    //     $err_msg = 'Test error_message: WP_DEBUG';
-    //     $err_regex = '/\s+<!--\s*' . $err_msg . '\s+-->\s+/';
-    //     $this->expectOutputRegex($err_regex);
+        $Manifest->error_handler($err_msg);
 
-    //     $this->ManifestErrorHandler->WP_DEBUG = true;
-    //     $this->ManifestErrorHandler->error_handler($err_msg);
-    //     $this->assertStringContainsString($err_msg, $error_log);
-    //     $this->assertTrue(action_was_added('wp_head'));
-    //     $added = all_added_actions();
-    // }
+        $actions[0]['action']();
+
+        $this->assertStringContainsString($err_msg, $error_log);
+    }
 
     public function testInitRegisterAssets()
     {

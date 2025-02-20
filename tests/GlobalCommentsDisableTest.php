@@ -17,8 +17,9 @@ final class GlobalCommentsDisableTest extends TestCase
 
     protected function setUp(): void
     {
-        global $actions;
+        global $actions, $meta_boxes;
         $actions = [];
+        $meta_boxes = [];
         $this->GlobalCommentsDisable = $this->getMockBuilder(
             '\IdeasOnPurpose\ThemeInit\Extras\GlobalCommentsDisable'
         )
@@ -95,8 +96,8 @@ final class GlobalCommentsDisableTest extends TestCase
         global $meta_boxes;
 
         $this->GlobalCommentsDisable->removeFromDashboard();
-        $this->assertArrayHasKey('remove', $meta_boxes[0]);
-        $this->assertEquals('dashboard_recent_comments', $meta_boxes[0]['remove']);
+        $ids = array_map(fn($box) => $box['id'], $meta_boxes);
+        $this->assertContains('dashboard_recent_comments', $ids);
     }
 
     public function testRemoveCommentsMenu()

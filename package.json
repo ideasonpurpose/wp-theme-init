@@ -27,6 +27,8 @@
     "composer:update": "docker compose run --rm composer update",
     "test": "docker compose run --rm test",
     "test:watch": "docker compose run --rm test watch",
+    "phpunit": "./vendor/bin/phpunit --coverage-clover coverage.xml tests",
+    "phpunit:watch": "npx chokidar-cli 'phpunit.xml' 'tests/**/*' 'src/**/*.php' -c 'npm run phpunit'",
     "version": "version-everything && auto-changelog && git add -u"
   },
   "prettier": "@ideasonpurpose/prettier-config",

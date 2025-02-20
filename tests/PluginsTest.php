@@ -27,6 +27,27 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\SEOFramework::class)]
 final class PluginsTest extends TestCase
 {
+    public function setUp(): void
+    {
+        /**
+         * Reset globals before each test
+         */
+        global $post_types,
+            $rest_fields,
+            $actions,
+            $wp_query,
+            $is_archive,
+            $has_post_thumbnail,
+            $wp_get_attachment_image_src;
+
+        unset($post_types);
+        unset($rest_fields);
+        unset($actions);
+        unset($wp_query);
+        unset($is_archive);
+        unset($has_post_thumbnail);
+        unset($wp_get_attachment_image_src);
+    }
     public function testInjectACF()
     {
         global $post_types, $rest_fields;
@@ -36,7 +57,6 @@ final class PluginsTest extends TestCase
         /** @var \IdeasOnPurpose\ThemeInit\Plugins\ACF $ACF */
         $ACF = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Plugins\ACF')
             ->disableOriginalConstructor()
-            // ->addMethods([])
             ->onlyMethods([])
             ->getMock();
 
@@ -109,7 +129,7 @@ final class PluginsTest extends TestCase
     public function testAcfGetFieldPolyfill()
     {
         global $is_admin, $actions;
-        $actions = [];
+        // $actions = [];
 
         // This prevents error_log from messing up the PHPUnit console
         ini_set('error_log', sys_get_temp_dir() . '/phpunit_error.log');
@@ -117,20 +137,10 @@ final class PluginsTest extends TestCase
         $reflection = new \ReflectionClass(Plugins\ACF::class);
         $Acf = $reflection->newInstanceWithoutConstructor();
 
-        // $this->expectOutputRegex('/get_field/');
-
         $is_admin = true;
         $Acf->acf_active = false;
         $Acf->init();
 
         $this->assertTrue(function_exists('get_field'));
-
-        // $expected = 'get_field test string';
-        // $actual = \get_field($expected, 123);
-
-        // $actions[0]['action']();
-
-        // $this->assertNull($actual);
-        // $this->assertTrue(action_was_added('admin_notices'));
     }
 }

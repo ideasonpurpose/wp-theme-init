@@ -96,11 +96,6 @@ final class TemplateAuditTest extends TestCase
 
     public function testAddTemplateAdminMenuInit()
     {
-        /** @var \IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable $ListTable */
-        $ListTable = $this->createMock(
-            \IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable::class
-        );
-
         $Audit = new Admin\TemplateAudit();
         $Audit->addTemplateAdminMenuInit();
         $this->assertContains(
@@ -109,46 +104,24 @@ final class TemplateAuditTest extends TestCase
         );
     }
 
-    //     public function testTemplateAdminPage()
-    //     {
-    //         // global $wp_get_theme;
+    public function testTemplateAdminPage()
+    {
+        /** @var \IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable $ListTable */
+        $ListTable = $this->createMock(
+            \IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable::class
+        );
 
-    //         /** @var \IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable $ListTable */
-    //         // $ListTable = $this->createMock(\IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable::class);
+        $ListTable->expects($this->once())->method('prepare_items');
+        $ListTable->expects($this->once())->method('display');
 
-    //         // $ListTable = $this->getMockBuilder(
-    //         //     '\IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable'
-    //         // )
-    //         //     ->disableOriginalConstructor()
-    //         //     ->disableOriginalClone()
-    //         //     ->disableArgumentCloning()
-    //         //     ->disallowMockingUnknownTypes()
-    //         //     ->onlyMethods(['prepare_items'])
-    //         //     // ->addMethods(['display'])
-    //         //     ->getMock();
+        $ref = new \ReflectionClass(Admin\TemplateAudit::class);
+        $TemplateAudit = $ref->newInstanceWithoutConstructor();
 
-    //         // $ListTable->expects($this->once())->method('prepare_items');
-    //         // $ListTable->expects($this->once())->method('display');
+        $TemplateAudit->ListTable = $ListTable;
 
-    //         // $expected = 'Theme Name';
-    //         // $wp_get_theme = new \WP_Theme($expected);
-
-    //         $Audit = new Admin\TemplateAudit();
-
-    //         // d($Audit);
-    //         // $Audit->ListTable = $ListTable;
-    //         // $Audit->theme_name = $expected;
-    //         // $Audit->templateAdminPage();
-    //         // $this->expectOutputRegex('/div/');
-
-    //         // $actual = $this->output();
-
-    //         // d(action_was_added('manage_page_posts_custom_column'), action_was_added('foo'));
-    //         $this->assertStringContainsString($Audit->option_per_page, 'templates_per_page');
-    // $this->assertTrue(action_was_added('admin_menu'));
-    // $this->assertTrue(action_was_added('manage_page_posts_custom_column'));
-
-    // $this->assertContains(['admin_menu', 'addTemplateAdminMenuInit'], all_added_actions());
-
-    //     }
+        $TemplateAudit->templateAdminPage();
+        $this->expectOutputRegex('/<div/');
+        $this->expectOutputRegex('/<h1/');
+        $this->expectOutputRegex('/wp-heading-inline/');
+    }
 }

@@ -20,7 +20,7 @@ class Media
 
     /**
      * Set jpeg_quality to a 0-100 clamped JPEG_QUALITY constant
-     * Defaults to 65 if no constant value is set.
+     * Defaults to 82 if no constant value is set.
      */
     public function jpeg_quality()
     {
@@ -51,7 +51,6 @@ class Media
         if (array_key_exists('original_image', $metadata)) {
             return $metadata;
         }
-
         /**
          * Check to see if $metadata['file'] is set. As of WordPress v6, this will be
          * missing for formats which can not be edited. (pdf, mp4)
@@ -87,7 +86,11 @@ class Media
          * use the optimized image. If not, remove the optimized image and
          * keep using the original image.
          */
-        if (filesize($saved['path']) / filesize($srcFile) < 0.75) {
+
+        $savedSize = filesize($saved['path']);
+        $srcSize = filesize($srcFile);
+
+        if ($savedSize && $srcSize && $savedSize / $srcSize < 0.75) {
             // Optimization successful, update $metadata to use optimized image
             // Ref: https://developer.wordpress.org/reference/functions/_wp_image_meta_replace_original/
             update_attached_file($attachment_id, $saved['path']);

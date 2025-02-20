@@ -22,16 +22,19 @@ class LoginCookieCleaner
 
         $stale_cookies = 0;
         foreach ($_COOKIE as $key => $value) {
-            if (strpos($key, 'wordpress_logged_in') !== false) {
+            if (preg_match('/^(wordpress_|wordpress_logged_in_)[a-f0-9]{32}$/', $key)) {
+                // Remove the cookie from PHP's cookie array
                 unset($_COOKIE[$key]);
-                setcookie($key, '', -1, '/');
+
+                // Reset the cookie with no value and a 1 hour-ago timestamp
+                setcookie($key, '', time() - 3600, '/');
                 $stale_cookies++;
             }
         }
 
         if ($stale_cookies > 0) {
             $msg = sprintf(
-                'IdeasOnPurpose\\wp-theme-init removed %d invalid `wordpress_logged_in` cookie%s',
+                'IdeasOnPurpose\\wp-theme-init removed %d invalid `wordpress_` cookie%s',
                 $stale_cookies,
                 $stale_cookies == 1 ? '' : 's'
             );

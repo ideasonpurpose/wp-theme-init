@@ -1,5 +1,5 @@
 <?php
-namespace ideasonpurpose\ThemeInit\Extras;
+namespace IdeasOnPurpose\ThemeInit\Extras;
 
 /**
  * Thanks to https://gist.github.com/mattclements/eab5ef656b2f946c4bfb

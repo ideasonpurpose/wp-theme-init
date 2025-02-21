@@ -17,7 +17,7 @@ Test\Stubs::init();
  */
 #[RunTestsInSeparateProcesses]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\ACF::class)]
-#[CoversFunction('\get_field')]
+#[CoversFunction('get_field')]
 final class AcfGetFieldStubTest extends TestCase
 {
     public function testAcfGetFieldPolyfill()

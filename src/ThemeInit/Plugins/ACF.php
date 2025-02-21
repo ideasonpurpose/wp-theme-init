@@ -1,6 +1,6 @@
 <?php
 
-namespace ideasonpurpose\ThemeInit\Plugins;
+namespace IdeasOnPurpose\ThemeInit\Plugins;
 
 class ACF
 {

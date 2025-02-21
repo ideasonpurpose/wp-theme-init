@@ -1,6 +1,5 @@
 <?php
-
-namespace ideasonpurpose\ThemeInit\Extras;
+namespace IdeasOnPurpose\ThemeInit\Extras;
 
 class RemoveJQueryMigrate
 {

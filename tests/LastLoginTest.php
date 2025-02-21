@@ -10,7 +10,7 @@ use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
-#[CoversClass(\IdeasOnPurpose\Themeinit\Admin\LastLogin::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\LastLogin::class)]
 final class LastLoginTest extends TestCase
 {
     public function setUp(): void

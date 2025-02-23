@@ -2,11 +2,11 @@ name: Create Release from Version Tags
 
 on:
   push:
+    branches: [main, master]
     tags: ["v*"]
 
 jobs:
   build:
-    # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
     runs-on: ubuntu-24.04
     name: Build Release
 

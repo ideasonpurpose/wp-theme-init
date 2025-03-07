@@ -33,6 +33,13 @@ class ThemeInit
         add_filter('admin_footer_text', [$this, 'iopCredit'], 500);
 
         /**
+         * Disable Remote Block Patterns
+         * @link https://developer.wordpress.org/block-editor/reference-guides/filters/editor-filters/#block-patterns
+         * TODO: Should this be in the plugin?
+         */
+        add_filter('should_load_remote_block_patterns', '__return_false');
+
+        /**
          * Disable WordPress auto-updates
          */
         add_filter('automatic_updater_disabled', '__return_true');

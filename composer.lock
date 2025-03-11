@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "13fe3ebe3bed838a0891e938f9327bd6",
+    "content-hash": "66f547693e55146e57d560102b971e2f",
     "packages": [],
     "packages-dev": [
         {
@@ -13,7 +13,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ideasonpurpose/wp-test-stubs",
-                "reference": "017611921471553723dcf950f18381ada5afea80"
+                "reference": "40d4bfcab3e7d3f4c89334e894397e705fff475a"
             },
             "require": {
                 "php": ">=8.0.0"
@@ -39,7 +39,7 @@
                 }
             ],
             "description": "A simple collection of stubs and doubles for testing WordPress code.",
-            "time": "2025-02-22T21:26:12+00:00"
+            "time": "2025-03-07T03:46:46+00:00"
         },
         {
             "name": "myclabs/deep-copy",

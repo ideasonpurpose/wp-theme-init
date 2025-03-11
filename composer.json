@@ -26,6 +26,8 @@
   "config": {
     "sort-packages": true
   },
+  "require": {
+  },
   "require-dev": {
     "ideasonpurpose/wp-test-stubs": "dev-main",
     "php-stubs/wordpress-stubs": "^6",
@@ -41,10 +43,14 @@
       "phpunit.xml"
     ]
   },
-  "repositories": [
-    {
+  "repositories": {
+    "ideasonpurpose/wp-theme-i18n": {
+      "type": "vcs",
+      "url": "https://github.com/ideasonpurpose/wp-theme-i18n.git"
+    },
+    "0": {
       "type": "git",
       "url": "https://github.com/ideasonpurpose/wp-test-stubs"
     }
-  ]
+  }
 }

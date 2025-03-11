@@ -40,6 +40,17 @@ class ThemeInit
         add_filter('should_load_remote_block_patterns', '__return_false');
 
         /**
+         * Disable the Block Directory (suggests third-party blocks from the Block Editor)
+         * @link https://developer.wordpress.org/block-editor/reference-guides/filters/editor-filters/#block-directory
+         */
+        add_action('admin_init', function () {
+            remove_action(
+                'enqueue_block_editor_assets',
+                'wp_enqueue_editor_block_directory_assets'
+            );
+        });
+
+        /**
          * Disable WordPress auto-updates
          */
         add_filter('automatic_updater_disabled', '__return_true');
@@ -133,14 +144,22 @@ class ThemeInit
         new ThemeInit\Extras\Shortcodes();
 
         // TODO: Is this too permissive? Reason not to disable unless WP_ENV == 'development'?
-        // @codeCoverageIgnoreStart
         if (class_exists('Kint')) {
+            /** @disregard P1014 "undefined property '$enabled_mode'" **/
             \Kint::$enabled_mode = false;
             if ($this->WP_DEBUG) {
+                /** @disregard P1014 "undefined property '$enabled_mode'" **/
                 \Kint::$enabled_mode = true;
             }
         }
         // @codeCoverageIgnoreEnd
+
+        /**
+         * Load IOP common i18n text domain 'iopwp'
+         *
+         * TODO: Namespace collision?
+         */
+        // new WP\I18n();
     }
 
     /**
@@ -178,8 +197,8 @@ class ThemeInit
                 '<span id="footer-thankyou">Thank you for creating with <a href="https://wordpress.org/">WordPress</a>.</span>';
         }
 
-        $credit =
-            'Design and development by <a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>.';
+        $href = '<a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>';
+        $credit = sprintf(__('Design and development by %s.', 'iopwp'), $href);
 
         $default = preg_replace('%\.?</a>.?</span>%', '</a>.</span>', $default);
         return preg_replace('%(\.?)</span>$%', "$1 $credit</span>", $default);

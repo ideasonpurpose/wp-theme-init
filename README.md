@@ -2,7 +2,7 @@
 
 #### Version: 2.15.1
 
-A common baseline of repeated functions, filters and actions used across our WordPress themes.
+A common baseline of repeated functions, filters and actions used across our WordPress themes. This won't be much use if you're not working at [Ideas On Purpose](https://www.ideasonpurpose.com), but the code is here so the solutions themselves can be shared. 
 
 [![Packagist](https://badgen.net/packagist/v/ideasonpurpose/wp-theme-init)](https://packagist.org/packages/ideasonpurpose/wp-theme-init)
 [![codecov](https://codecov.io/gh/ideasonpurpose/wp-theme-init/branch/master/graph/badge.svg)](https://codecov.io/gh/ideasonpurpose/wp-theme-init)
@@ -33,20 +33,24 @@ A common baseline of repeated functions, filters and actions used across our Wor
 
 - **Miscellaneous Fixes and Cleanup**
 
-  - Add a design credit to the WordPress dashboard.
+  - Add an i18n-ready design credit to the WordPress dashboard.
   - "Howdy" is removed from the admin menu bar.
-  - Lots of junk is removed from wp_head. Many optimizations come from the [Soil plugin](https://roots.io/plugins/soil/).
+  - IOP's i18n library
+  - Lots of junk is removed from wp_head. Many optimizations originally came from Roots.io's retired [Soil plugin](https://roots.io/plugins/soil/).
   - WordPress will attempt to trigger a webpack devServer reload from the `save_post` hook.
   - Override the [`DISALLOW_FILE_EDIT`](https://developer.wordpress.org/apis/wp-config-php/#disable-the-plugin-and-theme-file-editor) constant and block access to the [Theme File Editor](https://wordpress.org/documentation/article/appearance-theme-file-editor-screen/).
 
-- **ShowIncludes**
+- **Block Editor**<br>
+    Disable [third-party block suggestions](https://developer.wordpress.org/block-editor/reference-guides/filters/editor-filters/#block-directory) and [ remote block patterns](https://developer.wordpress.org/block-editor/reference-guides/filters/editor-filters/#block-patterns).
+
+- **ShowIncludes**<br>
   A div showing all included theme files will be appended to the page when `WP_DEBUG` is true. To disable it, initialize the class with an array containing: `['showIncludes' => false]`
 
-- **Template Audit**  
+- **Template Audit**<br>
    Adds a Template column to Pages admin and a summary table to the Appearance menu showing which templates have been assigned to pages.
 
 - **Record Users' Last Login time**
-  User's last successful login are recorded and added to the WordPress Admin User table.
+  Users' last successful logins are recorded and added to the WordPress Admin User table.
 
 - **Reset Metabox Order & Visibility**
   Adds buttons to the bottom of user profiles which will reset all metabox order and visibility from user_meta.

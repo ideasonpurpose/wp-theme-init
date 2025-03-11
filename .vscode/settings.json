@@ -20,5 +20,9 @@
     "titleBar.inactiveForeground": "#e7e7e799"
   },
   "peacock.remoteColor": "#020b88",
-  "peacock.color": "#020b88"
+  "peacock.color": "#020b88",
+  "cSpell.words": [
+    "iopwp",
+    "staticize"
+  ]
 }

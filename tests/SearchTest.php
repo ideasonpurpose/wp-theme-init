@@ -9,6 +9,7 @@ use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
+#[RunTestsInSeparateProcesses]
 #[CoversClass(\IdeasOnPurpose\WP\Search::class)]
 final class SearchTest extends TestCase
 {
@@ -115,6 +116,7 @@ final class SearchTest extends TestCase
 
         $is_admin = false;
         $actual = $this->Search->redirect();
+
         $this->assertStringContainsString('search', $wp_redirect[0]['location']);
         $this->assertEquals($actual, $this->exitMessage);
     }

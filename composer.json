@@ -31,7 +31,7 @@
   "require-dev": {
     "ideasonpurpose/wp-test-stubs": "dev-main",
     "php-stubs/wordpress-stubs": "^6",
-    "phpunit/phpunit": "^11.5"
+    "phpunit/phpunit": "^12.0"
   },
   "archive": {
     "exclude": [

@@ -115,32 +115,25 @@ final class PluginsTest extends TestCase
 
         $this->assertFalse(function_exists('get_field'));
 
-        $Acf->acf_active = true;
-        $Acf->init();
-
-        $this->assertFalse(function_exists('get_field'));
-
-        $Acf->acf_active = false;
-        $Acf->init();
-
+        $Acf->get_field_polyfill();
         $this->assertTrue(function_exists('get_field'));
     }
 
-    public function testAcfGetFieldPolyfill()
-    {
-        global $is_admin, $actions;
-        // $actions = [];
+    // public function testAcfGetFieldPolyfill()
+    // {
+    //     global $is_admin, $actions;
+    //     // $actions = [];
 
-        // This prevents error_log from messing up the PHPUnit console
-        ini_set('error_log', sys_get_temp_dir() . '/phpunit_error.log');
+    //     // This prevents error_log from messing up the PHPUnit console
+    //     ini_set('error_log', sys_get_temp_dir() . '/phpunit_error.log');
 
-        $reflection = new \ReflectionClass(Plugins\ACF::class);
-        $Acf = $reflection->newInstanceWithoutConstructor();
+    //     $reflection = new \ReflectionClass(Plugins\ACF::class);
+    //     $Acf = $reflection->newInstanceWithoutConstructor();
 
-        $is_admin = true;
-        $Acf->acf_active = false;
-        $Acf->init();
+    //     $is_admin = true;
+    //     $Acf->acf_active = false;
+    //     $Acf->init();
 
-        $this->assertTrue(function_exists('get_field'));
-    }
+    //     $this->assertTrue(function_exists('get_field'));
+    // }
 }

@@ -4,24 +4,19 @@ namespace IdeasOnPurpose\ThemeInit\Plugins;
 
 class ACF
 {
-    /**
-     * Lightweight dependency-injection-ish pattern for testing
-     * Skip the constructor in tests and flip the var to hit both
-     * pathways of init().
-     */
-    public $acf_active;
-
     public function __construct()
     {
-        $this->acf_active = function_exists('get_fields');
-        $this->init();
+        add_action('acf/init', [$this, 'injectACF']);
+        // add_action('init', [$this, 'get_field_polyfill']);
     }
 
-    public function init()
+    /**
+     * TODO: This will never work from the theme because too many hooks
+     *       have already been fired. It needs to be in a plugin to work.
+     */
+    public function get_field_polyfill()
     {
-        if ($this->acf_active) {
-            add_action('rest_api_init', [$this, 'injectACF']);
-        } else {
+        if (!function_exists('get_field')) {
             require_once 'acf_get_field.php';
         }
     }

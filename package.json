@@ -1,6 +1,6 @@
 {
   "name": "wp-theme-init",
-  "version": "2.16.0",
+  "version": "2.16.1",
   "private": true,
   "description": "A common baseline of repeated functions, filters and actions used across our WordPress themes.",
   "keywords": [

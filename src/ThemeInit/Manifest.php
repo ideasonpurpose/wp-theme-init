@@ -42,6 +42,7 @@ class Manifest
         add_action('init', [$this, 'init_register_assets']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_wp_assets']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
+        add_action('login_enqueue_scripts', [$this, 'enqueue_admin_assets']);
         add_action('enqueue_block_assets', [$this, 'enqueue_editor_styles']);
         add_action('enqueue_block_editor_assets', [$this, 'enqueue_editor_scripts']);
 

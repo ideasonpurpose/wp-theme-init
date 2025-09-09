@@ -90,6 +90,28 @@ A common baseline of repeated functions, filters and actions used across our Wor
   - Move the metabox to the bottom of admin pages
   - Show the default image from the first post in archives
 
+- **Customize the WordPress Login Screen** (wp-login.php)<br>
+  Customizes the WordPress login page by adding a client logo, byline, and footer. The logo can be a string or a callable function (e.g., using wp-svg-lib). All arguments are optional, but the first (`$siteLogo`) is required to display a logo.
+
+  Instantiate the class like this:
+
+  ```php
+  $siteLogo = fn() => $SVG->siteLogo(300, 'auto');
+  $byline = 'A WordPress site by <a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>';
+  $footer = fn() => sprintf(
+      '<a href="https://www.ideasonpurpose.com">%s</a>',
+      $SVG->siteLogo(32, 'auto')
+  );
+
+  new ThemeInit\Admin\CustomLoginScreen($siteLogo, $byline, $footer);
+
+  // or with just the logo
+  new ThemeInit\Admin\CustomLoginScreen($siteLogo);
+
+  // or with no arguments (no logo will be shown)
+  new ThemeInit\Admin\CustomLoginScreen();
+  ```
+
 ## WordPress Integration
 
 Dependency manifest processing is designed to work with the WordPress [Dependency Extraction Webpack Plugin](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-dependency-extraction-webpack-plugin/). This omits a subset of script libraries included with WordPress, and outputs a PHP snippet for each entry point which includes a dependency list for enqueuing scripts.
@@ -98,7 +120,18 @@ The set of WordPress scripts which will be omitted is listed [here](https://gith
 
 ## Development
 
-Run the PHPUnit test suite with: `npm run test`
+Run the PHPUnit test suite with: `npm run test`.
+
+To work on this project while installed in another project, add `repositories` to your **composer.json** file, then work on the checked-out repository in vendors.
+
+```json
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/ideasonpurpose/wp-theme-init"
+    }
+  ]
+```
 
 <!-- START IOP CREDIT BLURB -->
 

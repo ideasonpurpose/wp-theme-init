@@ -1,0 +1,51 @@
+#login h1 a {
+  height: 56px;
+  background-size: contain;
+}
+
+#iop-login-message {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 0 24px;
+}
+
+#iop-client-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+#iop-client-logo svg {
+  width: 100%;
+  max-width: 270px;
+  height: 100%;
+  max-height: 125px;
+  object-fit: contain;
+}
+
+#iop-login-footer {
+  display: flex;
+  justify-content: center;
+  max-width: 270px;
+  margin: 3em auto 2em auto;
+}
+
+#iop-login-footer a {
+  display: block;
+  width: 32px;
+  height: 32px;
+  color: #50575e;
+
+  &:hover {
+    color: #135e96;
+  }
+}
+
+#iop-login-footer svg {
+  object-fit: contain;
+  fill: currentColor;
+}

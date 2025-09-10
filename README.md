@@ -1,6 +1,6 @@
 # wp-theme-init
 
-#### Version: 2.17.1
+#### Version: 2.17.2
 
 A common baseline of repeated functions, filters and actions used across our WordPress themes. This won't be much use if you're not working at [Ideas On Purpose](https://www.ideasonpurpose.com), but the code is here so the solutions themselves can be shared. 
 

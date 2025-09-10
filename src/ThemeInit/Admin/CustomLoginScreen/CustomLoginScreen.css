@@ -24,6 +24,7 @@
   max-width: 270px;
   height: 100%;
   max-height: 125px;
+  fill: currentColor;
   object-fit: contain;
 }
 

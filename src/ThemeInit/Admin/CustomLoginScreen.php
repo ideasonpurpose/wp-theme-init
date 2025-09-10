@@ -7,7 +7,7 @@ class CustomLoginScreen
     public $byline = 'A WordPress site by <a href="https://www.ideasonpurpose.com" target="_blank">Ideas On Purpose</a>';
     public $footer;
 
-    public function __construct($siteLogo, $byline = null, $footer = null)
+    public function __construct($siteLogo = null, $byline = null, $footer = null)
     {
         $this->siteLogo = $siteLogo;
         $this->byline = $byline ?? $this->byline;
@@ -23,7 +23,7 @@ class CustomLoginScreen
         $css_path = __DIR__ . '/CustomLoginScreen/CustomLoginScreen.css';
         $theme_path = get_template_directory();
         $css_url = get_template_directory_uri() . str_replace($theme_path, '', $css_path);
-        wp_enqueue_style('iop-login-styles', $css_url, [], false, 'all');
+        wp_enqueue_style('iop-custom-login-screen-styles', $css_url, [], false, 'all');
     }
 
     public function login_message($message)
@@ -65,7 +65,7 @@ class CustomLoginScreen
             '<a href="%s" target="_blank" title="%s">%s</a>',
             esc_url($url),
             esc_attr($title),
-            $logo
+            $logo,
         );
         echo "<div id='iop-login-footer'>{$footer}</div>";
     }

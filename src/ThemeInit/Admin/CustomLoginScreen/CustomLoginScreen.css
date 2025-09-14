@@ -17,6 +17,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  color: var(--iop-login-logo-color, currentColor);
 }
 
 #iop-client-logo svg {
@@ -39,14 +40,13 @@
   display: block;
   width: 32px;
   height: 32px;
-  color: #50575e;
+  color: var(--iop-login-footer-logo-color, #50575e);
 
   &:hover {
-    color: #135e96;
+    color: var(--iop-login-footer-logo-hover, #135e96);
   }
 }
 
 #iop-login-footer svg {
   object-fit: contain;
-  fill: currentColor;
 }

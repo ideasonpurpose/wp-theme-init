@@ -2,7 +2,7 @@
 
 #### Version: 2.17.2
 
-A common baseline of repeated functions, filters and actions used across our WordPress themes. This won't be much use if you're not working at [Ideas On Purpose](https://www.ideasonpurpose.com), but the code is here so the solutions themselves can be shared. 
+A common baseline of repeated functions, filters and actions used across our WordPress themes. This may not be much use if you're not working at [Ideas On Purpose](https://www.ideasonpurpose.com), but the code is here so the solutions themselves can be shared.
 
 [![Packagist](https://badgen.net/packagist/v/ideasonpurpose/wp-theme-init)](https://packagist.org/packages/ideasonpurpose/wp-theme-init)
 [![codecov](https://codecov.io/gh/ideasonpurpose/wp-theme-init/branch/master/graph/badge.svg)](https://codecov.io/gh/ideasonpurpose/wp-theme-init)
@@ -32,7 +32,6 @@ A common baseline of repeated functions, filters and actions used across our Wor
   Editor assets are enqueued using the [appropriate hooks](https://developer.wordpress.org/block-editor/how-to-guides/enqueueing-assets-in-the-editor/#editor-content-scripts-and-styles); [`enqueue_block_editor_assets`](https://developer.wordpress.org/reference/hooks/enqueue_block_editor_assets/) for scripts and [`enqueue_block_assets`](https://developer.wordpress.org/reference/hooks/enqueue_block_assets/) for styles. All scripts are enqueued as ESM by adding the `type="module"` to included script tags.
 
 - **Miscellaneous Fixes and Cleanup**
-
   - Add an i18n-ready design credit to the WordPress dashboard.
   - "Howdy" is removed from the admin menu bar.
   - IOP's i18n library
@@ -41,13 +40,13 @@ A common baseline of repeated functions, filters and actions used across our Wor
   - Override the [`DISALLOW_FILE_EDIT`](https://developer.wordpress.org/apis/wp-config-php/#disable-the-plugin-and-theme-file-editor) constant and block access to the [Theme File Editor](https://wordpress.org/documentation/article/appearance-theme-file-editor-screen/).
 
 - **Block Editor**<br>
-    Disable [third-party block suggestions](https://developer.wordpress.org/block-editor/reference-guides/filters/editor-filters/#block-directory) and [ remote block patterns](https://developer.wordpress.org/block-editor/reference-guides/filters/editor-filters/#block-patterns).
+  Disable [third-party block suggestions](https://developer.wordpress.org/block-editor/reference-guides/filters/editor-filters/#block-directory) and [ remote block patterns](https://developer.wordpress.org/block-editor/reference-guides/filters/editor-filters/#block-patterns).
 
 - **ShowIncludes**<br>
   A div showing all included theme files will be appended to the page when `WP_DEBUG` is true. To disable it, initialize the class with an array containing: `['showIncludes' => false]`
 
 - **Template Audit**<br>
-   Adds a Template column to Pages admin and a summary table to the Appearance menu showing which templates have been assigned to pages.
+  Adds a Template column to Pages admin and a summary table to the Appearance menu showing which templates have been assigned to pages.
 
 - **Record Users' Last Login time**
   Users' last successful logins are recorded and added to the WordPress Admin User table.
@@ -72,14 +71,12 @@ A common baseline of repeated functions, filters and actions used across our Wor
 
 - **Media**
   Several media related features will be enabled:
-
   - The JPEG Compression value can be set by defining a `JPEG_QUALITY` constant before invoking `ThemeInit()`. Numeric values will be clamped between 0-100 then passed to the [WordPress `jpeg_quality` filter](https://developer.wordpress.org/reference/hooks/jpeg_quality/). `JPEG_QUALITY` defaults to `82`.
   - A high-quality Lanczos scaling filter will be used for scaling images.
   - All image uploads will be re-compressed if their filesize can be reduced by at least 75%.
 
 - **Search**
   A few improvements to native WordPress search
-
   - Short-circuit search queries <2 characters long
   - Redirect query searches to `/search/`
   - Workaround leading-dot search failures
@@ -111,6 +108,17 @@ A common baseline of repeated functions, filters and actions used across our Wor
   // or with no arguments (no logo will be shown)
   new ThemeInit\Admin\CustomLoginScreen();
   ```
+
+Logo colors can be customized by setting any of these three CSS properties in the **admin.css** scope:
+
+```css
+
+:root {
+  --iop-login-logo-color: seagreen;
+  --iop-login-footer-logo-color: slategray;
+  --iop-login-footer-logo-hover: steelblue;
+}
+```
 
 ## WordPress Integration
 

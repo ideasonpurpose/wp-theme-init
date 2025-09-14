@@ -31,15 +31,15 @@
 
 #iop-login-footer {
   display: flex;
+  align-items: center;
   justify-content: center;
-  max-width: 270px;
   margin: 3em auto 2em auto;
 }
 
 #iop-login-footer a {
   display: block;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   color: var(--iop-login-footer-logo-color, #50575e);
 
   &:hover {

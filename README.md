@@ -109,7 +109,7 @@ A common baseline of repeated functions, filters and actions used across our Wor
   new ThemeInit\Admin\CustomLoginScreen();
   ```
 
-Logo colors can be customized by setting any of these three CSS properties in the **admin.css** scope:
+Logo colors and maximum size can be customized by setting any of these CSS properties in the **admin.css** scope:
 
 ```css
 
@@ -117,8 +117,13 @@ Logo colors can be customized by setting any of these three CSS properties in th
   --iop-login-logo-color: seagreen;
   --iop-login-footer-logo-color: slategray;
   --iop-login-footer-logo-hover: steelblue;
+
+  --iop-login-logo-max-width: 270px;
+  --iop-login-logo-max-height: 125px;
 }
 ```
+
+Note that the **theme.json** `--wp--preset--` properties are not defined for the login page, so any values from that file will need to be manually duplicated.
 
 ## WordPress Integration
 

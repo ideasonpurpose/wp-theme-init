@@ -22,9 +22,9 @@
 
 #iop-client-logo svg {
   width: 100%;
-  max-width: 270px;
+  max-width: var(--iop-login-logo-max-width, 270px);
   height: 100%;
-  max-height: 125px;
+  max-height: var(--iop-login-logo-max-height, 125px);
   fill: currentColor;
   object-fit: contain;
 }

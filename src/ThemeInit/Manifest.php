@@ -40,10 +40,10 @@ class Manifest
         $this->load_manifest($manifest_file);
 
         add_action('init', [$this, 'init_register_assets']);
-        add_action('wp_enqueue_scripts', [$this, 'enqueue_wp_assets']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
-        add_action('login_enqueue_scripts', [$this, 'enqueue_admin_assets']);
-        add_action('enqueue_block_assets', [$this, 'enqueue_editor_styles']);
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_wp_assets'], 500);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets'], 500);
+        add_action('login_enqueue_scripts', [$this, 'enqueue_admin_assets'], 500);
+        add_action('enqueue_block_assets', [$this, 'enqueue_editor_styles'], 500);
         add_action('enqueue_block_editor_assets', [$this, 'enqueue_editor_scripts']);
 
         /**
@@ -78,7 +78,7 @@ class Manifest
         $this->manifest_file = realpath(
             is_null($manifest_file)
                 ? get_template_directory() . '/dist/dependency-manifest.json' // TODO: get_template_directory is theme-dependent
-                : $manifest_file
+                : $manifest_file,
         );
 
         if (!$this->manifest_file) {
@@ -132,7 +132,7 @@ class Manifest
                 ['extension' => $ext, 'filename' => $filename] = str_replace(
                     '~',
                     '-',
-                    pathinfo($src)
+                    pathinfo($src),
                 );
                 $asset_handle = sanitize_title("{$handle}-{$filename}");
 
@@ -296,7 +296,7 @@ class Manifest
                     $asset['file'],
                     $asset['deps_js'],
                     $asset['version'],
-                    !$asset['showInHead']
+                    !$asset['showInHead'],
                 );
             }
             if (strtolower($asset['ext']) === 'css') {
@@ -307,14 +307,14 @@ class Manifest
                         $asset['handle'],
                         $asset['file'],
                         $asset['deps_css'],
-                        $asset['version']
+                        $asset['version'],
                     );
                 } else {
                     wp_enqueue_style(
                         $asset['handle'],
                         $asset['file'],
                         $asset['deps_css'],
-                        $asset['version']
+                        $asset['version'],
                     );
                 }
             }
@@ -334,7 +334,7 @@ class Manifest
             $new_tag = sprintf(
                 "<script type='module' src='%s' id='%s'></script>",
                 esc_url($src),
-                $handle
+                $handle,
             );
             return $new_tag;
         }

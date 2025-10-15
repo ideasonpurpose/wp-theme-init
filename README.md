@@ -32,6 +32,7 @@ A common baseline of repeated functions, filters and actions used across our Wor
   Editor assets are enqueued using the [appropriate hooks](https://developer.wordpress.org/block-editor/how-to-guides/enqueueing-assets-in-the-editor/#editor-content-scripts-and-styles); [`enqueue_block_editor_assets`](https://developer.wordpress.org/reference/hooks/enqueue_block_editor_assets/) for scripts and [`enqueue_block_assets`](https://developer.wordpress.org/reference/hooks/enqueue_block_assets/) for styles. All scripts are enqueued as ESM by adding the `type="module"` to included script tags.
 
 - **Miscellaneous Fixes and Cleanup**
+
   - Add an i18n-ready design credit to the WordPress dashboard.
   - "Howdy" is removed from the admin menu bar.
   - IOP's i18n library
@@ -71,18 +72,21 @@ A common baseline of repeated functions, filters and actions used across our Wor
 
 - **Media**
   Several media related features will be enabled:
+
   - The JPEG Compression value can be set by defining a `JPEG_QUALITY` constant before invoking `ThemeInit()`. Numeric values will be clamped between 0-100 then passed to the [WordPress `jpeg_quality` filter](https://developer.wordpress.org/reference/hooks/jpeg_quality/). `JPEG_QUALITY` defaults to `82`.
   - A high-quality Lanczos scaling filter will be used for scaling images.
   - All image uploads will be re-compressed if their filesize can be reduced by at least 75%.
 
 - **Search**
   A few improvements to native WordPress search
+
   - Short-circuit search queries <2 characters long
   - Redirect query searches to `/search/`
   - Workaround leading-dot search failures
 
 - **SEO Framework Tweaks**
   We apply several tweaks to the excellent [The SEO Framework plugin](https://theseoframework.com/):
+
   - Hide the author's name
   - Move the metabox to the bottom of admin pages
   - Show the default image from the first post in archives
@@ -109,7 +113,7 @@ A common baseline of repeated functions, filters and actions used across our Wor
   new ThemeInit\Admin\CustomLoginScreen();
   ```
 
-Logo colors and maximum size can be customized by setting any of these CSS properties in the **admin.css** scope:
+Logo colors, margins and maximum size can be customized by setting any of these CSS properties in the **admin.css** scope:
 
 ```css
 
@@ -117,6 +121,11 @@ Logo colors and maximum size can be customized by setting any of these CSS prope
   --iop-login-logo-color: seagreen;
   --iop-login-footer-logo-color: slategray;
   --iop-login-footer-logo-hover: steelblue;
+
+  --iop-login-logo-margin-top: 0;
+  --iop-login-logo-margin-left: 10px;
+  --iop-login-logo-margin-bottom: 0;
+  --iop-login-logo-margin-right: 0;
 
   --iop-login-logo-max-width: 270px;
   --iop-login-logo-max-height: 125px;

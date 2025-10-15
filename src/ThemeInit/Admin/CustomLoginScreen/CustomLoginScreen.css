@@ -17,6 +17,8 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  margin: var(--iop-login-logo-margin-top, 0) var(--iop-login-logo-margin-right, 0) var(--iop-login-logo-margin-bottom, 0)
+    var(--iop-login-logo-margin-left, 0);
   color: var(--iop-login-logo-color, currentColor);
 }
 

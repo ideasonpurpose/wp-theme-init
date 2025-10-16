@@ -4,13 +4,18 @@ namespace IdeasOnPurpose\ThemeInit\Admin;
 class CustomLoginScreen
 {
     public $siteLogo;
-    public $byline = 'A WordPress site by <a href="https://www.ideasonpurpose.com" target="_blank">Ideas On Purpose</a>';
+    public $byline;
     public $footer;
 
     public function __construct($siteLogo = null, $byline = null, $footer = null)
     {
         $this->siteLogo = $siteLogo;
-        $this->byline = $byline ?? $this->byline;
+        if ($byline === null) {
+            $href = '<a href="https://www.ideasonpurpose.com" target="_blank">Ideas On Purpose</a>';
+            $this->byline = sprintf(__('A WordPress site by %s', 'iopwp'), $href);
+        } else {
+            $this->byline = $byline;
+        }
         $this->footer = $footer;
 
         add_action('login_enqueue_scripts', [$this, 'load_styles']);

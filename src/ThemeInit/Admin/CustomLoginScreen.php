@@ -10,12 +10,7 @@ class CustomLoginScreen
     public function __construct($siteLogo = null, $byline = null, $footer = null)
     {
         $this->siteLogo = $siteLogo;
-        if ($byline === null) {
-            $href = '<a href="https://www.ideasonpurpose.com" target="_blank">Ideas On Purpose</a>';
-            $this->byline = sprintf(__('A WordPress site by %s', 'iopwp'), $href);
-        } else {
-            $this->byline = $byline;
-        }
+        $this->byline = $byline;
         $this->footer = $footer;
 
         add_action('login_enqueue_scripts', [$this, 'load_styles']);
@@ -33,6 +28,11 @@ class CustomLoginScreen
 
     public function login_message($message)
     {
+        if ($this->byline === null) {
+            $href = '<a href="https://www.ideasonpurpose.com" target="_blank">Ideas On Purpose</a>';
+            $this->byline = sprintf(__('A WordPress site by %s', 'iopwp'), $href);
+        }
+
         $siteLogo = '';
         if ($this->siteLogo) {
             if (is_callable($this->siteLogo)) {

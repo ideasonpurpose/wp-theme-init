@@ -121,11 +121,11 @@ class Manifest
      */
     public function sort_manifest()
     {
+        $this->js_handles = [];
         foreach ($this->manifest as $entry => $assets) {
             $jsDeps = [];
             $cssDeps = [];
             $asset_versions = [$entry => substr(sha1_file($this->manifest_file), 0, 12)];
-            $this->js_handles = [];
             $handle = basename(dirname(dirname($this->manifest_file))); // TODO: hack. do better
 
             foreach ($assets['dependencies'] as $src => $file) {

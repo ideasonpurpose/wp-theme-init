@@ -181,7 +181,7 @@ final class ManifestTest extends TestCase
     {
         $this->Manifest->js_handles = ['dog'];
         $actual = $this->Manifest->script_type_module('<tag>', 'dog', 'source');
-        $this->assertStringStartsWith("<script type='module'", $actual);
+        $this->assertStringStartsWith("<script defer type='module'", $actual);
 
         $actual = $this->Manifest->script_type_module('<tag>', 'cat', 'source');
         $this->assertEquals('<tag>', $actual);

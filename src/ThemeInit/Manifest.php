@@ -185,17 +185,19 @@ class Manifest
 
                 $isAdmin = stripos($entry, 'admin') === 0;
                 $isEditor = stripos($entry, 'editor') === 0;
-                $showInHead = stripos($src, 'head') === 0 || stripos($src, 'admin-head') === 0;
-
-                if ($ext === 'js') {
-                    $this->js_handles[] = $asset_handle;
+                $args = [];
+                if (stripos($src, 'head') === 0 || stripos($src, 'admin-head') === 0) {
+                    // TODO: this is pointless, should be reversed to force scripts into the footer... which
+                    //       we're never going to do. Leaving it here in case WP starts supporting defer
+                    //       and type="module", then we can remove the entire script_type_module method
+                    $args['in_footer'] = false;
                 }
 
                 $asset = [
                     'handle' => $asset_handle,
                     'entry' => $entry,
                     'file' => $file,
-                    'showInHead' => $showInHead,
+                    'args' => $args,
                     'ext' => $ext,
                     'deps_js' => $jsDeps,
                     'deps_css' => $cssDeps,
@@ -286,6 +288,9 @@ class Manifest
     /**
      * Actual asset enqueuing function, handles subsets from above functions
      * Separates scripts and styles as well as appears-in-head
+     *
+     * @link https://developer.wordpress.org/reference/functions/wp_enqueue_script/
+     * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
      */
     public function enqueue_webpack_assets($assets)
     {
@@ -296,7 +301,7 @@ class Manifest
                     $asset['file'],
                     $asset['deps_js'],
                     $asset['version'],
-                    !$asset['showInHead'],
+                    $asset['args'],
                 );
             }
             if (strtolower($asset['ext']) === 'css') {
@@ -332,7 +337,7 @@ class Manifest
     {
         if (in_array($handle, $this->js_handles)) {
             $new_tag = sprintf(
-                "<script type='module' src='%s' id='%s'></script>",
+                "<script defer type='module' src='%s' id='%s'></script>\n",
                 esc_url($src),
                 $handle,
             );

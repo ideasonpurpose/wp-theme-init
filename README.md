@@ -29,7 +29,11 @@ A common baseline of repeated functions, filters and actions used across our Wor
   }
   ```
 
-  Editor assets are enqueued using the [appropriate hooks](https://developer.wordpress.org/block-editor/how-to-guides/enqueueing-assets-in-the-editor/#editor-content-scripts-and-styles); [`enqueue_block_editor_assets`](https://developer.wordpress.org/reference/hooks/enqueue_block_editor_assets/) for scripts and [`enqueue_block_assets`](https://developer.wordpress.org/reference/hooks/enqueue_block_assets/) for styles. All scripts are enqueued as ESM by adding the `type="module"` to included script tags.
+  Editor assets are enqueued using the [appropriate hooks](https://developer.wordpress.org/block-editor/how-to-guides/enqueueing-assets-in-the-editor/#editor-content-scripts-and-styles); [`enqueue_block_editor_assets`](https://developer.wordpress.org/reference/hooks/enqueue_block_editor_assets/) for scripts and [`enqueue_block_assets`](https://developer.wordpress.org/reference/hooks/enqueue_block_assets/) for styles. 
+  
+  * All scripts are enqueued as ESM by adding the `type="module"` to included script tags.
+  * Assets are enqueued with priority **500**.
+  * Handles are the theme-name and the entrypoint. For the **iop-client** theme, the **main** stylesheet would be enqueued as `iop-client-main`.
 
 - **Miscellaneous Fixes and Cleanup**
 

@@ -15,12 +15,7 @@ final class CustomLoginScreenTest extends TestCase
     protected function setUp(): void
     {
         global $enqueued;
-        // global $actions, $filters, $enqueued, $template_directory, $template_directory_uri;
-        // $actions = [];
-        // $filters = [];
         $enqueued = [];
-        // $template_directory = '/path/to/theme';
-        // $template_directory_uri = 'https://example.com/wp-content/themes/theme';
     }
 
     public function testHooks()
@@ -59,6 +54,9 @@ final class CustomLoginScreenTest extends TestCase
         $test_message = 'Test message ';
         $fake_logo = fn() => '<img src="logo1.svg" />';
 
+        $CLS->byline = null; // keep for compatibility, though not used
+        // $CLS->footer = null; // keep for compatibility, though not used
+
         $CLS->siteLogo = $fake_logo;
         $actual = $CLS->login_message($test_message);
 
@@ -79,6 +77,8 @@ final class CustomLoginScreenTest extends TestCase
             ->onlyMethods([])
             ->getMock();
 
+        $CLS->footer = null; // keep for compatibility, though not used
+
         // Test with default footer (no custom footer set)
         ob_start();
         $CLS->footer();
@@ -93,15 +93,20 @@ final class CustomLoginScreenTest extends TestCase
         $CLS->footer();
         $output = ob_get_clean();
 
-        $this->assertStringContainsString("<div id='iop-login-footer'><p>Custom Footer</p></div>", $output);
+        $this->assertStringContainsString(
+            "<div id='iop-login-footer'><p>Custom Footer</p></div>",
+            $output,
+        );
 
-        $CLS->footer = fn()  => '<p>Callable Footer</p>';
+        $CLS->footer = fn() => '<p>Callable Footer</p>';
 
         ob_start();
         $CLS->footer();
         $output = ob_get_clean();
 
-
-        $this->assertStringContainsString("<div id='iop-login-footer'><p>Callable Footer</p></div>", $output);
+        $this->assertStringContainsString(
+            "<div id='iop-login-footer'><p>Callable Footer</p></div>",
+            $output,
+        );
     }
 }

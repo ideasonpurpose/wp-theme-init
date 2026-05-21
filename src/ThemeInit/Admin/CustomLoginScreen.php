@@ -3,9 +3,9 @@ namespace IdeasOnPurpose\ThemeInit\Admin;
 
 class CustomLoginScreen
 {
-    public $siteLogo;
-    public $byline;
-    public $footer;
+    public mixed $siteLogo;
+    public ?string $byline;
+    public mixed $footer;
 
     public function __construct($siteLogo = null, $byline = null, $footer = null)
     {

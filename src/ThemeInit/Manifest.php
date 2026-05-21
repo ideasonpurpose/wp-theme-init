@@ -126,7 +126,7 @@ class Manifest
             $jsDeps = [];
             $cssDeps = [];
             $asset_versions = [$entry => substr(sha1_file($this->manifest_file), 0, 12)];
-            $handle = basename(dirname(dirname($this->manifest_file))); // TODO: hack. do better
+            $handle = preg_replace('/-\d+(_\d+)*$/', '', get_stylesheet());
 
             foreach ($assets['dependencies'] as $src => $file) {
                 ['extension' => $ext, 'filename' => $filename] = str_replace(

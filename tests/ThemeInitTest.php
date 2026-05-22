@@ -22,12 +22,14 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
 
 #[CoversClass(\IdeasOnPurpose\ThemeInit::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\CleanDashboard::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\Core::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\DisallowFileEdit::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\LastLogin::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\LoginCookieCleaner::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\PostStates::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\ResetMetaboxes::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\TemplateAudit::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Core::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Debug\ShowIncludes::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Extras\GlobalCommentsDisable::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Extras\RemoveJQueryMigrate::class)]
@@ -36,6 +38,7 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\ACF::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\EnableMediaReplace::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\SEOFramework::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\TwoFactor::class)]
 final class ThemeInitTest extends TestCase
 {
     // const ABSPATH = '';
@@ -49,7 +52,7 @@ final class ThemeInitTest extends TestCase
 
     protected function beforeEach(): void
     {
-        global $error_log,  $meta_boxes, $transients;
+        global $error_log, $meta_boxes, $transients;
         $error_log = '';
         $meta_boxes = [];
         $transients = [];
@@ -70,7 +73,7 @@ final class ThemeInitTest extends TestCase
         $this->assertContains(['admin_bar_menu', 'deHowdy'], all_added_filters());
         $this->assertContains(
             ['wp_head', 'adjacent_posts_rel_link_wp_head'],
-            all_removed_actions()
+            all_removed_actions(),
         );
     }
 
@@ -106,69 +109,6 @@ final class ThemeInitTest extends TestCase
         $this->assertContains(['wp_default_scripts', 'deRegister'], all_added_actions());
     }
 
-    public function testReadOption()
-    {
-        global $options;
-        /**
-         * Replace PHPUnit's deprecated setMethodsExcept method with a list of all methods EXCEPT 'readOption'
-         *
-         * TODO: Waiting on feedback about best practices for partial mocks
-         *     - https://github.com/sebastianbergmann/phpunit/issues/4652#issuecomment-957662989
-         *     - https://stackoverflow.com/questions/69813091/how-to-best-preserve-some-methods-when-mocking-a-class-with-phpunit-10
-         */
-
-        /**
-         * Alternate method: Use Reflection API to get a copy of the readOption method
-         */
-        $class = new \ReflectionClass(ThemeInit::class);
-        $readOption = $class->getMethod('readOption');
-
-        /**
-         * The mocked get_option function returns the argument passed to it,
-         * which should be the theme name with the version stripped off
-         */
-        $expected = 'SomeValue';
-        $options['theme-name'] = $expected;
-        $opt = $this->ThemeInit->readOption('Other Value', 'theme-name-1_2_3');
-        $this->assertEquals($opt, $expected);
-        /**
-         * Check the ReflectionMethod too
-         */
-        $opt = $readOption->invoke(
-            $class->newInstanceWithoutConstructor(),
-            'hello',
-            'theme-name-1_2_4'
-        );
-        $this->assertEquals($opt, $expected);
-
-        /**
-         * Option values attached to un-versioned theme-names pass through directly
-         */
-        $expected = '42';
-        $opt = $this->ThemeInit->readOption($expected, 'theme-name');
-        $this->assertEquals($opt, $expected);
-
-        $opt = $readOption->invoke(
-            $class->newInstanceWithoutConstructor(),
-            $expected,
-            'theme-name_1_2_4'
-        );
-        $this->assertEquals($opt, $expected);
-    }
-
-    public function testWriteOption()
-    {
-        /**
-         * When the theme-name is corrected, writeOption will
-         * return the old value to short-circuit update_option()
-         */
-        $opt = $this->ThemeInit->writeOption('42', 'old-42', 'theme-name-1_2_3');
-        $this->assertEquals($opt, 'old-42');
-
-        $opt = $this->ThemeInit->writeOption('42', 'old-42', 'theme-name');
-        $this->assertEquals($opt, '42');
-    }
-
     /**
      * Note that Kinsta strips off the last period from the string, we check for that
      * and restore it if missing.
@@ -179,19 +119,20 @@ final class ThemeInitTest extends TestCase
             '<span id="footer-thankyou">Thank you for creating with <a href="https://wordpress.org/">WordPress</a>.</span>';
         $kinsta =
             '<span id="footer-thankyou">Thanks for creating with <a href="https://wordpress.org/">WordPress</a> and hosting with <a href="https://kinsta.com/?utm_source=client-wp-admin&utm_medium=bottom-cta" target="_blank">Kinsta</a></span>';
-        $credit = $this->ThemeInit->iopCredit($default);
+        $adminCore = new ThemeInit\Admin\Core();
+        $credit = $adminCore->iopCredit($default);
         $this->assertStringContainsString('WordPress</a>. Design and development', $credit);
         $this->assertStringContainsString('ideasonpurpose.com', $credit);
         $this->assertStringContainsString('Ideas On Purpose', $credit);
         $this->assertStringContainsString('.</span>', $credit);
 
-        $credit = $this->ThemeInit->iopCredit($kinsta);
+        $credit = $adminCore->iopCredit($kinsta);
         $this->assertStringContainsString('Kinsta</a>. Design and development', $credit);
         $this->assertStringContainsString('ideasonpurpose.com', $credit);
         $this->assertStringContainsString('Ideas On Purpose', $credit);
         $this->assertStringContainsString('.</span>', $credit);
 
-        $credit = $this->ThemeInit->iopCredit('');
+        $credit = $adminCore->iopCredit('');
         $this->assertStringContainsString('WordPress</a>. Design and development', $credit);
         $this->assertStringContainsString('ideasonpurpose.com', $credit);
         $this->assertStringContainsString('Ideas On Purpose', $credit);
@@ -203,92 +144,11 @@ final class ThemeInitTest extends TestCase
         $name = 'Stella';
         $AdminBar = new WP_Admin_Bar();
         $AdminBar->add_node(['id' => 'my-account', 'title' => "Howdy, $name"]);
-        $this->ThemeInit->deHowdy($AdminBar);
+        $adminCore = new ThemeInit\Admin\Core();
+        $adminCore->deHowdy($AdminBar);
         $actual = $AdminBar->get_node('my-account')->title;
         $this->assertEquals($name, $actual);
         $this->assertStringNotContainsString($actual, 'Howdy');
-    }
-
-    public function testDebugFlushRewriteRules()
-    {
-        global $_SERVER,
-            $error_log,
-            $flush_rewrite_rules,
-            $get_transient,
-            $is_admin,
-            $is_embed,
-            $wp_is_json_request;
-
-        $_SERVER['REQUEST_URI'] = 'phpunit mock request';
-
-        $error_log = '';
-
-        $is_admin = false;
-        $is_embed = true;
-        $wp_is_json_request = false;
-
-        $this->ThemeInit->WP_DEBUG = true;
-        $this->ThemeInit->ABSPATH = __DIR__ . '/Fixtures/htaccess/';
-
-        $get_transient['flush_rewrite_log'] = false;
-
-        $is_admin = true;
-        $is_embed = false;
-
-        $this->ThemeInit->debugFlushRewriteRules();
-
-        $this->assertTrue($flush_rewrite_rules);
-        $this->assertStringContainsString('Flushing rewrite rules', $error_log);
-        $this->assertStringContainsString('including .htaccess file', $error_log);
-    }
-
-    public function testDebugFlushRewriteRulesNoHTACCESS()
-    {
-        global $_SERVER,
-            $error_log,
-            $flush_rewrite_rules,
-            $is_admin,
-            $is_embed,
-            $transients,
-            $wp_is_json_request;
-
-        $_SERVER['REQUEST_URI'] = 'phpunit mock request';
-
-        $error_log = '';
-
-        $is_admin = true;
-        $is_embed = false;
-        $wp_is_json_request = false;
-
-        $transients['flush_rewrite_log'] = false;
-        $this->ThemeInit->WP_DEBUG = true;
-        $this->ThemeInit->ABSPATH = __DIR__ . '/Fixtures/manifest/';
-
-        $this->ThemeInit->debugFlushRewriteRules();
-
-        $this->assertFalse(file_exists($this->ThemeInit->ABSPATH . '.htaccess'));
-        $this->assertFalse($flush_rewrite_rules);
-        $this->assertStringContainsString(' Flushing rewrite rules', $error_log);
-        $this->assertStringNotContainsString('including .htaccess file', $error_log);
-    }
-
-    public function testFlushRewriteRulesNoDebug()
-    {
-        global $is_embed;
-        global $_SERVER;
-        $_SERVER['REQUEST_URI'] = 'phpunit mock request';
-        $is_embed = true;
-        $this->ThemeInit->WP_DEBUG = true;
-        $expected = $this->ThemeInit->debugFlushRewriteRules();
-        $this->assertFalse($expected);
-    }
-
-    public function testRevisionsOverride()
-    {
-        // Filter with a stub short-arrow function is called from the constructor,
-        // which is mocked, so this is never registered and can't be tested as is
-        // $this->assertContains(['wp_revisions_to_keep', 6], all_added_filters());
-        $this->assertTrue(true);
     }
 
     public function testCleanDashboard()

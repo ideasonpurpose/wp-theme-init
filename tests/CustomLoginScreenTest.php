@@ -9,6 +9,8 @@ use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
+// Not sure where the request for Core is coming from
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\Core::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\CustomLoginScreen::class)]
 final class CustomLoginScreenTest extends TestCase
 {

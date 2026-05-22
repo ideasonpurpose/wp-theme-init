@@ -152,7 +152,6 @@ class Manifest
              * TODO: In development, *.asset.php files are being generated for dependencies as well,
              *       but they're always empty. Those should probably be checked as well, just in case.
              */
-            // d("{$entry}.php", $assets['files'], array_key_exists("{$entry}.php", $assets['files']));
             if (array_key_exists("{$entry}.php", $assets['files'])) {
                 $asset_filepath = realpath($this->ABSPATH . $assets['files']["{$entry}.php"]);
 
@@ -186,12 +185,6 @@ class Manifest
                 $isAdmin = stripos($entry, 'admin') === 0;
                 $isEditor = stripos($entry, 'editor') === 0;
                 $args = [];
-                if (stripos($src, 'head') === 0 || stripos($src, 'admin-head') === 0) {
-                    // TODO: this is pointless, should be reversed to force scripts into the footer... which
-                    //       we're never going to do. Leaving it here in case WP starts supporting defer
-                    //       and type="module", then we can remove the entire script_type_module method
-                    $args['in_footer'] = false;
-                }
 
                 $asset = [
                     'handle' => $asset_handle,

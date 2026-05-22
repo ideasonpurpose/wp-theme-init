@@ -4,6 +4,7 @@ namespace IdeasOnPurpose\ThemeInit;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
 
 use IdeasOnPurpose\WP\Test;
 
@@ -19,11 +20,11 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Manifest::class)]
 final class ManifestTest extends TestCase
 {
+    /** @var \IdeasOnPurpose\ThemeInit\Manifest&MockObject */
     public $Manifest;
 
     protected function setUp(): void
     {
-        /** @var \IdeasOnPurpose\ThemeInit $this->Manifest */
         $this->Manifest = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Manifest')
             ->disableOriginalConstructor()
             ->onlyMethods(['error_handler'])
@@ -40,13 +41,12 @@ final class ManifestTest extends TestCase
 
     public function testLoadManifest()
     {
-        // $manifest = new Manifest(__DIR__ . '/Fixtures/manifest/dependency-manifest.json');
         $this->Manifest->ABSPATH = __DIR__;
         $this->Manifest->load_manifest(__DIR__ . '/Fixtures/manifest/dependency-manifest.json');
 
         $this->assertStringEndsWith(
             'manifest/dependency-manifest.json',
-            $this->Manifest->manifest_file
+            $this->Manifest->manifest_file,
         );
     }
 

@@ -29,14 +29,12 @@ A common baseline of repeated functions, filters and actions used across our Wor
   }
   ```
 
-  Editor assets are enqueued using the [appropriate hooks](https://developer.wordpress.org/block-editor/how-to-guides/enqueueing-assets-in-the-editor/#editor-content-scripts-and-styles); [`enqueue_block_editor_assets`](https://developer.wordpress.org/reference/hooks/enqueue_block_editor_assets/) for scripts and [`enqueue_block_assets`](https://developer.wordpress.org/reference/hooks/enqueue_block_assets/) for styles. 
-  
-  * All scripts are enqueued as ESM by adding the `type="module"` to included script tags.
-  * Assets are enqueued with priority **500**.
-  * Handles are the theme-name and the entrypoint. For the **iop-client** theme, the **main** stylesheet would be enqueued as `iop-client-main`.
+  Editor assets are enqueued using the [appropriate hooks](https://developer.wordpress.org/block-editor/how-to-guides/enqueueing-assets-in-the-editor/#editor-content-scripts-and-styles); [`enqueue_block_editor_assets`](https://developer.wordpress.org/reference/hooks/enqueue_block_editor_assets/) for scripts and [`enqueue_block_assets`](https://developer.wordpress.org/reference/hooks/enqueue_block_assets/) for styles.
+  - All scripts are enqueued as ESM by adding the `type="module"` to included script tags.
+  - Assets are enqueued with priority **500**.
+  - Handles are the theme-name and the entrypoint. For the **iop-client** theme, the **main** stylesheet would be enqueued as `iop-client-main`.
 
 - **Miscellaneous Fixes and Cleanup**
-
   - Add an i18n-ready design credit to the WordPress dashboard.
   - "Howdy" is removed from the admin menu bar.
   - IOP's i18n library
@@ -53,47 +51,35 @@ A common baseline of repeated functions, filters and actions used across our Wor
 - **Template Audit**<br>
   Adds a Template column to Pages admin and a summary table to the Appearance menu showing which templates have been assigned to pages.
 
-- **Record Users' Last Login time**
+- **Record Users' Last Login time**<br>
   Users' last successful logins are recorded and added to the WordPress Admin User table.
 
-- **Reset Metabox Order & Visibility**
+- **Reset Metabox Order & Visibility**<br>
   Adds buttons to the bottom of user profiles which will reset all metabox order and visibility from user_meta.
 
-- **Enable and limit WP_POST_REVISIONS**
+- **Enable and limit WP_POST_REVISIONS**<br>
   Revisions are set to 6, this overrides any constants set in wp-config.php.
 
-- **Global Comments Disable**
+- **Global Comments Disable**<br>
   Comments and Trackbacks are completely disabled. To re-enable comments, initialize the ThemeInit class with an array containing: `['enableComments' => true]`
 
-- **Remove jQuery Migrate** (optional)
+- **Remove jQuery Migrate** (optional)<br>
   Prevent jQuery Migrate from loading by removing it from the list of WordPress dependencies. To remove jquery-migrate, initialize the ThemeInit class with an array containing: `['jQueryMigrate' => false]`
 
-- **Admin Separators**
-  Admin Separators have been moved to their own library: [wp-admin-separators](https://github.com/ideasonpurpose/wp-admin-separators)
-
-- **Remove Stale Login Cookies**
+- **Remove Stale Login Cookies**<br>
   Repeatedly spinning up local dev environments often bloats **localhost** cookies with stale `wordpress_logged_in` entries. Once these accumulate, the local server will eventually fail with a bad request and the error message _"Your browser sent a request that this server could not understand. Size of a request header field exceeds server limit."_ The cookie can be removed using the browser's dev tools, if the error is recognized -- but it often isn't. Instead, wp-theme-init removes stale login cookies from the `wp_login` hook, preventing the issue. This only runs on development environments when WP_DEBUG is set.
 
-- **Media**
+- **Media**<br>
   Several media related features will be enabled:
-
   - The JPEG Compression value can be set by defining a `JPEG_QUALITY` constant before invoking `ThemeInit()`. Numeric values will be clamped between 0-100 then passed to the [WordPress `jpeg_quality` filter](https://developer.wordpress.org/reference/hooks/jpeg_quality/). `JPEG_QUALITY` defaults to `82`.
   - A high-quality Lanczos scaling filter will be used for scaling images.
   - All image uploads will be re-compressed if their filesize can be reduced by at least 75%.
 
-- **Search**
+- **Search**<br>
   A few improvements to native WordPress search
-
   - Short-circuit search queries <2 characters long
   - Redirect query searches to `/search/`
   - Workaround leading-dot search failures
-
-- **SEO Framework Tweaks**
-  We apply several tweaks to the excellent [The SEO Framework plugin](https://theseoframework.com/):
-
-  - Hide the author's name
-  - Move the metabox to the bottom of admin pages
-  - Show the default image from the first post in archives
 
 - **Customize the WordPress Login Screen** (wp-login.php)<br>
   Customizes the WordPress login page by adding a client logo, byline, and footer. The logo can be a string or a callable function (e.g., using wp-svg-lib). All arguments are optional, but the first (`$siteLogo`) is required to display a logo.
@@ -138,6 +124,25 @@ Logo colors, margins and maximum size can be customized by setting any of these 
 
 Note that the **theme.json** `--wp--preset--` properties are not defined for the login page, so any values from that file will need to be manually duplicated.
 
+## Plugins
+
+- **ACF**  
+  Exposes ACF fields on the REST API for all public post types.
+
+- **Enable Media Replace**  
+  Hides the upsell and remove-background features.
+
+- **SEO Framework Tweaks**  
+  Several tweaks to [The SEO Framework plugin](https://theseoframework.com/):
+  - Hide the author's name
+  - Move the metabox to the bottom of admin pages
+  - Show the default image from the first post in archives
+
+- **Two Factor**  
+  Sets emailed token length to 6 characters. Optionally enforces email MFA for all admin users.
+
+Note that [wp-admin-separators](https://github.com/ideasonpurpose/wp-admin-separators) were moved into their own package.
+
 ## WordPress Integration
 
 Dependency manifest processing is designed to work with the WordPress [Dependency Extraction Webpack Plugin](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-dependency-extraction-webpack-plugin/). This omits a subset of script libraries included with WordPress, and outputs a PHP snippet for each entry point which includes a dependency list for enqueuing scripts.
@@ -165,6 +170,7 @@ To work on this project while installed in another project, add `repositories` t
 
 #### Brought to you by IOP
 
-<a href="https://www.ideasonpurpose.com"><img src="https://raw.githubusercontent.com/ideasonpurpose/ideasonpurpose/master/iop-logo-white-on-black-88px.png" height="44" align="top" alt="IOP Logo"></a><img src="https://raw.githubusercontent.com/ideasonpurpose/ideasonpurpose/master/spacer.png" align="middle" width="4" height="54"> This project is actively developed and used in production at <a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>.
+| <a href="https://www.ideasonpurpose.com"><img src="https://raw.githubusercontent.com/ideasonpurpose/ideasonpurpose/master/iop-logo-white-on-black-88px.png" height="44" align="top" alt="IOP Logo"></a> | This project is actively developed and used in production at <a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>. |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 
 <!-- END IOP CREDIT BLURB -->

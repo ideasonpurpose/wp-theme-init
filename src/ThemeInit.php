@@ -14,7 +14,12 @@ class ThemeInit
         $this->ABSPATH = defined('ABSPATH') ? ABSPATH : getcwd(); // WordPress always defines this
         $this->WP_DEBUG = defined('WP_DEBUG') && WP_DEBUG;
 
-        $defaults = ['showIncludes' => true, 'enableComments' => false, 'jQueryMigrate' => true];
+        $defaults = [
+            'showIncludes' => true,
+            'enableComments' => false,
+            'jQueryMigrate' => true,
+            'enforceMFA' => true, // Disable to enforce MFA per-user
+        ];
         $options = array_merge($defaults, $options);
 
         /**
@@ -125,6 +130,7 @@ class ThemeInit
         new ThemeInit\Plugins\ACF();
         new ThemeInit\Plugins\EnableMediaReplace();
         new ThemeInit\Plugins\SEOFramework();
+        new ThemeInit\Plugins\TwoFactor(!!$options['enforceMFA']);
 
         if ($options['showIncludes'] !== false) {
             new ThemeInit\Debug\ShowIncludes();

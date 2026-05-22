@@ -24,6 +24,7 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
  */
 #[RunTestsInSeparateProcesses]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\ACF::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\TwoFactor::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\SEOFramework::class)]
 final class PluginsTest extends TestCase
 {
@@ -119,21 +120,22 @@ final class PluginsTest extends TestCase
         $this->assertTrue(function_exists('get_field'));
     }
 
-    // public function testAcfGetFieldPolyfill()
-    // {
-    //     global $is_admin, $actions;
-    //     // $actions = [];
+    public function testTwoFactorEnforceEmailMFA()
+    {
+        $reflection = new \ReflectionClass(Plugins\TwoFactor::class);
+        $TwoFactor = $reflection->newInstanceWithoutConstructor();
 
-    //     // This prevents error_log from messing up the PHPUnit console
-    //     ini_set('error_log', sys_get_temp_dir() . '/phpunit_error.log');
+        $expected = ['Two_Factor_Email'];
 
-    //     $reflection = new \ReflectionClass(Plugins\ACF::class);
-    //     $Acf = $reflection->newInstanceWithoutConstructor();
+        $actual = $TwoFactor->enforceEmail(null);
+        $this->assertEquals($expected, $actual);
 
-    //     $is_admin = true;
-    //     $Acf->acf_active = false;
-    //     $Acf->init();
+        $actual = $TwoFactor->enforceEmail([]);
+        $this->assertEquals($expected, $actual);
 
-    //     $this->assertTrue(function_exists('get_field'));
-    // }
+        $existing = ['dog'];
+        $actual = $TwoFactor->enforceEmail($existing);
+        $this->assertEquals($existing, $actual);
+    }
+
 }

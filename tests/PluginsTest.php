@@ -138,4 +138,24 @@ final class PluginsTest extends TestCase
         $this->assertEquals($existing, $actual);
     }
 
+    public function testTwoFactorDisableForDev()
+    {
+        global $wp_get_environment_type;
+        $reflection = new \ReflectionClass(Plugins\TwoFactor::class);
+        $TwoFactor = $reflection->newInstanceWithoutConstructor();
+
+        $enabled_providers = ['Two_Factor_Email'];
+
+        $wp_get_environment_type = 'development';
+        $actual = $TwoFactor->disableForDev($enabled_providers);
+        $this->assertEquals([], $actual);
+
+        $wp_get_environment_type = 'production';
+        $actual = $TwoFactor->disableForDev($enabled_providers);
+        $this->assertEquals($enabled_providers, $actual);
+
+        $wp_get_environment_type = '';
+        $actual = $TwoFactor->disableForDev($enabled_providers);
+        $this->assertEquals($enabled_providers, $actual);
+    }
 }

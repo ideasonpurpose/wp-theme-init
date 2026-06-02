@@ -15,6 +15,11 @@ jobs:
       # https://github.com/marketplace/actions/checkout
       - uses: actions/checkout@v5
 
+      # https://github.com/marketplace/actions/setup-php-action
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+
       - name: Global install PHPUnit & update $PATH
         run: |
           composer global require phpunit/phpunit --prefer-dist

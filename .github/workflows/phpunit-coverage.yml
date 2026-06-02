@@ -13,7 +13,7 @@ jobs:
 
     steps:
       # https://github.com/marketplace/actions/checkout
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v5
 
       - name: Global install PHPUnit & update $PATH
         run: |
@@ -24,7 +24,7 @@ jobs:
         run: composer validate
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress
 
       - name: Run test suite
         env:

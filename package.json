@@ -29,15 +29,14 @@
     "test:watch": "docker compose run --rm test watch",
     "phpunit": "./vendor/bin/phpunit --coverage-clover coverage.xml tests",
     "phpunit:watch": "npx chokidar-cli 'phpunit.xml' 'tests/**/*' 'src/**/*.php' -c 'npm run phpunit'",
-    "version": "version-everything && auto-changelog && git add -u"
+    "version": "version-everything && git add -u"
   },
   "prettier": "@ideasonpurpose/prettier-config",
   "devDependencies": {
     "@ideasonpurpose/prettier-config": "^1.1.0",
-    "@prettier/plugin-php": "^0.24.0",
-    "auto-changelog": "^2.5.0",
-    "prettier": "^3.8.1",
-    "version-everything": "^0.11.4"
+    "@prettier/plugin-php": "^0.25.0",
+    "prettier": "^3.8.3",
+    "version-everything": "^0.12.2"
   },
   "auto-changelog": {
     "package": true,

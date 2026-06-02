@@ -12,23 +12,19 @@ jobs:
 
     steps:
       # https://github.com/marketplace/actions/checkout
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up REPO and TAG environment vars
         run: |
           echo "REPO=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
-          echo "TAG=${GITHUB_SHA:0:6}" >> $GITHUB_ENV
-
-      - name: This run was triggered by a version tag, reset the $TAG variable to the tag name
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: |
           echo "TAG=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+          echo "TAG=${TAG:-${GITHUB_SHA:0:6}}" >> $GITHUB_ENV
 
       - name: Validate composer.json and composer.lock
         run: composer validate
 
       - name: Install PHP dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress
 
       - name: Create Zip archive with `composer archive`
         run: |

@@ -143,7 +143,7 @@ final class PluginsTest extends TestCase
 
         $wp_get_environment_type = 'development';
         $actual = $TwoFactor->disableForDev($enabled_providers);
-        $this->assertEquals([], $actual);
+        $this->assertEquals(['Two_Factor_Dummy'], $actual);
 
         $wp_get_environment_type = 'production';
         $actual = $TwoFactor->disableForDev($enabled_providers);

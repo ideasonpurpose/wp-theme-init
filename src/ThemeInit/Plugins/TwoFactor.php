@@ -34,7 +34,8 @@ class TwoFactor
     {
         if (wp_get_environment_type() === 'development') {
             error_log('Two Factor MFA disabled for development environment.');
-            return [];
+            // Return only the Dummy Provider class name
+            return ['Two_Factor_Dummy'];
         }
         return $enabled_providers;
     }

@@ -101,7 +101,7 @@ class ThemeInit
         }
         new ThemeInit\Extras\Shortcodes();
 
-        // TODO: Is this too permissive? Reason not to disable unless WP_ENV == 'development'?
+        // @codeCoverageIgnoreStart
         if (class_exists('Kint')) {
             /** @disregard P1014 "undefined property '$enabled_mode'" **/
             \Kint::$enabled_mode = false;

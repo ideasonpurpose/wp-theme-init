@@ -139,7 +139,7 @@ Note that the **theme.json** `--wp--preset--` properties are not defined for the
   - Show the default image from the first post in archives
 
 - **Two Factor**  
-  Sets emailed token length to 6 characters. Optionally enforces email MFA for all admin users.
+  Sets emailed token length to 6 characters. Optionally enforces email MFA for all admin users. Disables MFA for development environments. 
 
 Note that [wp-admin-separators](https://github.com/ideasonpurpose/wp-admin-separators) were moved into their own package.
 

@@ -33,6 +33,7 @@ class TwoFactor
     public function disableForDev($enabled_providers)
     {
         if (wp_get_environment_type() === 'development') {
+            error_log('Two Factor MFA disabled for development environment.');
             return [];
         }
         return $enabled_providers;

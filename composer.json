@@ -27,6 +27,7 @@
     "sort-packages": true
   },
   "require": {
+    "php": "^8.4"
   },
   "require-dev": {
     "ideasonpurpose/wp-test-stubs": "dev-main",

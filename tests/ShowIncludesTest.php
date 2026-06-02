@@ -3,12 +3,14 @@
 namespace IdeasOnPurpose;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Debug\ShowIncludes::class)]
 final class ShowIncludesTest extends TestCase
 {

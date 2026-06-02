@@ -3,13 +3,16 @@
 namespace IdeasOnPurpose\WP;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
 #[RunTestsInSeparateProcesses]
+#[PreserveGlobalState(false)]
 #[CoversClass(\IdeasOnPurpose\WP\Search::class)]
 final class SearchTest extends TestCase
 {
@@ -22,16 +25,11 @@ final class SearchTest extends TestCase
         $actions = [];
 
         $this->exitMessage = 'Exited!';
-        /** @var \IdeasOnPurpose\ThemeInit $this->ThemeInit */
-        $this->Search = $this->getMockBuilder('\IdeasOnPurpose\WP\Search')
-            ->disableOriginalConstructor()
-            ->onlyMethods(['exit'])
-            ->getMock();
 
-        $this->Search
-            ->expects($this->any())
-            ->method('exit')
-            ->willReturn($this->exitMessage);
+        $this->Search = $this->getStubBuilder(\IdeasOnPurpose\WP\Search::class)
+            ->onlyMethods(['exit'])
+            ->getStub();
+        $this->Search->method('exit')->willReturn($this->exitMessage);
     }
 
     public function testConstructor()
@@ -56,7 +54,7 @@ final class SearchTest extends TestCase
         $expected = '/some_prefix/plain_search_string/+.dotfile';
         $actual = $this->Search->pad_dot_search(
             '/some_prefix/plain_search_string/.dotfile',
-            '.dotfile'
+            '.dotfile',
         );
 
         $this->assertEquals($expected, $actual);

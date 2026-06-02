@@ -3,6 +3,7 @@
 namespace IdeasOnPurpose;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 use IdeasOnPurpose\WP\Test;
@@ -10,6 +11,7 @@ use IdeasOnPurpose\ThemeInit\Extras\GlobalCommentsDisable;
 
 Test\Stubs::init();
 
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Extras\GlobalCommentsDisable::class)]
 final class GlobalCommentsDisableTest extends TestCase
 {

@@ -5,6 +5,7 @@ namespace IdeasOnPurpose\ThemeInit;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversFunction;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 use IdeasOnPurpose\WP\Test;
@@ -16,6 +17,7 @@ Test\Stubs::init();
  * Run in separate process to so get_field doesn't leak in from other tests
  */
 #[RunTestsInSeparateProcesses]
+#[PreserveGlobalState(false)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\ACF::class)]
 #[CoversFunction('get_field')]
 final class AcfGetFieldStubTest extends TestCase

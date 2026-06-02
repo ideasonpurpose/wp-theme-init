@@ -46,16 +46,13 @@ final class ThemeInitTest extends TestCase
 
     protected function setUp(): void
     {
-        $ref = new \ReflectionClass('\IdeasOnPurpose\ThemeInit');
-        $this->ThemeInit = $ref->newInstanceWithoutConstructor();
-    }
-
-    protected function beforeEach(): void
-    {
         global $error_log, $meta_boxes, $transients;
         $error_log = '';
         $meta_boxes = [];
         $transients = [];
+
+        $ref = new \ReflectionClass('\IdeasOnPurpose\ThemeInit');
+        $this->ThemeInit = $ref->newInstanceWithoutConstructor();
     }
 
     /**

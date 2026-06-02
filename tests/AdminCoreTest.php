@@ -19,7 +19,7 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\Core::class)]
 final class AdminCoreTest extends TestCase
 {
-    protected function beforeEach(): void
+    protected function setUp(): void
     {
         global $error_log, $transients;
         $error_log = '';

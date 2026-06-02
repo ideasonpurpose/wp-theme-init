@@ -3,6 +3,7 @@
 namespace IdeasOnPurpose;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 use IdeasOnPurpose\WP\Test;
@@ -11,6 +12,7 @@ Test\Stubs::init();
 
 require_once 'Fixtures/WP_Image_Editor_Imagick.php';
 
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Media::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Media\Imagick\HQ::class)]
 final class ImagickHQTest extends TestCase

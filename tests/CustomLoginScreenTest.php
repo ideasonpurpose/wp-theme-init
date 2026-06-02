@@ -3,6 +3,7 @@
 namespace IdeasOnPurpose\ThemeInit\Admin;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 use IdeasOnPurpose\WP\Test;
@@ -16,8 +17,9 @@ final class CustomLoginScreenTest extends TestCase
 {
     protected function setUp(): void
     {
-        global $enqueued;
+        global $enqueued, $actions;
         $enqueued = [];
+        $actions = [];
     }
 
     public function testHooks()
@@ -29,6 +31,7 @@ final class CustomLoginScreenTest extends TestCase
         $this->assertContains(['login_footer', 'footer'], all_added_actions());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testLoadStyles()
     {
         global $enqueued;
@@ -45,6 +48,7 @@ final class CustomLoginScreenTest extends TestCase
         $this->assertStringContainsString('CustomLoginScreen', $enqueued[0]['src']);
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testLoginMessage()
     {
         /** @var \IdeasOnPurpose\ThemeInit\Admin $CLS */
@@ -71,6 +75,7 @@ final class CustomLoginScreenTest extends TestCase
         $this->assertStringContainsString('logo2.svg', $actual);
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testFooter()
     {
         /** @var \IdeasOnPurpose\ThemeInit\Admin\CustomLoginScreen $CLS */

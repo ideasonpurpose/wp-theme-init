@@ -3,6 +3,7 @@
 namespace IdeasOnPurpose\ThemeInit;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -17,6 +18,8 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
     }
 }
 
+#[RunTestsInSeparateProcesses]
+#[PreserveGlobalState(false)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Manifest::class)]
 final class ManifestTest extends TestCase
 {
@@ -25,10 +28,8 @@ final class ManifestTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->Manifest = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Manifest')
-            ->disableOriginalConstructor()
-            ->onlyMethods(['error_handler'])
-            ->getMock();
+        $ref = new \ReflectionClass(Manifest::class);
+        $this->Manifest = $ref->newInstanceWithoutConstructor();
 
         global $enqueued, $actions, $error_log, $styles, $scripts;
 
@@ -43,7 +44,6 @@ final class ManifestTest extends TestCase
     {
         $this->Manifest->ABSPATH = __DIR__;
         $this->Manifest->load_manifest(__DIR__ . '/Fixtures/manifest/dependency-manifest.json');
-
         $this->assertStringEndsWith(
             'manifest/dependency-manifest.json',
             $this->Manifest->manifest_file,
@@ -52,15 +52,22 @@ final class ManifestTest extends TestCase
 
     public function testLoadManifestMissing()
     {
-        $this->Manifest->expects($this->exactly(2))->method('error_handler');
-        $this->Manifest->__construct();
-        $this->Manifest->__construct('no-file.json');
+        $ManifestStub = $this->createPartialMock('\IdeasOnPurpose\ThemeInit\Manifest', [
+            'error_handler',
+        ]);
+        $ManifestStub->expects($this->exactly(2))->method('error_handler');
+        $ManifestStub->__construct();
+        $ManifestStub->__construct('no-file.json');
     }
 
-    public function testLoadManifestParseError()
+    public function testLoadManifestParseErrors()
     {
-        $this->Manifest->expects($this->once())->method('error_handler');
-        $this->Manifest->__construct(__DIR__ . '/Fixtures/manifest/no-parse.txt');
+        $ManifestStub = $this->createPartialMock('\IdeasOnPurpose\ThemeInit\Manifest', [
+            'error_handler',
+        ]);
+
+        $ManifestStub->expects($this->once())->method('error_handler');
+        $ManifestStub->__construct(__DIR__ . '/Fixtures/manifest/no-parse.txt');
 
         $this->expectException('Exception');
         $this->Manifest->load_manifest(__DIR__ . '/Fixtures/manifest/empty.json');
@@ -160,6 +167,7 @@ final class ManifestTest extends TestCase
         $actions[0]['action']();
 
         $this->assertStringContainsString($err_msg, $error_log);
+        unset($actions);
     }
 
     public function testInitRegisterAssets()

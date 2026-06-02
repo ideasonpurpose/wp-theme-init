@@ -3,8 +3,10 @@
 namespace IdeasOnPurpose\ThemeInit;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversFunction;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 use IdeasOnPurpose\WP\Test;
@@ -23,6 +25,7 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
  * Run in separate process to so get_field doesn't leak in from other tests
  */
 #[RunTestsInSeparateProcesses]
+#[PreserveGlobalState(false)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\ACF::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\TwoFactor::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\SEOFramework::class)]
@@ -55,11 +58,8 @@ final class PluginsTest extends TestCase
         $post_types = [];
         $rest_fields = [];
 
-        /** @var \IdeasOnPurpose\ThemeInit\Plugins\ACF $ACF */
-        $ACF = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Plugins\ACF')
-            ->disableOriginalConstructor()
-            ->onlyMethods([])
-            ->getMock();
+        $ref = new \ReflectionClass(Plugins\ACF::class);
+        $ACF = $ref->newInstanceWithoutConstructor();
 
         $ACF->injectACF();
 
@@ -71,11 +71,8 @@ final class PluginsTest extends TestCase
 
     public function testReturnLow()
     {
-        /** @var \IdeasOnPurpose\ThemeInit\Plugins\SEOFramework $seo */
-        $seo = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Plugins\SEOFramework')
-            ->disableOriginalConstructor()
-            ->onlyMethods([])
-            ->getMock();
+        $ref = new \ReflectionClass(Plugins\SEOFramework::class);
+        $seo = $ref->newInstanceWithoutConstructor();
 
         $expected = 'low';
         $actual = $seo->returnLow();
@@ -91,11 +88,8 @@ final class PluginsTest extends TestCase
         $post->ID = 1;
         $wp_query->posts = [$post];
 
-        /** @var \IdeasOnPurpose\ThemeInit\Plugins\SEOFramework $seo */
-        $seo = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Plugins\SEOFramework')
-            ->disableOriginalConstructor()
-            ->onlyMethods([])
-            ->getMock();
+        $ref = new \ReflectionClass(Plugins\SEOFramework::class);
+        $seo = $ref->newInstanceWithoutConstructor();
 
         $expected = ['image' => 'fake/image.jpg'];
         $wp_get_attachment_image_src = ['global/image/placeholder.png'];
@@ -143,6 +137,7 @@ final class PluginsTest extends TestCase
         global $wp_get_environment_type;
         $reflection = new \ReflectionClass(Plugins\TwoFactor::class);
         $TwoFactor = $reflection->newInstanceWithoutConstructor();
+        $this->expectErrorLog();
 
         $enabled_providers = ['Two_Factor_Email'];
 

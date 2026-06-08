@@ -18,25 +18,17 @@ jobs:
         with:
           php-version: "8.4"
 
-      - name: Set up REPO and TAG environment vars
-        run: |
-          echo "REPO=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
-          echo "TAG=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
-          echo "TAG=${TAG:-${GITHUB_SHA:0:6}}" >> $GITHUB_ENV
-
       - name: Validate composer.json and composer.lock
         run: composer validate
 
-      - name: Install PHP dependencies
-        run: composer install --prefer-dist --no-progress
-
-      - name: Create Zip archive with `composer archive`
+      - name: Create Zip archive
+        id: create-zip-archive
         run: |
-          composer archive -f zip --dir=../ --file=${REPO}
+          composer archive -f zip --dir=../ --file=${{ github.event.repository.name }}
+          echo "zip_path=../${{ github.event.repository.name }}.zip" >> $GITHUB_OUTPUT
 
       - name: Create GitHub release
-        if: ${{ contains(github.ref, 'refs/tags/') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create v${TAG} ../${REPO}.zip
+          gh release create "${{ github.ref_name }}" "${{ steps.create-zip-archive.outputs.zip_path }}"

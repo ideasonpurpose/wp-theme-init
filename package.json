@@ -38,10 +38,6 @@
     "prettier": "^3.8.3",
     "version-everything": "^0.12.2"
   },
-  "auto-changelog": {
-    "package": true,
-    "backfillLimit": 7
-  },
   "version-everything": {
     "files": [
       "README.md"

@@ -5,18 +5,28 @@ class Core
 {
     public function __construct()
     {
-        $this->disableAutoUpdates();
+        $this->toggleAutoUpdates();
         $this->setRevisionsLimit();
         $this->stripThemeVersionFromOptions();
         $this->cleanWPHead();
     }
 
     /**
-     * Disable WordPress auto-updates
+     * Toggle WordPress auto-updates
+     * All updates are disabled for 'production' environments.
+     * Enable updates for all non-production environments.
      */
-    private function disableAutoUpdates()
+    private function toggleAutoUpdates()
     {
-        add_filter('automatic_updater_disabled', '__return_true');
+        if (wp_get_environment_type() === 'production') {
+            add_filter('automatic_updater_disabled', '__return_true');
+            return;
+        }
+
+        add_filter('auto_update_core', '__return_true');
+        add_filter('auto_update_plugin', '__return_true');
+        add_filter('auto_update_theme', '__return_true');
+        add_filter('auto_update_translation', '__return_true');
     }
 
     /**
@@ -58,13 +68,21 @@ class Core
 
     public function readOption($val, $opt)
     {
-        $optBase = preg_replace('/-(?P<major>0|[1-9]\d*)(?:\.|_)(?P<minor>0|[1-9]\d*)(?:\.|_)(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/ ', '', $opt);
+        $optBase = preg_replace(
+            '/-(?P<major>0|[1-9]\d*)(?:\.|_)(?P<minor>0|[1-9]\d*)(?:\.|_)(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/ ',
+            '',
+            $opt,
+        );
         return $optBase === $opt ? $val : get_option($optBase);
     }
 
     public function writeOption($val, $oldVal, $opt)
     {
-        $optBase = preg_replace('/-(?P<major>0|[1-9]\d*)(?:\.|_)(?P<minor>0|[1-9]\d*)(?:\.|_)(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/ ', '', $opt);
+        $optBase = preg_replace(
+            '/-(?P<major>0|[1-9]\d*)(?:\.|_)(?P<minor>0|[1-9]\d*)(?:\.|_)(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/ ',
+            '',
+            $opt,
+        );
         if ($optBase !== $opt) {
             update_option($optBase, $val);
             return $oldVal;

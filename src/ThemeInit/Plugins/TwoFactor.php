@@ -8,7 +8,7 @@ class TwoFactor
     {
         // Set the emailed codes to industry standard 6 characters.
         add_filter('two_factor_email_token_length', fn(): int => 6);
-        add_filter('two_factor_enabled_providers_for_user', [$this, 'disableForDev'], 500);
+        add_filter('two_factor_enabled_providers_for_user', [$this, 'disableForNonProduction'], 500);
 
         // Customize MFA Token emails sending name and subject line
         add_filter('two_factor_token_email_message', [$this, 'tokenEmail'], 700, 3);
@@ -31,14 +31,14 @@ class TwoFactor
     }
 
     /**
-     * Disable MFA for local/development environments
-     * Return an empty array for development environments, otherwise return $enabled_providers
+     * Disable MFA for non-production environments
+     * Return the dummy provider for non-production environments, otherwise return $enabled_providers
      */
-    public function disableForDev($enabled_providers)
+    public function disableForNonProduction($enabled_providers)
     {
-        if (wp_get_environment_type() === 'development') {
-            error_log('Two Factor MFA disabled for development environment.');
-            // Return only the Dummy Provider class name
+        if (wp_get_environment_type() !== 'production') {
+            error_log('Two Factor MFA disabled for non-production environments.');
+            error_log('Environment: ' . wp_get_environment_type());
             return ['Two_Factor_Dummy'];
         }
         return $enabled_providers;

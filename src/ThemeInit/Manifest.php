@@ -35,8 +35,7 @@ class Manifest
         $this->ABSPATH = defined('ABSPATH') ? ABSPATH : '/'; // WordPress always defines this
         $this->WP_DEBUG = defined('WP_DEBUG') && WP_DEBUG;
 
-        // NEED TO MAN UYALLY LOAD THE MANIFEST, NOT RUN THE constructor
-
+        // NEED TO MANUALLY LOAD THE MANIFEST, NOT RUN THE constructor
         $this->load_manifest($manifest_file);
 
         add_action('init', [$this, 'init_register_assets']);

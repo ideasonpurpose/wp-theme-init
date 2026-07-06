@@ -44,7 +44,7 @@ final class CoreTest extends TestCase
         $opt = $readOption->invoke(
             $class->newInstanceWithoutConstructor(),
             'hello',
-            'theme-name-1_2_4'
+            'theme-name-1_2_4',
         );
         $this->assertEquals($opt, $expected);
 
@@ -58,7 +58,7 @@ final class CoreTest extends TestCase
         $opt = $readOption->invoke(
             $class->newInstanceWithoutConstructor(),
             $expected,
-            'theme-name_1_2_4'
+            'theme-name_1_2_4',
         );
         $this->assertEquals($opt, $expected);
     }
@@ -83,5 +83,17 @@ final class CoreTest extends TestCase
         // which is mocked, so this is never registered and can't be tested as is
         // $this->assertContains(['wp_revisions_to_keep', 6], all_added_filters());
         $this->assertTrue(true);
+    }
+
+    public function testToggleAutoUpdates()
+    {
+        global $wp_get_environment_type;
+
+        $core = new ThemeInit\Core();
+
+        $wp_get_environment_type = 'development';
+
+        $core->toggleAutoUpdates();
+        $this->assertContains(['auto_update_core', '__return_true'], all_added_filters());
     }
 }

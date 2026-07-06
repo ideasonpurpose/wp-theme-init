@@ -12,9 +12,7 @@ Test\Stubs::init();
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\ResetMetaboxes::class)]
 final class ResetMetaboxesTest extends TestCase
 {
-    protected function setUp(): void
-    {
-    }
+    protected function setUp(): void {}
 
     public function testEnqueueScripts()
     {
@@ -40,12 +38,19 @@ final class ResetMetaboxesTest extends TestCase
         $this->assertEquals($expected, $localized[$known_handle][$known_var]['action']);
     }
 
-    public function testAddForm()
+    public function testAddFormHeading()
     {
         $ResetMetaboxes = new Admin\ResetMetaboxes();
         $ResetMetaboxes->addForm();
 
         $this->expectOutputRegex('/<h2>Metabox Settings/');
+    }
+
+    public function testAddFormButton()
+    {
+        $ResetMetaboxes = new Admin\ResetMetaboxes();
+        $ResetMetaboxes->addForm();
+
         $this->expectOutputRegex('/<button/');
     }
 
@@ -54,7 +59,8 @@ final class ResetMetaboxesTest extends TestCase
         global $current_user_can;
         $ResetMetaboxes = new Admin\ResetMetaboxes();
 
-        $this->expectExceptionMessage('wp_die');
+        // $this->expectExceptionMessage('wp_die');
+        $this->expectExceptionMessageIsOrContains('wp_die');
         $current_user_can = false;
         $ResetMetaboxes->handler();
     }
@@ -67,9 +73,6 @@ final class ResetMetaboxesTest extends TestCase
             $wp_send_json;
 
         $post_types = [(object) ['name' => 'test_post_type', 'label' => 'Test Post_Type']];
-        // $_POST = ['class_name' => 'iop-reset-metabox-order'];
-
-        // d($post_types);
 
         $ResetMetaboxes = new Admin\ResetMetaboxes();
 

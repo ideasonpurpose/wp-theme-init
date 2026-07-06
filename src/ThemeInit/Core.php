@@ -16,7 +16,7 @@ class Core
      * All updates are disabled for 'production' environments.
      * Enable updates for all non-production environments.
      */
-    private function toggleAutoUpdates()
+    public function toggleAutoUpdates()
     {
         if (wp_get_environment_type() === 'production') {
             add_filter('automatic_updater_disabled', '__return_true');

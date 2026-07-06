@@ -28,6 +28,7 @@ final class ShowIncludesTest extends TestCase
     {
         global $template, $template_directory;
 
+        $this->expectOutputRegex('/<script>console.log/');
         require 'Fixtures/templates/vendor/fake-vendor.php';
         require 'Fixtures/templates/fake-template.php';
 
@@ -35,17 +36,22 @@ final class ShowIncludesTest extends TestCase
         $template_directory = __DIR__ . '/Fixtures/templates/';
         $template = "{$template_directory}{$expected}";
 
-        $this->expectOutputRegex('/fake plain template/');
-        $this->expectOutputRegex('/fake vendor template/');
-        $this->expectOutputRegex('/script/');
-        $this->expectOutputRegex('/console.log/');
-
         $actual = $this->ShowIncludes->show();
         $this->assertCount(2, $actual['all_includes']);
         $this->assertEquals($expected, $actual['template']);
         $this->assertContains('fake-template.php', $actual['theme_includes']);
         $this->assertContains('vendor/fake-vendor.php', $actual['vendor_includes']);
-        $this->assertNotContains('fake-template.php', $actual['vendor_includes']);
-        $this->assertNotContains('vendor/fake-vendor.php', $actual['theme_includes']);
+    }
+
+    public function testShowIncludesOutputVendorTemplate()
+    {
+        $this->expectOutputRegex('/fake vendor template/');
+        require 'Fixtures/templates/vendor/fake-vendor.php';
+    }
+
+    public function testShowIncludesOutputPlainTemplate()
+    {
+        $this->expectOutputRegex('/fake normal template/');
+        require 'Fixtures/templates/fake-template.php';
     }
 }

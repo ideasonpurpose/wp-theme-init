@@ -3,14 +3,11 @@
 namespace IdeasOnPurpose\ThemeInit;
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 use IdeasOnPurpose\WP\Test;
-use PHPUnit\Framework\Attributes\UsesFunction;
 
 Test\Stubs::init();
 
@@ -132,7 +129,7 @@ final class PluginsTest extends TestCase
         $this->assertEquals($existing, $actual);
     }
 
-    public function testTwoFactorDisableForDev()
+    public function testTwoFactorDisableForNonProduction()
     {
         global $wp_get_environment_type;
         $reflection = new \ReflectionClass(Plugins\TwoFactor::class);
@@ -140,17 +137,50 @@ final class PluginsTest extends TestCase
         $this->expectErrorLog();
 
         $enabled_providers = ['Two_Factor_Email'];
+        $expected = ['Two_Factor_Dummy'];
 
         $wp_get_environment_type = 'development';
-        $actual = $TwoFactor->disableForDev($enabled_providers);
-        $this->assertEquals(['Two_Factor_Dummy'], $actual);
+        $actual = $TwoFactor->disableForNonProduction($enabled_providers);
+        $this->assertEquals($expected, $actual);
 
         $wp_get_environment_type = 'production';
-        $actual = $TwoFactor->disableForDev($enabled_providers);
+        $actual = $TwoFactor->disableForNonProduction($enabled_providers);
         $this->assertEquals($enabled_providers, $actual);
 
         $wp_get_environment_type = '';
-        $actual = $TwoFactor->disableForDev($enabled_providers);
-        $this->assertEquals($enabled_providers, $actual);
+        $actual = $TwoFactor->disableForNonProduction($enabled_providers);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testTwoFactorTokenEmail()
+    {
+        global $filters;
+        $filters = [];
+
+        $reflection = new \ReflectionClass(Plugins\TwoFactor::class);
+        $TwoFactor = $reflection->newInstanceWithoutConstructor();
+
+        $tokenFirst3 = '123';
+        $tokenLast3 = '456';
+        $token = $tokenFirst3 . $tokenLast3;
+        $message = "Your token is {$token}.";
+
+        $actual = $TwoFactor->tokenEmail($message, $token, 1);
+        $this->assertStringContainsString($tokenFirst3, $actual);
+        $this->assertStringContainsString($tokenLast3, $actual);
+
+        $this->assertContains(['wp_mail', 'rewriteSubject'], \all_added_filters());
+        $this->assertContains(['wp_mail_content_type', 'text/html'], \all_added_filters());
+        $filterNames = array_column($filters, 'add');
+        $this->assertContains('wp_mail_from_name', $filterNames);
+    }
+
+    public function testRewriteSubject()
+    {
+        $reflection = new \ReflectionClass(Plugins\TwoFactor::class);
+        $TwoFactor = $reflection->newInstanceWithoutConstructor();
+        $TwoFactor->token = '987654';
+        $actual = $TwoFactor->rewriteSubject(['subject' => 'No token in this subject line']);
+        $this->assertStringContainsString($TwoFactor->token, $actual['subject']);
     }
 }

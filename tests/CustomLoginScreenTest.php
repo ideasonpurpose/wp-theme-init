@@ -10,8 +10,7 @@ use IdeasOnPurpose\WP\Test;
 
 Test\Stubs::init();
 
-// Not sure where the request for Core is coming from
-#[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\Core::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Core::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\CustomLoginScreen::class)]
 final class CustomLoginScreenTest extends TestCase
 {
@@ -36,7 +35,7 @@ final class CustomLoginScreenTest extends TestCase
     {
         global $enqueued;
 
-        /** @var \IdeasOnPurpose\ThemeInit\Admin $CLS */
+        /** @var \IdeasOnPurpose\ThemeInit\Admin\CustomLoginScreen $CLS */
         $CLS = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Admin\CustomLoginScreen')
             ->disableOriginalConstructor()
             ->onlyMethods([])
@@ -51,7 +50,7 @@ final class CustomLoginScreenTest extends TestCase
     #[AllowMockObjectsWithoutExpectations]
     public function testLoginMessage()
     {
-        /** @var \IdeasOnPurpose\ThemeInit\Admin $CLS */
+        /** @var \IdeasOnPurpose\ThemeInit\Admin\CustomLoginScreen $CLS */
         $CLS = $this->getMockBuilder('\IdeasOnPurpose\ThemeInit\Admin\CustomLoginScreen')
             ->disableOriginalConstructor()
             ->onlyMethods([])

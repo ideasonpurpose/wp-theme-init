@@ -10,7 +10,7 @@ use IdeasOnPurpose\WP\Test;
 Test\Stubs::init();
 
 if (!function_exists(__NAMESPACE__ . '\error_log')) {
-    function error_log($err)
+    function error_log(string $err)
     {
         Test\Stubs::error_log($err);
     }
@@ -100,7 +100,7 @@ final class TemplateAuditTest extends TestCase
         $Audit->addTemplateAdminMenuInit();
         $this->assertContains(
             ['load-appearance_page_iop-template-audit', 'templateAdminPageScreenOptions'],
-            all_added_actions()
+            all_added_actions(),
         );
     }
 
@@ -108,7 +108,7 @@ final class TemplateAuditTest extends TestCase
     {
         /** @var \IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable $ListTable */
         $ListTable = $this->createMock(
-            \IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable::class
+            \IdeasOnPurpose\ThemeInit\Admin\TemplateAudit\ListTable::class,
         );
 
         $ListTable->expects($this->once())->method('prepare_items');
@@ -120,8 +120,6 @@ final class TemplateAuditTest extends TestCase
         $TemplateAudit->ListTable = $ListTable;
 
         $TemplateAudit->templateAdminPage();
-        $this->expectOutputRegex('/<div/');
-        $this->expectOutputRegex('/<h1/');
-        $this->expectOutputRegex('/wp-heading-inline/');
+        $this->expectOutputRegex('/<div[^<]*<h1[^>]*wp-heading-inline/');
     }
 }

@@ -13,28 +13,23 @@ jobs:
 
     steps:
       # https://github.com/marketplace/actions/checkout
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       # https://github.com/marketplace/actions/setup-php-action
       - uses: shivammathur/setup-php@v2
         with:
           php-version: "8.4"
 
-      - name: Global install PHPUnit & update $PATH
-        run: |
-          composer global require phpunit/phpunit --prefer-dist
-          echo "$HOME/.composer/vendor/bin" >> $GITHUB_PATH
-
       - name: Validate composer.json and composer.lock
         run: composer validate
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
+        run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Run test suite
         env:
           XDEBUG_MODE: coverage
-        run: phpunit
+        run: vendor/bin/phpunit
 
       # The Coveralls repo token is found on the project's Settings page
       # https://github.com/php-coveralls/php-coveralls

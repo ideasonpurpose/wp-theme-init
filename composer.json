@@ -24,7 +24,8 @@
     }
   },
   "config": {
-    "sort-packages": true
+    "sort-packages": true,
+    "discard-changes": "stash"
   },
   "require-dev": {
     "ideasonpurpose/wp-test-stubs": "dev-main",

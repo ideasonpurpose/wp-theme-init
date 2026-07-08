@@ -14,7 +14,7 @@ class Core
     /**
      * Toggle WordPress auto-updates
      * All updates are disabled for 'production' environments.
-     * Enable updates for all non-production environments.
+     * Force auto-updates for core, plugins, themes, and translations in 'staging' environments.
      */
     public function toggleAutoUpdates()
     {
@@ -23,10 +23,36 @@ class Core
             return;
         }
 
-        add_filter('auto_update_core', '__return_true');
-        add_filter('auto_update_plugin', '__return_true');
-        add_filter('auto_update_theme', '__return_true');
-        add_filter('auto_update_translation', '__return_true');
+        /**
+         * Force auto-updates for themes, and translations in non-production environments.
+         */
+        if (wp_get_environment_type() === 'staging') {
+            add_filter('auto_update_core', '__return_true');
+            add_filter('auto_update_plugin', '__return_true');
+            add_filter('auto_update_theme', '__return_true');
+            add_filter('auto_update_translation', '__return_true');
+        }
+
+        // TODO: This alomost worked, but inverts the set every time the value changed.
+        // /**
+        //  * Plugins default to auto-update in non-production environments with the option to override.
+        //  *
+        //  * For plugins, invert the `auto_update_plugins` option values against the list of all plugins.
+        //  * This causes all unset update values to be true, effectively setting the default to true. If the
+        //  * option has never been set, WordPress returns false, so short-circuit with the list of all plugins.
+        //  */
+        // add_filter('site_option_auto_update_plugins', function ($value) {
+        //     $all_plugins = array_keys(get_plugins());
+        //     if ($value === false) {
+        //         return $all_plugins;
+        //     }
+
+        //     $auto_update_plugins = array_filter($all_plugins, function ($plugin) use ($value) {
+        //         return !in_array($plugin, $value);
+        //     });
+
+        //     return $auto_update_plugins;
+        // });
     }
 
     /**

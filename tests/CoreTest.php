@@ -94,6 +94,10 @@ final class CoreTest extends TestCase
         $wp_get_environment_type = 'development';
 
         $core->toggleAutoUpdates();
+        $this->assertNotContains(['auto_update_core', '__return_true'], all_added_filters());
+
+        $wp_get_environment_type = 'staging';
+        $core->toggleAutoUpdates();
         $this->assertContains(['auto_update_core', '__return_true'], all_added_filters());
     }
 }

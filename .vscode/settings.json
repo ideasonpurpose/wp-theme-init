@@ -1,6 +1,6 @@
 {
   "workbench.colorCustomizations": {
-    "activityBar.activeBorder": "#dc0412",
+    "activityBar.activeBorder": "#e7e7e7",
     "activityBar.activeBackground": "#030fba",
     "activityBar.background": "#030fba",
     "activityBar.foreground": "#e7e7e7",
@@ -24,7 +24,9 @@
     "activityBarTop.inactiveForeground": "#e7e7e799",
     "commandCenter.foreground": "#e7e7e7",
     "statusBar.debuggingBackground": "#020b88",
-    "statusBar.debuggingForeground": "#e7e7e7"
+    "statusBar.debuggingForeground": "#e7e7e7",
+    "activityBarTop.activeBorder": "#e7e7e7",
+    "statusBar.inactiveBackground": "#020b88"
   },
   "peacock.remoteColor": "#020b88",
   "peacock.color": "#020b88",

@@ -81,6 +81,78 @@ A common baseline of repeated functions, filters and actions used across our Wor
   - Redirect query searches to `/search/`
   - Workaround leading-dot search failures
 
+- **Nav Menu Branches**<br>
+  Custom Menus often represent the real navigation hierarchy of a site, it's easy for authors to understand and build the tree they want. `IdeasOnPurpose\WP\NavMenu\Branch` is a stateless query API over that tree, offering a set of helper functions and a filter which lets `wp_nav_menu` to output a single branch.
+
+  The set of static helper methods return an array of `WP_Post` menu item objects for a given theme location, in menu order:
+
+  | Signature                         | Returns     | Notes                                                                               |
+  | --------------------------------- | ----------- | ----------------------------------------------------------------------------------- |
+  | `current($loc)`                   | `?WP_Post`  | First item flagged `current`                                                        |
+  | `parent($loc)`                    | `?WP_Post`  | Parent of current                                                                   |
+  | `ancestors($loc)`                 | `WP_Post[]` | Top-level down to parent of current                                                 |
+  | `children($loc, $item = null)`    | `WP_Post[]` | Direct children of `$item` (object or ID), default current                          |
+  | `siblings($loc)`                  | `WP_Post[]` | Items sharing current's parent, current included                                    |
+  | `descendants($loc, $base = true)` | `WP_Post[]` | All depths under base, base excluded                                                |
+  | `base($loc, $base = true)`        | `?WP_Post`  | `true`: current's top-level ancestor (or current); positive int: matching menu item |
+
+  The `iop_branch_filter` argument to `wp_nav_menu` limits menu output and can be configured with these values.
+
+  | Value                       | Renders                                                | Base item                                      |
+  | --------------------------- | ------------------------------------------------------ | ---------------------------------------------- |
+  | `true` / `'descendants'`    | Everything under the current item's top-level ancestor | Current item's top-level ancestor (or current) |
+  | Positive menu item ID (int) | Everything under that item                             | The specified menu item                        |
+  | `'children'`                | Direct children of the current item                    | Current item                                   |
+  | `'siblings'`                | Current item and its siblings                          | Current item's immediate parent, if present    |
+
+  Set `iop_branch_filter_include_base` to `true` to also include the corresponding base item. It defaults to `false` and has no effect when `iop_branch_filter` is disabled. This option only affects menu output; the `Branch` query helpers are unchanged.
+
+  **Rules:**
+
+  - Setting `iop_branch_filter` to `false` or `null`, or omitting it, leaves the menu unchanged
+  - IDs must be positive integers (numeric strings and floats are not accepted)
+  - The base item is excluded unless `iop_branch_filter_include_base` is enabled
+  - An included base with no children can render by itself
+  - Top-level `'siblings'` have no parent to include, so their output is unchanged
+  - menu order and array keys are kept
+  - Empty results return `[]`
+  - Invalid selectors, IDs not in the menu, and undefined bases return `false` (no menu)
+  - children whose parent was removed render as top-level items via the core walker.
+
+  **Examples**
+
+  ```php
+  use IdeasOnPurpose\WP\NavMenu\Branch;
+
+  // Section nav with a separate toggle button
+  if ($root = Branch::base('menu-header-nav')) {
+      printf('<button aria-controls="section-nav">%s</button>', esc_html($root->title));
+      wp_nav_menu([
+          'theme_location' => 'menu-header-nav',
+          'container_id' => 'section-nav',
+          'iop_branch_filter' => true,
+      ]);
+  }
+
+  // Section nav including its root item and all descendants
+  wp_nav_menu([
+      'theme_location' => 'menu-header-nav',
+      'iop_branch_filter' => true,
+      'iop_branch_filter_include_base' => true,
+  ]);
+
+  // Siblings list above the footer
+  wp_nav_menu(['theme_location' => 'menu-header-nav', 'iop_branch_filter' => 'siblings']);
+
+  // Breadcrumbs
+  foreach (Branch::ancestors('menu-header-nav') as $crumb) {
+      printf('<a href="%s">%s</a> / ', esc_url($crumb->url), esc_html($crumb->title));
+  }
+
+  // A specific branch by menu item ID (see the menu-item-{ID} class)
+  wp_nav_menu(['theme_location' => 'menu-header-nav', 'iop_branch_filter' => 123]);
+  ```
+
 - **Customize the WordPress Login Screen** (wp-login.php)<br>
   Customizes the WordPress login page by adding a client logo, byline, and footer. The logo can be a string or a callable function (e.g., using wp-svg-lib). All arguments are optional, but the first (`$siteLogo`) is required to display a logo.
 
@@ -139,7 +211,7 @@ Note that the **theme.json** `--wp--preset--` properties are not defined for the
   - Show the default image from the first post in archives
 
 - **Two Factor**  
-  Sets emailed token length to 6 characters. Optionally enforces email MFA for all admin users. Disables MFA for development environments by substituting the `Two_Factor_Dummy` Provider. The MFA email sender name is filterable via `iop_two_factor_email_from_name`: 
+  Sets emailed token length to 6 characters. Optionally enforces email MFA for all admin users. Disables MFA for development environments by substituting the `Two_Factor_Dummy` Provider. The MFA email sender name is filterable via `iop_two_factor_email_from_name`:
 
 Note that [wp-admin-separators](https://github.com/ideasonpurpose/wp-admin-separators) were moved into their own package.
 
@@ -171,6 +243,6 @@ To work on this project while installed in another project, add `repositories` t
 #### Brought to you by IOP
 
 | <a href="https://www.ideasonpurpose.com"><img src="https://raw.githubusercontent.com/ideasonpurpose/ideasonpurpose/master/iop-logo-white-on-black-88px.png" width="44" height="44" align="top" alt="IOP Logo"></a> <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | This project is actively developed and used in production at <a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>. <br>&nbsp; |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 
 <!-- END IOP CREDIT BLURB -->

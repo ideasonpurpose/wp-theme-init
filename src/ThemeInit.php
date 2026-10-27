@@ -19,6 +19,7 @@ class ThemeInit
             'enableComments' => false,
             'jQueryMigrate' => true,
             'enforceMFA' => true, // Disable to enforce MFA per-user
+            'branchFilter' => true, // Enables the `iop_branch_filter` wp_nav_menu arg
         ];
         $options = array_merge($defaults, $options);
 
@@ -86,6 +87,13 @@ class ThemeInit
 
         if ($options['showIncludes'] !== false) {
             new ThemeInit\Debug\ShowIncludes();
+        }
+
+        /**
+         * Nav menu branch filter, inert unless wp_nav_menu is called with `iop_branch_filter`
+         */
+        if ($options['branchFilter'] !== false) {
+            new WP\NavMenu\BranchFilter();
         }
 
         if ($options['enableComments'] === false) {

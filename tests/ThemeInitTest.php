@@ -21,6 +21,7 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
 }
 
 #[CoversClass(\IdeasOnPurpose\ThemeInit::class)]
+#[CoversClass(\IdeasOnPurpose\WP\NavMenu\BranchFilter::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\CleanDashboard::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\Core::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\DisallowFileEdit::class)]
@@ -89,6 +90,17 @@ final class ThemeInitTest extends TestCase
         $actions = [];
 
         // d(all_added_actions());
+
+        global $filters;
+        $filters = [];
+        new ThemeInit(); // branchFilter default
+        $this->assertContains(['wp_nav_menu_objects', 'filter'], all_added_filters());
+        $filters = [];
+
+        new ThemeInit(['branchFilter' => false]);
+        $this->assertNotContains(['wp_nav_menu_objects', 'filter'], all_added_filters());
+        $filters = [];
+        $actions = [];
 
         new ThemeInit(['enableComments' => false]); // default
         $this->assertContains(['init', 'removeFromAdminBar'], all_added_actions());

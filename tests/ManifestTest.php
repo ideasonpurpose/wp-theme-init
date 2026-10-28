@@ -2,12 +2,11 @@
 
 namespace IdeasOnPurpose\ThemeInit;
 
-use PHPUnit\Framework\TestCase;
+use IdeasOnPurpose\WP\Test;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
-
-use IdeasOnPurpose\WP\Test;
+use PHPUnit\Framework\TestCase;
 
 Test\Stubs::init();
 
@@ -143,6 +142,24 @@ final class ManifestTest extends TestCase
         $is_admin = true;
         $this->Manifest->enqueue_editor_styles();
         $this->assertCount(0, $enqueued[0]['deps']);
+    }
+
+    public function testHandlesKeepVersionedStylesheetName()
+    {
+        global $enqueued, $is_admin, $stylesheet;
+
+        $is_admin = false;
+        $stylesheet = 'iop-theme-1_22_33';
+
+        $this->Manifest->ABSPATH = __DIR__;
+        $this->Manifest->load_manifest(__DIR__ . '/Fixtures/manifest/dependency-manifest.json');
+
+        $enqueued = [];
+        $this->Manifest->enqueue_wp_assets();
+        $this->assertNotEmpty($enqueued);
+        foreach ($enqueued as $asset) {
+            $this->assertStringStartsWith("{$stylesheet}-", $asset['handle']);
+        }
     }
 
     public function testErrorHandler()

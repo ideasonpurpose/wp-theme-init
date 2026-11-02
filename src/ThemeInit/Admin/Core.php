@@ -1,4 +1,5 @@
 <?php
+
 namespace IdeasOnPurpose\ThemeInit\Admin;
 
 class Core
@@ -46,7 +47,6 @@ class Core
     /**
      * Disable Remote Block Patterns
      * @link https://developer.wordpress.org/block-editor/reference-guides/filters/editor-filters/#block-patterns
-     * TODO: Should this be in the plugin?
      */
     private function disableRemoteBlockPatterns()
     {
@@ -70,8 +70,7 @@ class Core
     public function iopCredit($default)
     {
         if (!$default) {
-            $default =
-                '<span id="footer-thankyou">Thank you for creating with <a href="https://wordpress.org/">WordPress</a>.</span>';
+            $default = '<span id="footer-thankyou">Thank you for creating with <a href="https://wordpress.org/">WordPress</a>.</span>';
         }
         $href = '<a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>';
         $credit = sprintf(__('Design and development by %s.', 'iopwp'), $href);
@@ -104,12 +103,10 @@ class Core
                 is_embed() ||
                 !is_admin()
             ) {
-
                 return false;
             }
             $htaccess = file_exists($this->ABSPATH . '.htaccess');
             $htaccess_log = $htaccess ? ' including .htaccess file' : '';
-
 
             if (get_transient('flush_rewrite_log') === false && !isset($_GET['service-worker'])) {
                 error_log(

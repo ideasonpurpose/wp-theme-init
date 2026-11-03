@@ -35,24 +35,27 @@ class Core
             add_filter('auto_update_translation', '__return_true');
         }
 
-        // TODO: This alomost worked, but inverts the set every time the value changed.
-        // /**
-        //  * Plugins default to auto-update in non-production environments with the option to override.
-        //  *
-        //  * For plugins, invert the `auto_update_plugins` option values against the list of all plugins.
-        //  * This causes all unset update values to be true, effectively setting the default to true. If the
-        //  * option has never been set, WordPress returns false, so short-circuit with the list of all plugins.
-        //  */
-        // add_filter('site_option_auto_update_plugins', function ($value) {
-        //     $all_plugins = array_keys(get_plugins());
-        //     if ($value === false) {
-        //         return $all_plugins;
-        //     }
-        //     $auto_update_plugins = array_filter($all_plugins, function ($plugin) use ($value) {
-        //         return !in_array($plugin, $value);
-        //     });
-        //     return $auto_update_plugins;
-        // });
+        /**
+         * Plugins default to auto-update in non-production environments with the option to override.
+         *
+         * WordPress stores the list of plugins with auto-updates *enabled*, and its toggle handler
+         * reads the option, adds or removes one plugin, then writes it back. Invert on both read and
+         * write so the stored value becomes the opt-out list and unlisted plugins default to enabled.
+         * Inverting only reads would flip the meaning of the stored value on every toggle.
+         */
+        add_filter('site_option_auto_update_plugins', [$this, 'invertAutoUpdatePlugins']);
+        add_filter('pre_update_site_option_auto_update_plugins', [
+            $this,
+            'invertAutoUpdatePlugins',
+        ]);
+    }
+
+    /**
+     * Invert an enabled plugin list into an opt-out list (and back).
+     */
+    public function invertAutoUpdatePlugins($value)
+    {
+        return array_values(array_diff(array_keys(get_plugins()), (array) $value));
     }
 
     /**

@@ -84,14 +84,47 @@ final class CoreTest extends TestCase
         $this->assertTrue(true);
     }
 
+    public function testInvertAutoUpdatePlugins()
+    {
+        global $plugins;
+
+        $plugins = [
+            'akismet/akismet.php' => ['Name' => 'Akismet'],
+            'hello.php' => ['Name' => 'Hello Dolly'],
+        ];
+
+        $Core = new \ReflectionClass(ThemeInit\Core::class)->newInstanceWithoutConstructor();
+
+        /**
+         * An unset option returns false, which inverts to every plugin enabled
+         */
+        $this->assertEquals(
+            ['akismet/akismet.php', 'hello.php'],
+            $Core->invertAutoUpdatePlugins(false),
+        );
+
+        /**
+         * The stored opt-out list inverts to the enabled list
+         */
+        $this->assertEquals(['akismet/akismet.php'], $Core->invertAutoUpdatePlugins(['hello.php']));
+
+        /**
+         * Inverting the full enabled list produces an empty opt-out list
+         */
+        $this->assertEquals(
+            [],
+            $Core->invertAutoUpdatePlugins(['akismet/akismet.php', 'hello.php']),
+        );
+    }
+
     public function testEnableWordPressFeatures()
     {
         global $theme_support;
+        $theme_support = [];
 
         $Core = new \ReflectionClass(ThemeInit\Core::class)->newInstanceWithoutConstructor();
         $Core->enableWordPressFeatures();
 
-        // print_r($theme_support);
         $features = array_column($theme_support, 'add');
 
         /**

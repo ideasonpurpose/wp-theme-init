@@ -3,11 +3,10 @@
 namespace IdeasOnPurpose;
 
 use IdeasOnPurpose\ThemeInit\AdminPostStatesTest;
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-
-use WP_Admin_Bar;
 use IdeasOnPurpose\WP\Test;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\TestCase;
+use WP_Admin_Bar;
 
 Test\Stubs::init();
 
@@ -21,9 +20,9 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
 }
 
 #[CoversClass(\IdeasOnPurpose\ThemeInit::class)]
-#[CoversClass(\IdeasOnPurpose\WP\NavMenu\BranchFilter::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\CleanDashboard::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\Core::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\DisableCustomizer::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\DisallowFileEdit::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\LastLogin::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Admin\LoginCookieCleaner::class)]
@@ -40,6 +39,7 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\EnableMediaReplace::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\SEOFramework::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Plugins\TwoFactor::class)]
+#[CoversClass(\IdeasOnPurpose\WP\NavMenu\BranchFilter::class)]
 final class ThemeInitTest extends TestCase
 {
     // const ABSPATH = '';
@@ -124,10 +124,8 @@ final class ThemeInitTest extends TestCase
      **/
     public function testIOPCredit()
     {
-        $default =
-            '<span id="footer-thankyou">Thank you for creating with <a href="https://wordpress.org/">WordPress</a>.</span>';
-        $kinsta =
-            '<span id="footer-thankyou">Thanks for creating with <a href="https://wordpress.org/">WordPress</a> and hosting with <a href="https://kinsta.com/?utm_source=client-wp-admin&utm_medium=bottom-cta" target="_blank">Kinsta</a></span>';
+        $default = '<span id="footer-thankyou">Thank you for creating with <a href="https://wordpress.org/">WordPress</a>.</span>';
+        $kinsta = '<span id="footer-thankyou">Thanks for creating with <a href="https://wordpress.org/">WordPress</a> and hosting with <a href="https://kinsta.com/?utm_source=client-wp-admin&utm_medium=bottom-cta" target="_blank">Kinsta</a></span>';
         $adminCore = new ThemeInit\Admin\Core();
         $credit = $adminCore->iopCredit($default);
         $this->assertStringContainsString('WordPress</a>. Design and development', $credit);

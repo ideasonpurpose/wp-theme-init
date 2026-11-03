@@ -19,8 +19,8 @@ class Core
         $this->iopCreditFooter();
         $this->disableRemoteBlockPatterns();
         $this->disableBlockDirectory();
-        add_action('admin_init', [$this, 'debugFlushRewriteRules']);
         $this->debugFlushRewriteRules();
+        add_action('admin_init', [$this, 'debugFlushRewriteRules']);
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 namespace IdeasOnPurpose;
 
 class ThemeInit
@@ -78,6 +79,11 @@ class ThemeInit
         new ThemeInit\Admin\CleanDashboard();
 
         /**
+         * Disable the Customizer (wp-admin/customize.php)
+         */
+        new ThemeInit\Admin\DisableCustomizer();
+
+        /**
          * Common plugin tweaks
          */
         new ThemeInit\Plugins\ACF();
@@ -118,8 +124,8 @@ class ThemeInit
                 \Kint::$enabled_mode = true;
             }
         }
-        // @codeCoverageIgnoreEnd
 
+        // @codeCoverageIgnoreEnd
         /**
          * Load IOP common i18n text domain 'iopwp'
          *
@@ -139,20 +145,19 @@ class ThemeInit
     public function totalExecutionTime()
     {
         /**
-                      * Need to be sure we don't dump this into a JSON response or other structured data request
-                      *
-                      * TODO: Check code from wp-includes/admin-bar.php for skipping AJAX, JSON, etc.
-                      *       https://github.com/WordPress/WordPress/blob/42d52ce08099f9fae82a1977da0237b32c863e94/wp-includes/admin-bar.php#L1179-L1181
-                      *
-                      *      if ( defined( 'XMLRPC_REQUEST' ) || defined( 'DOING_AJAX' ) || defined( 'IFRAME_REQUEST' ) || wp_is_json_request() ) {
-                      *
-                      */
+         * Need to be sure we don't dump this into a JSON response or other structured data request
+         *
+         * TODO: Check code from wp-includes/admin-bar.php for skipping AJAX, JSON, etc.
+         *       https://github.com/WordPress/WordPress/blob/42d52ce08099f9fae82a1977da0237b32c863e94/wp-includes/admin-bar.php#L1179-L1181
+         *
+         *      if ( defined( 'XMLRPC_REQUEST' ) || defined( 'DOING_AJAX' ) || defined( 'IFRAME_REQUEST' ) || wp_is_json_request() ) {
+         *
+         */
         // if (wp_doing_ajax()) {
         //     return;
         // }
         // error_log('SHUTDOWN');
         // error_log(print_r($_SERVER, true));
-
         // $time = microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
         // $msg = sprintf('Total processing time: %0.4f seconds', $time);
         // echo "\n<!--\n\n$msg\n -->";

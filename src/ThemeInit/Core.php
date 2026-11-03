@@ -1,4 +1,5 @@
 <?php
+
 namespace IdeasOnPurpose\ThemeInit;
 
 class Core
@@ -9,6 +10,7 @@ class Core
         $this->setRevisionsLimit();
         $this->stripThemeVersionFromOptions();
         $this->cleanWPHead();
+        add_action('after_setup_theme', [$this, 'enableWordPressFeatures']);
     }
 
     /**
@@ -46,13 +48,81 @@ class Core
         //     if ($value === false) {
         //         return $all_plugins;
         //     }
-
         //     $auto_update_plugins = array_filter($all_plugins, function ($plugin) use ($value) {
         //         return !in_array($plugin, $value);
         //     });
-
         //     return $auto_update_plugins;
         // });
+    }
+
+    /**
+     * Enable assorted WordPress theme features
+     *
+     *
+     * Enable all features from _add_default_theme_supports() so our hybrid themes
+     * start from the same baseline as Block Themes.
+     * Call remove_theme_support() from a later `after_setup_theme` action to disable.
+     * Only includes features which can not be set from theme.json.
+     *
+     * @link https://developer.wordpress.org/reference/functions/_add_default_theme_supports/
+     * @link https://developer.wordpress.org/reference/functions/add_theme_support/
+     * @link https://developer.wordpress.org/reference/functions/remove_theme_support/
+     */
+    public function enableWordPressFeatures()
+    {
+        /**
+         * @link https://codex.wordpress.org/Post_Thumbnails
+         * @link https://developer.wordpress.org/reference/functions/add_theme_support/#post-thumbnails
+         * @link https://developer.wordpress.org/themes/classic-themes/functionality/featured-images-post-thumbnails/
+         */
+        add_theme_support('post-thumbnails');
+
+        /**
+         * @link https://make.wordpress.org/themes/2015/08/25/title-tag-support-now-required/
+         * @link https://developer.wordpress.org/reference/functions/add_theme_support/#title-tag
+         * @link https://developer.wordpress.org/themes/classic-themes/basics/theme-functions/#title-tag
+         */
+        add_theme_support('title-tag');
+
+        /**
+         * @link https://developer.wordpress.org/reference/functions/add_theme_support/#html5
+         * @link https://developer.wordpress.org/themes/classic-themes/basics/theme-functions/
+         * @link https://developer.wordpress.org/themes/classic-themes/basics/theme-functions/#theme-support-in-block-themes
+         */
+        add_theme_support('html5', [
+            'caption',
+            'comment-form',
+            'comment-list',
+            'gallery',
+            'script',
+            'search-form',
+            'style',
+        ]);
+
+        /**
+         * @link https://developer.wordpress.org/reference/functions/add_theme_support/
+         * @link https://developer.wordpress.org/block-editor/how-to-guides/themes/theme-support/#responsive-embedded-content
+         */
+        add_theme_support('responsive-embeds');
+
+        /**
+         * Likely obsolete
+         * @link https://developer.wordpress.org/reference/functions/add_theme_support/
+         * @link https://developer.wordpress.org/block-editor/how-to-guides/themes/theme-support/#editor-styles
+         */
+        add_theme_support('editor-styles');
+
+        /**
+         * @link https://developer.wordpress.org/reference/functions/add_theme_support/#feed-links
+         * @link https://developer.wordpress.org/advanced-administration/wordpress/feeds/
+         */
+        add_theme_support('automatic-feed-links');
+
+        /**
+         * @link https://developer.wordpress.org/reference/functions/add_post_type_support/#excerpt
+         * @link https://developer.wordpress.org/reference/functions/post_type_supports/#more-information
+         */
+        add_post_type_support('page', 'excerpt');
     }
 
     /**

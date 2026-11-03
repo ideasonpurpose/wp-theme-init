@@ -2,10 +2,9 @@
 
 namespace IdeasOnPurpose;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-
 use IdeasOnPurpose\WP\Test;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\TestCase;
 
 Test\Stubs::init();
 
@@ -83,6 +82,50 @@ final class CoreTest extends TestCase
         // which is mocked, so this is never registered and can't be tested as is
         // $this->assertContains(['wp_revisions_to_keep', 6], all_added_filters());
         $this->assertTrue(true);
+    }
+
+    public function testEnableWordPressFeatures()
+    {
+        global $theme_support;
+
+        $Core = new \ReflectionClass(ThemeInit\Core::class)->newInstanceWithoutConstructor();
+        $Core->enableWordPressFeatures();
+
+        // print_r($theme_support);
+        $features = array_column($theme_support, 'add');
+
+        /**
+         * Everything from core's _add_default_theme_supports() plus title-tag
+         * @link https://developer.wordpress.org/reference/functions/_add_default_theme_supports/
+         */
+        $expected = [
+            'post-thumbnails',
+            'title-tag',
+            'html5',
+            'responsive-embeds',
+            'editor-styles',
+            'automatic-feed-links',
+        ];
+        foreach ($expected as $feature) {
+            $this->assertContains($feature, $features);
+        }
+
+        $html5 = array_values(array_filter(
+            $theme_support,
+            fn($s) => ($s['add'] ?? null) === 'html5',
+        ));
+        $this->assertCount(1, $html5);
+        $html5Args = $html5[0]['args'][0];
+        $expectedHtml5 = [
+            'script',
+            'style',
+            'search-form',
+            'gallery',
+            'caption',
+            'comment-form',
+            'comment-list',
+        ];
+        $this->assertEqualsCanonicalizing($expectedHtml5, $html5Args);
     }
 
     public function testToggleAutoUpdates()

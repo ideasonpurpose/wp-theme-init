@@ -45,11 +45,15 @@ class Core
     }
 
     /**
+     * Remove all core block patterns
+     * @link https://developer.wordpress.org/themes/patterns/registering-patterns/#removing-core-patterns
+     *
      * Disable Remote Block Patterns
      * @link https://developer.wordpress.org/block-editor/reference-guides/filters/editor-filters/#block-patterns
      */
     private function disableRemoteBlockPatterns()
     {
+        remove_theme_support('core-block-patterns');
         add_filter('should_load_remote_block_patterns', '__return_false');
     }
 

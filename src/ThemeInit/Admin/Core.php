@@ -77,6 +77,7 @@ class Core
             $default = '<span id="footer-thankyou">Thank you for creating with <a href="https://wordpress.org/">WordPress</a>.</span>';
         }
         $href = '<a href="https://www.ideasonpurpose.com">Ideas On Purpose</a>';
+        // translators: %s: linked agency name.
         $credit = sprintf(__('Design and development by %s.', 'iopwp'), $href);
         $default = preg_replace('%\.?</a>.?</span>%', '</a>.</span>', $default);
         return preg_replace('%(\.?)</span>$%', "$1 $credit</span>", $default);

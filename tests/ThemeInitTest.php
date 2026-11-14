@@ -110,11 +110,11 @@ final class ThemeInitTest extends TestCase
         $this->assertNotContains(['init', 'removeFromAdminBar'], all_added_actions());
         $actions = [];
 
-        new ThemeInit(['jQueryMigrate' => true]); // default
+        new ThemeInit(['jQueryMigrate' => true]);
         $this->assertNotContains(['wp_default_scripts', 'deRegister'], all_added_actions());
         $actions = [];
 
-        new ThemeInit(['jQueryMigrate' => false]);
+        new ThemeInit(['jQueryMigrate' => false]); // default
         $this->assertContains(['wp_default_scripts', 'deRegister'], all_added_actions());
     }
 

@@ -63,8 +63,8 @@ A common baseline of repeated functions, filters and actions used across our Wor
 - **Global Comments Disable**<br>
   Comments and Trackbacks are completely disabled. To re-enable comments, initialize the ThemeInit class with an array containing: `['enableComments' => true]`
 
-- **Remove jQuery Migrate** (optional)<br>
-  Prevent jQuery Migrate from loading by removing it from the list of WordPress dependencies. To remove jquery-migrate, initialize the ThemeInit class with an array containing: `['jQueryMigrate' => false]`
+- **Remove jQuery Migrate**<br>
+  jQuery Migrate is removed from the front end by default (admin screens keep it). To restore it, initialize the ThemeInit class with an array containing: `['jQueryMigrate' => true]`
 
 - **Remove Stale Login Cookies**<br>
   Repeatedly spinning up local dev environments often bloats **localhost** cookies with stale `wordpress_logged_in` entries. Once these accumulate, the local server will eventually fail with a bad request and the error message _"Your browser sent a request that this server could not understand. Size of a request header field exceeds server limit."_ The cookie can be removed using the browser's dev tools, if the error is recognized -- but it often isn't. Instead, wp-theme-init removes stale login cookies from the `wp_login` hook, preventing the issue. This only runs on development environments when WP_DEBUG is set.

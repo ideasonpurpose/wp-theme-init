@@ -18,7 +18,7 @@ class ThemeInit
         $defaults = [
             'showIncludes' => true,
             'enableComments' => false,
-            'jQueryMigrate' => true,
+            'jQueryMigrate' => false,
             'enforceMFA' => true, // Disable to enforce MFA per-user
             'branchFilter' => true, // Enables the `iop_branch_filter` wp_nav_menu arg
         ];

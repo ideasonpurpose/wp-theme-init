@@ -5,6 +5,11 @@ namespace IdeasOnPurpose;
 class ThemeInit
 {
     /**
+     * Semver suffix of versioned theme snapshot directories, eg. `-1.2.3` or `-1_2_3`
+     */
+    const VERSION_SUFFIX = '/-(?P<major>0|[1-9]\d*)(?:\.|_)(?P<minor>0|[1-9]\d*)(?:\.|_)(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/';
+
+    /**
      * Placeholders for mocking
      */
     public $ABSPATH;
@@ -115,6 +120,11 @@ class ThemeInit
         }
         new ThemeInit\Extras\Shortcodes();
 
+        /**
+         * Block Pattern category named for the theme, labeled with the Site Title
+         */
+        new ThemeInit\Extras\PatternCategory();
+
         // @codeCoverageIgnoreStart
         if (class_exists('Kint')) {
             /** @disregard P1014 "undefined property '$enabled_mode'" **/
@@ -132,6 +142,15 @@ class ThemeInit
          * TODO: Namespace collision?
          */
         // new WP\I18n();
+    }
+
+    /**
+     * The active theme's directory name without a version suffix
+     * Matches package.json `name`, which is not deployed with the theme
+     */
+    public static function themeName(): string
+    {
+        return preg_replace(self::VERSION_SUFFIX, '', get_stylesheet());
     }
 
     /**

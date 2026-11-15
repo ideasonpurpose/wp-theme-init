@@ -2,6 +2,8 @@
 
 namespace IdeasOnPurpose\ThemeInit;
 
+use IdeasOnPurpose\ThemeInit;
+
 class Core
 {
     public function __construct()
@@ -167,21 +169,13 @@ class Core
 
     public function readOption($val, $opt)
     {
-        $optBase = preg_replace(
-            '/-(?P<major>0|[1-9]\d*)(?:\.|_)(?P<minor>0|[1-9]\d*)(?:\.|_)(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/ ',
-            '',
-            $opt,
-        );
+        $optBase = preg_replace(ThemeInit::VERSION_SUFFIX, '', $opt);
         return $optBase === $opt ? $val : get_option($optBase);
     }
 
     public function writeOption($val, $oldVal, $opt)
     {
-        $optBase = preg_replace(
-            '/-(?P<major>0|[1-9]\d*)(?:\.|_)(?P<minor>0|[1-9]\d*)(?:\.|_)(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/ ',
-            '',
-            $opt,
-        );
+        $optBase = preg_replace(ThemeInit::VERSION_SUFFIX, '', $opt);
         if ($optBase !== $opt) {
             update_option($optBase, $val);
             return $oldVal;

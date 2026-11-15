@@ -45,6 +45,11 @@ A common baseline of repeated functions, filters and actions used across our Wor
 - **Block Editor**<br>
   Disable [third-party block suggestions](https://developer.wordpress.org/block-editor/reference-guides/filters/editor-filters/#block-directory) and [ remote block patterns](https://developer.wordpress.org/block-editor/reference-guides/filters/editor-filters/#block-patterns).
 
+- **Theme Pattern Category**<br>
+  Registers a Block Pattern category using the theme's name, labeled with the Site Title. Theme patterns can use it from their file headers, eg. `Categories: iop-client`.
+
+  The theme's name is its directory without any version suffix, matching `name` in package.json. Get it with `ThemeInit::themeName()`; a versioned snapshot like `iop-client-1.2.3` returns `iop-client`.
+
 - **ShowIncludes**<br>
   A div showing all included theme files will be appended to the page when `WP_DEBUG` is true. To disable it, initialize the class with an array containing: `['showIncludes' => false]`
 

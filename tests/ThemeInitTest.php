@@ -32,6 +32,7 @@ if (!function_exists(__NAMESPACE__ . '\error_log')) {
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Core::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Debug\ShowIncludes::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Extras\GlobalCommentsDisable::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit\Extras\PatternCategory::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Extras\RemoveJQueryMigrate::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Extras\Shortcodes::class)]
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Media::class)]
@@ -168,5 +169,21 @@ final class ThemeInitTest extends TestCase
         $ids = array_map(fn($box) => $box['id'], $meta_boxes);
         $this->assertContains('dashboard_primary', $ids);
         $this->assertContains('dashboard_site_health', $ids);
+    }
+
+    public function testThemeName()
+    {
+        global $stylesheet;
+
+        $stylesheet = 'iop-therabbit-1.0.5';
+        $this->assertEquals('iop-therabbit', ThemeInit::themeName());
+
+        $stylesheet = 'iop-therabbit-1_0_5';
+        $this->assertEquals('iop-therabbit', ThemeInit::themeName());
+
+        $stylesheet = 'iop-gwu2';
+        $this->assertEquals('iop-gwu2', ThemeInit::themeName());
+
+        $stylesheet = null;
     }
 }

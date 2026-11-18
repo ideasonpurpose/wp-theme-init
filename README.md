@@ -71,6 +71,27 @@ A common baseline of repeated functions, filters and actions used across our Wor
 - **Remove jQuery Migrate**<br>
   jQuery Migrate is removed from the front end by default (admin screens keep it). To restore it, initialize the ThemeInit class with an array containing: `['jQueryMigrate' => true]`
 
+- **Analytics**<br>
+  `ThemeInit\Analytics` prints Google Analytics (`gtag`) and Cloudflare Web Analytics from `wp_head`. Instantiate it from the theme; `ThemeInit` does not start it. Snippets are omitted for logged-in users (an HTML comment is left in their place).
+
+  `gtag` is one measurement ID or a list of them. The `gtag.js` script loads once, using the first ID, then each ID gets its own `gtag('config')` call. Pass several IDs to track several properties from one page. `cloudflare` is a single site token.
+
+  When `WP_DEBUG` is true, the named `dev` argument is a complete config and replaces production. The two are never merged: a service left out of `dev` is off. `dev: []` and omitting `dev` both send nothing.
+
+  ```php
+  use IdeasOnPurpose\ThemeInit\Analytics;
+
+  new Analytics(
+      ['gtag' => ['G-AAA', 'G-BBB'], 'cloudflare' => 'token'],
+      dev: ['gtag' => 'G-DEV'],
+  );
+
+  // one property, no dev config (nothing is sent while WP_DEBUG is on)
+  new Analytics(['gtag' => 'G-AAA']);
+  ```
+
+  **Migrating from [wp-google-analytics](https://github.com/ideasonpurpose/wp-google-analytics).** Replace `new GoogleAnalytics($id, $devId)` with `new Analytics(['gtag' => $id], dev: ['gtag' => $devId])`. A list of gtag IDs tracks several properties with one script load; it is no longer a Universal Analytics / GA4 bridge. Development no longer falls back to a second ID. With `WP_DEBUG` on, analytics stays off unless `dev` is configured.
+
 - **Remove Stale Login Cookies**<br>
   Repeatedly spinning up local dev environments often bloats **localhost** cookies with stale `wordpress_logged_in` entries. Once these accumulate, the local server will eventually fail with a bad request and the error message _"Your browser sent a request that this server could not understand. Size of a request header field exceeds server limit."_ The cookie can be removed using the browser's dev tools, if the error is recognized -- but it often isn't. Instead, wp-theme-init removes stale login cookies from the `wp_login` hook, preventing the issue. This only runs on development environments when WP_DEBUG is set.
 

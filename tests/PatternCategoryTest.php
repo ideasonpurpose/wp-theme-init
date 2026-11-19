@@ -19,6 +19,7 @@ if (!function_exists(__NAMESPACE__ . '\register_block_pattern_category')) {
 }
 
 #[CoversClass(\IdeasOnPurpose\ThemeInit\Extras\PatternCategory::class)]
+#[CoversClass(\IdeasOnPurpose\ThemeInit::class)]
 final class PatternCategoryTest extends TestCase
 {
     public function testConstructorRegistersHook()
@@ -39,7 +40,7 @@ final class PatternCategoryTest extends TestCase
         $pattern_categories = [];
         $stylesheet = 'iop-therabbit-1.0.5';
 
-        (new PatternCategory())->register();
+        new PatternCategory()->register();
 
         $this->assertEquals(
             ['iop-therabbit' => ['label' => "Joe's Books & Bar"]],

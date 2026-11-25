@@ -42,8 +42,10 @@ final class AnalyticsTest extends TestCase
 
         $this->assertSame(1, substr_count($html, 'googletagmanager.com/gtag/js'));
         $this->assertStringContainsString('id=G-PROD', $html);
+        $this->assertStringContainsString("gtag('js', new Date());", $html);
         $this->assertStringContainsString("gtag('config', 'G-PROD');", $html);
         $this->assertStringContainsString('token-prod', $html);
+        $this->assertStringNotContainsString('{{', $html);
         $this->assertStringNotContainsString('G-DEV', $html);
         $this->assertStringNotContainsString('token-dev', $html);
     }

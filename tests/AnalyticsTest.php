@@ -127,6 +127,39 @@ final class AnalyticsTest extends TestCase
         $this->assertStringNotContainsString('gtag', $html);
     }
 
+    public function testVideoTrackingWithGtag(): void
+    {
+        global $filters_applied;
+        $filters_applied = [];
+
+        $html = $this->render(new Analytics(['gtag' => 'G-AAA']), debug: false);
+
+        $this->assertStringContainsString('<!-- HTML5 video tracking -->', $html);
+        $this->assertStringContainsString("gtag('event', name", $html);
+        $this->assertContains(
+            'iop_analytics_video_tracking',
+            array_column($filters_applied, 'hook'),
+        );
+    }
+
+    public function testNoVideoTrackingForCloudflareOnly(): void
+    {
+        $html = $this->render(new Analytics(['cloudflare' => 'token']), debug: false);
+
+        $this->assertStringNotContainsString('video tracking', $html);
+    }
+
+    public function testNoVideoTrackingWhenLoggedIn(): void
+    {
+        global $is_user_logged_in, $wp_get_current_user;
+        $is_user_logged_in = true;
+        $wp_get_current_user = new \WP_User(1, 'editor');
+
+        $html = $this->render(new Analytics(['gtag' => 'G-AAA']), debug: false);
+
+        $this->assertStringNotContainsString('video tracking', $html);
+    }
+
     private function render(Analytics $analytics, bool $debug): string
     {
         $analytics->WP_DEBUG = $debug;

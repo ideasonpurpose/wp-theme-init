@@ -90,6 +90,12 @@ A common baseline of repeated functions, filters and actions used across our Wor
   new Analytics(['gtag' => 'G-AAA']);
   ```
 
+  **Video tracking.** With `gtag`, a small inline script also tracks HTML5 `<video>` elements (including ones added later) and sends GA4 `video_start`, `video_progress` (10, 25, 50, 75 and 90%, once each) and `video_complete`. Params: `video_provider` (`self-hosted`), `video_url`, `video_title` (`title`, `aria-label`, `data-title`, else the filename), `video_duration`, `video_current_time`, `video_percent` and `video_autoplay`. Looping videos complete once, on the first loop, then stop reporting. In GA4, `video_provider`, `video_title` and `video_url` map to built-in video dimensions; register `video_percent`, `video_current_time`, `video_duration` and `video_autoplay` as event-scoped custom definitions to report on them. To turn it off:
+
+  ```php
+  add_filter('iop_analytics_video_tracking', '__return_false');
+  ```
+
   **Migrating from [wp-google-analytics](https://github.com/ideasonpurpose/wp-google-analytics).** Replace `new GoogleAnalytics($id, $devId)` with `new Analytics(['gtag' => $id], dev: ['gtag' => $devId])`. A list of gtag IDs tracks several properties with one script load; it is no longer a Universal Analytics / GA4 bridge. Development no longer falls back to a second ID. With `WP_DEBUG` on, analytics stays off unless `dev` is configured.
 
 - **Remove Stale Login Cookies**<br>
